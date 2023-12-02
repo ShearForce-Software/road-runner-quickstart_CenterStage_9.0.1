@@ -36,6 +36,9 @@ public class  UniversalControlClass {
     DcMotor rightRear;
     DcMotor rightSlide;
     DcMotor leftSlide;
+
+    DcMotor leftScissor;
+    DcMotor rightScissor;
     TouchSensor leftSlideLimit;
     TouchSensor rightSlideLimit;
     CRServo intakeLeft;
@@ -121,6 +124,17 @@ public class  UniversalControlClass {
         leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
         leftSlideLimit = hardwareMap.get(TouchSensor.class, "leftSlideLimit");
         rightSlideLimit = hardwareMap.get(TouchSensor.class, "rightSlideLimit");
+
+        leftScissor = hardwareMap.get(DcMotor.class, "centerOdometry");
+        rightScissor = hardwareMap.get(DcMotor.class, "rightScissor");
+        leftScissor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightScissor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftScissor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightScissor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftScissor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightScissor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
         rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
         //InitBlinkin(hardwareMap);
@@ -447,8 +461,16 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("Whole Arm Position: ", wholeArmPosition);
         opMode.telemetry.addData("Left Hopper: ", leftColorSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.addData("Right Hopper: ", rightColorSensor.getDistance(DistanceUnit.MM));
+        opMode.telemetry.addData("LeftScissor: ", leftScissor.getPower());
+        opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
+
         opMode.telemetry.addData("WRIST_GRAB_PIXEL_POS: ", WRIST_GRAB_PIXEL_POS);
 
+    }
+
+    public void SetScissorLiftPower(double power){
+        leftScissor.setPower(power);
+        rightScissor.setPower(power);
     }
     public void ColorDetect(){
         //double rightColor = rightColorSensor.getLightDetected();

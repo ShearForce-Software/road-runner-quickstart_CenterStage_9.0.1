@@ -82,6 +82,19 @@ public class ManualWithUniversalClass extends LinearOpMode {
                 theRobot.SpecialSleep(150);
             }
 
+            if (gamepad1.left_trigger != 0)
+            {
+                theRobot.SetScissorLiftPower(gamepad1.left_trigger);
+            }
+            else if (gamepad1.right_trigger != 0)
+            {
+                theRobot.SetScissorLiftPower(-gamepad1.right_trigger);
+            }
+            else
+            {
+                theRobot.SetScissorLiftPower(0);
+            }
+
             // special combo (left tiny button and top right button together)
             if (gamepad2.back && gamepad2.y)
             {
