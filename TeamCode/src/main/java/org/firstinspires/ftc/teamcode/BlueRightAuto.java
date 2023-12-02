@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name="Blue Right")
+@Autonomous(name="Blue Right", preselectTeleOp="1 Manual Control")
 public class BlueRightAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     private HuskyLens huskyLens;
@@ -29,36 +29,79 @@ public class BlueRightAuto extends LinearOpMode {
 
         telemetry.update();
 
+        control.WebcamInit(hardwareMap);
+        telemetry.update();
+
         while(!isStarted()){
             control.DetectTeamArtBlue();
             telemetry.update();
         }
-
-        control.WebcamInit(hardwareMap);
-        telemetry.update();
         waitForStart();
+
+        // lock the pixels
         control.GrabPixels();
 
+        // drive to the middle floor delivery position
         Actions.runBlocking(
             drive.actionBuilder(startPose)
-                    .splineToLinearHeading(new Pose2d(-38.5, 14.5, Math.toRadians(270)), Math.toRadians(270))
+                    .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
                 .build());
+
+        // Drop the LEFT pixel (put PURPLE on LEFT, YELLOW on RIGHT) on the line
         control.DropOnLine();
+        // put the arm back in a safe to travel position
         control.SafeStow();
-    Actions.runBlocking(
-            drive.actionBuilder(new Pose2d(-38.5, 14.5, Math.toRadians(270)))
-                    .splineToLinearHeading(new Pose2d(-38,10, Math.toRadians(270)), Math.toRadians(270))
+
+        // drive to the backboard area
+        Actions.runBlocking(
+            drive.actionBuilder(new Pose2d(-38.5, 12.5, Math.toRadians(270)))
+                    .splineToLinearHeading(new Pose2d(-38,9, Math.toRadians(270)), Math.toRadians(270))
                     //.setTangent(0)
-                    .splineToLinearHeading(new Pose2d(-30,10, Math.toRadians(180)), Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(-30,9, Math.toRadians(180)), Math.toRadians(0))
             //.setTangent(0)
-                    .splineToLinearHeading(new Pose2d(30,10, Math.toRadians(180)), Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(48,36, Math.toRadians(180)), Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(30,9, Math.toRadians(180)), Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(52.2,28, Math.toRadians(180)), Math.toRadians(0))
             .build());
+
+        // Raise Arm to delivery position
+        control.ReadyToLiftSlides();
+        sleep(150);
+        control.SlidesLow();
+        sleep(150);
         control.DeliverPixelToBoardPos();
-//        control.NavToTag();
-//        Actions.runBlocking(
-//                drive.actionBuilder(new Pose2d(48, 36, Math.toRadians(180)))
-//                        .splineToLinearHeading(new Pose2d(48+control.rangeError,36+control.yawError, Math.toRadians(180)), Math.toRadians(180))
-//                .build());
+
+        // try to find the right April Tag
+        control.NavToTag();
+        telemetry.addData("Target - ", control.DESIRED_TAG_ID);
+        telemetry.addData("rangeError: ",control.rangeError);
+        telemetry.addData("yawError: ", control.yawError);
+        telemetry.update();
+        sleep(2000); //TEMP to debug the values
+
+    // adjust the position to go the correct position for the april tag
+    //Actions.runBlocking(
+    //       drive.actionBuilder(new Pose2d(50, 36, Math.toRadians(180)))
+    //            .splineToLinearHeading(new Pose2d(50+control.rangeError,36+control.yawError, Math.toRadians(180)), Math.toRadians(0))
+    //            .build());
+
+        // Drop the pixel on the board
+        control.ReleaseRight();
+        control.ReleaseLeft();
+        sleep(750);
+
+        // Return Arm to Ready position
+        control.ResetArm();
+        sleep(400);
+
+        // Move the robot to the parking position
+        Actions.runBlocking(
+                //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                drive.actionBuilder(new Pose2d(52.2, 28, Math.toRadians(180)))
+                        .splineToLinearHeading(new Pose2d(50,15, Math.toRadians(270)), Math.toRadians(270))
+                        .build());
+
+        telemetry.update();
+
+
     }
 }

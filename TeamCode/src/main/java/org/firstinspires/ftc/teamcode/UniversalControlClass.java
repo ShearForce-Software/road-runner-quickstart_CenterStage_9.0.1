@@ -75,6 +75,8 @@ public class  UniversalControlClass {
     public double wholeArmPosition = 0.04;
     static final double MAX_WRIST_POS = 1.0;
     static final double MIN_WRIST_POS = 0.0;
+    public double WRIST_GRAB_PIXEL_POS = 0.61;
+    public double WRIST_DELIVER_TO_BOARD_POS = 0.13;
     static final double MAX_WHOLE_ARM_POS = 1.0;
     static final double MIN_WHOLE_ARM_POS = 0.04;
     //NAV TO TAG VARIABLES
@@ -86,7 +88,7 @@ public class  UniversalControlClass {
     final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private static int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    public static int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
@@ -176,10 +178,10 @@ public class  UniversalControlClass {
     public void AutoStartPos(){
         grabberLeft.setPosition(0);
         grabberRight.setPosition(0);
-        armRotLeft.setPosition(.16);
-        armRotRight.setPosition(.16);
-        wristLeft.setPosition(.06);
-        wristRight.setPosition(.06);
+        armRotLeft.setPosition(.17);
+        armRotRight.setPosition(.17);
+        wristLeft.setPosition(MIN_WRIST_POS);  // Point straight up
+        wristRight.setPosition(MIN_WRIST_POS);
     }
     public void GrabPixels(){
         grabberRight.setPosition(.72);
@@ -203,8 +205,8 @@ public class  UniversalControlClass {
     public void ManualStartPos(){
         armRotLeft.setPosition(.07);
         armRotRight.setPosition(.07);
-        wristLeft.setPosition(.66);
-        wristRight.setPosition(.66);
+        wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
+        wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
         grabberLeft.setPosition(0);
         grabberRight.setPosition(0);
     }
@@ -212,28 +214,32 @@ public class  UniversalControlClass {
         armRotLeft.setPosition(.04);
         armRotRight.setPosition(.04);
         SpecialSleep(150);
-        wristLeft.setPosition(.63);
-        wristRight.setPosition(.63);
+        wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
+        wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
     }
     public void ReadyToLiftSlides(){ // slight move before lifting slides
         armRotLeft.setPosition(.09);
         armRotRight.setPosition(.09);
         SpecialSleep(150);
-        wristLeft.setPosition(.63);
-        wristRight.setPosition(.63);
-        SpecialSleep(150);
-        leftSlide.setTargetPosition(100);
-        rightSlide.setTargetPosition(100);
+        //wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
+        //wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
+        //SpecialSleep(150);
+    }
+
+    public void PrepareSlidesToFlipArm()
+    {
+        leftSlide.setTargetPosition(-300);
+        rightSlide.setTargetPosition(-300);
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         SetSlidePower(SLIDE_POWER);
     }
     public void DeliverPixelToBoardPos(){
-        armRotLeft.setPosition(.86);
-        armRotRight.setPosition(.86);
+        armRotLeft.setPosition(.8);
+        armRotRight.setPosition(.8);
         SpecialSleep(150);
-        wristLeft.setPosition(.19);
-        wristRight.setPosition(.19);
+        wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
+        wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
 
     }
     public void ResetArm(){
@@ -281,8 +287,17 @@ public class  UniversalControlClass {
         wristLeft.setPosition(wristPosition);
         wristRight.setPosition(wristPosition);
     }
+
+    // SPECIAL routine to change the wrist position that equals the right spot
+    // to grab the pixels, if the servo gets shifted out of position
+    public void ResetWristGrabPixelPos()
+    {
+        WRIST_GRAB_PIXEL_POS = wristLeft.getPosition();
+        WRIST_DELIVER_TO_BOARD_POS = WRIST_GRAB_PIXEL_POS - 0.48;
+
+    }
     public double getWristPosition(){
-        return wristPosition;
+        return wristLeft.getPosition();
     }
     public void WholeArmRot(double position){
     if (position > MAX_WHOLE_ARM_POS){
@@ -373,7 +388,7 @@ public class  UniversalControlClass {
     public void SlidesDown() {
         double timeout = opMode.getRuntime() + 3;
         // while one of the slide limit switches are not pressed
-        while ((!(leftSlideLimit.isPressed() && rightSlideLimit.isPressed()))&&(opMode.getRuntime() < timeout))
+        while ((!(leftSlideLimit.isPressed() || rightSlideLimit.isPressed()))&&(opMode.getRuntime() < timeout))
         {
             leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -390,6 +405,8 @@ public class  UniversalControlClass {
             }else{
                 rightSlide.setPower(slidePower);
             }
+
+            SpecialSleep(150);
         }
 
         // at least one of the slide limits has been pressed when we get to here, stop both slide motors, and then reset encoders to zero
@@ -430,6 +447,8 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("Whole Arm Position: ", wholeArmPosition);
         opMode.telemetry.addData("Left Hopper: ", leftColorSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.addData("Right Hopper: ", rightColorSensor.getDistance(DistanceUnit.MM));
+        opMode.telemetry.addData("WRIST_GRAB_PIXEL_POS: ", WRIST_GRAB_PIXEL_POS);
+
     }
     public void ColorDetect(){
         //double rightColor = rightColorSensor.getLightDetected();
@@ -636,8 +655,10 @@ public class  UniversalControlClass {
     public void LaunchAirplane() {
         if (droneLauncher.getPosition() < 0.5) {
             droneLauncher.setPosition(1);
+            SpecialSleep(150);
         } else {
             droneLauncher.setPosition(0);
+            SpecialSleep(150);
         }
     }
     public void Hang() {
