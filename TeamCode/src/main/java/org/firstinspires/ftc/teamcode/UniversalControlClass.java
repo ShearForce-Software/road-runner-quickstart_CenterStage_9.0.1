@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.MecanumDrive.PARAMS;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -11,12 +9,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -64,15 +62,11 @@ public class  UniversalControlClass {
     boolean IsDriverControl;
     boolean IsFieldCentric;
     int hopperDistance = 30;
-    double  grabberPosition = 0; // Start at minimum rotational position
     int spikeBound = 160;
     int autoPosition;
-    public static double grabPosition = 0.5;
-    public static double dropPosition = 0;
     boolean AutoIntake = false;
     public static final double SLIDE_POWER   = 0.75;
     public static final int SLIDE_MAX_HEIGHT = -2850;
-    public static final int SLIDE_MIN_HEIGHT = 0;
     public static final int SLIDE_LOW_HEIGHT = -1300;
     public static final int SLIDE_MEDIUM_HEIGHT = -2000;
     public double wristPosition = 0.0;
@@ -81,8 +75,6 @@ public class  UniversalControlClass {
     static final double MIN_WRIST_POS = 0.0;
     public double WRIST_GRAB_PIXEL_POS = 0.61;
     public double WRIST_DELIVER_TO_BOARD_POS = 0.13;
-    static final double MAX_WHOLE_ARM_POS = 1.0;
-    static final double MIN_WHOLE_ARM_POS = 0.04;
     //NAV TO TAG VARIABLES
     final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
     final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
@@ -91,7 +83,6 @@ public class  UniversalControlClass {
     final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-    private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     public static int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
@@ -166,9 +157,6 @@ public class  UniversalControlClass {
     }
 
     public void WebcamInit (HardwareMap hardwareMap){
-        double  drive           = 0;        // Desired forward power/speed (-1 to +1)
-        double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-        double  turn            = 0;        // Desired turning power/speed (-1 to +1)
         aprilTag = new AprilTagProcessor.Builder().build();
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
@@ -236,19 +224,8 @@ public class  UniversalControlClass {
         armRotLeft.setPosition(.09);
         armRotRight.setPosition(.09);
         SpecialSleep(150);
-        //wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
-        //wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
-        //SpecialSleep(150);
     }
 
-    public void PrepareSlidesToFlipArm()
-    {
-        leftSlide.setTargetPosition(-300);
-        rightSlide.setTargetPosition(-300);
-        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        SetSlidePower(SLIDE_POWER);
-    }
     public void DeliverPixelToBoardPos(){
         armRotLeft.setPosition(.8);
         armRotRight.setPosition(.8);
@@ -316,20 +293,6 @@ public class  UniversalControlClass {
     public double getWristPosition(){
         return wristLeft.getPosition();
     }
-    public void WholeArmRot(double position){
-    if (position > MAX_WHOLE_ARM_POS){
-            wholeArmPosition = MAX_WHOLE_ARM_POS;
-        }else if(position < MIN_WHOLE_ARM_POS){
-            wholeArmPosition = MIN_WHOLE_ARM_POS;
-        }else{
-            wholeArmPosition = position;
-        }
-        armRotLeft.setPosition(wholeArmPosition);
-        armRotRight.setPosition(wholeArmPosition);
-    }
-    public double getWholeArmPosition(){
-        return wholeArmPosition;
-    }
     public void GrabLeft(){
         grabberLeft.setPosition(.72);
     }
@@ -353,33 +316,6 @@ public class  UniversalControlClass {
     public void ServoStop(){
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
-    }
-    public void CheckForSlideBottom(){
-        if((leftSlide.getTargetPosition()==SLIDE_MIN_HEIGHT)&&(leftSlide.isBusy())){
-            if(rightSlideLimit.isPressed()||leftSlideLimit.isPressed()){
-                leftSlide.setPower(0);
-                rightSlide.setPower(0);
-                leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-
-            else{
-                leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                while((!rightSlideLimit.isPressed())&&(!leftSlideLimit.isPressed())){
-                    leftSlide.setPower(1);
-                    rightSlide.setPower(1);
-                    driveControlsFieldCentric();
-                    SpecialSleep(1);
-                }
-                leftSlide.setPower(0);
-                rightSlide.setPower(0);
-                leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-        }
     }
     public void SlidesLow(){
         leftSlide.setTargetPosition(SLIDE_LOW_HEIGHT);
@@ -433,10 +369,6 @@ public class  UniversalControlClass {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    public void ManualSlide(double power){
-        leftSlide.setPower(power);
-        rightSlide.setPower(power);
     }
     public void SetSlidePower(double power){
         //TODO: CLAIRE slides w/ limit switch
@@ -686,9 +618,80 @@ public class  UniversalControlClass {
             SpecialSleep(150);
         }
     }
-    public void Hang() {
-        //TODO: UNASSIGNED Hang from bar
+    public void DriveToTag()
+    {
+        double  drive           = 0.0;        // Desired forward power/speed (-1 to +1)
+        double  strafe          = 0.0;        // Desired strafe power/speed (-1 to +1)
+        double  turn            = 0.0;        // Desired turning power/speed (-1 to +1)
+
+        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+        NavToTag();
+        double  headingError    = desiredTag.ftcPose.bearing;
+
+        double timeout = opMode.getRuntime() + 5;
+
+        while ((rangeError > DESIRED_DISTANCE) &&
+                ((headingError > 2.0) || (headingError < -2.0)) &&
+                ((yawError > 2.0) || (yawError < -2.0)) && (opMode.getRuntime() < timeout))
+        {
+            // Determine heading, range and Yaw (tag image rotation) errors
+            NavToTag();
+            headingError = desiredTag.ftcPose.bearing;
+
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+            drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+            opMode.telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+            opMode.telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+            opMode.telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
+            opMode.telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
+            opMode.telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+            opMode.telemetry.update();
+
+            // Apply desired axes motions to the drivetrain.
+            moveRobot(drive, strafe, turn);
+            opMode.sleep(10);
+        }
+
     }
+
+    /**
+     * Move robot according to desired axes motions
+     * <p>
+     * Positive X is forward
+     * <p>
+     * Positive Y is strafe left
+     * <p>
+     * Positive Yaw is counter-clockwise
+     */
+    public void moveRobot(double x, double y, double yaw) {
+        // Calculate wheel powers.
+        double leftFrontPower    =  x -y -yaw;
+        double rightFrontPower   =  x +y +yaw;
+        double leftBackPower     =  x +y -yaw;
+        double rightBackPower    =  x -y +yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the wheels.
+        leftFront.setPower(leftFrontPower *.5);
+        rightFront.setPower(rightFrontPower *.5);
+        leftRear.setPower(leftBackPower *.5);
+        rightRear.setPower(rightBackPower *.5);
+    }
+
     public void driveControlsRobotCentric() {
         double y = opMode.gamepad1.left_stick_y;
         double x = -opMode.gamepad1.left_stick_x * 1.1;
