@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.MecanumDrive.PARAMS;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -277,6 +278,8 @@ public class  UniversalControlClass {
         }
 
     }
+
+
     public void EnableAutoIntake(){
         AutoIntake = true;
     }

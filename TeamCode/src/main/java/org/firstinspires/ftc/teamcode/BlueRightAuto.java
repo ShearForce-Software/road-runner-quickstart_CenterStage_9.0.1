@@ -101,7 +101,90 @@ public class BlueRightAuto extends LinearOpMode {
                         .build());
 
         telemetry.update();
+       // public void TeamArtDelivery()
+        {
+            Pose2d deliveryPosition;
+            Pose2d startPosition;
+            //If team art is at left, robot must drive past the spike mark and rotate 45 degrees clockwise and deliver pixel
 
+            // If team art is at center, robot must drive past spike mark and carefully place pixel on spike mark
+
+            // If team art is at right, robot must  drive past spike mark and rotate 45 degrees counterclockwise and deliver the pixel
+
+        }
+     //   public void redAudienceTeamArtDelivery()
+        {
+            if (autoPosition == 1)
+            {
+                //Pose2d deliverPose = new Pose2d(-44,-29,Math.toRadians(270));
+            }
+            else if (autoPosition ==2)
+            {
+                //delivery position = (-36,-20)
+            }
+            else if (autoPosition == 3)
+            {
+
+            }
+            else
+            {
+                //delivery position = (-36,-20)
+            }
+        }
+       // public void redCloseTeamArtDelivery()
+        {
+            if (autoPosition == 1)
+            {
+                //delivery position = (-34,-29)
+            } else if (autoPosition ==2)
+            {
+
+            }
+            else if (autoPosition == 3)
+            {
+
+            }
+            else
+            {
+                // delivery position = to AutoPosition2
+            }
+        }
+        //public void blueAudienceTeamArtDelivery()
+        {
+            if (autoPosition == 1)
+            {
+                //delivery position = (-34,-29)
+            } else if (autoPosition ==2)
+            {
+
+            }
+            else if (autoPosition == 3)
+            {
+
+            }
+            else
+            {
+                // delivery position = to AutoPosition2
+            }
+        }
+        //public void blueCloseTeamArtDelivery()
+        {
+            if (autoPosition == 1)
+            {
+                //delivery position = (-34,-29)
+            } else if (autoPosition ==2)
+            {
+
+            }
+            else if (autoPosition == 3)
+            {
+
+            }
+            else
+            {
+                // delivery position = to AutoPosition2
+            }
+        }
 
     }
 }
