@@ -13,11 +13,12 @@ public class RedLeftAuto extends LinearOpMode {
     int leftRightSpikeBound = 150;
     int autoPosition = 0;
     public double pixelDeliverFirstPos = 14.5;
+
+    Pose2d startPose;
+    MecanumDrive drive;
     public void runOpMode(){
-        Pose2d startPose = new Pose2d(-38.5,-62.5,Math.toRadians(90));
-
-        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-
+    startPose = new Pose2d(-38.5,-62.5,Math.toRadians(90));
+    drive = new MecanumDrive(hardwareMap, startPose);
         control.Init(hardwareMap);
         control.HuskyLensInit();
         control.AutoStartPos();
@@ -55,27 +56,15 @@ public class RedLeftAuto extends LinearOpMode {
                     .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
             //.setTangent(0)
                     .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(52.2,-28, Math.toRadians(180)), Math.toRadians(0))
+                    //.splineToLinearHeading(new Pose2d(52.2,-28, Math.toRadians(180)), Math.toRadians(0))
             .build());
 
         // Raise Arm to delivery position
         control.ReadyToLiftSlides();
         sleep(150);
-        control.SlidesLow();
-        sleep(150);
-        control.DeliverPixelToBoardPos();
 
-        // try to find the right April Tag
-        control.NavToTag();
-        telemetry.addData("Target - ", control.DESIRED_TAG_ID);
-        telemetry.addData("rangeError: ",control.rangeError);
-        telemetry.addData("yawError: ", control.yawError);
-        telemetry.update();
-        sleep(2000); //TEMP to debug the values
-        // Drop the pixel on the board
-        control.ReleaseRight();
-        control.ReleaseLeft();
-        sleep(750);
+        //move arm, slides, drive, and release pixels to board
+        DeliverPixelToBoardRoutine();
 
         // Return Arm to Ready position
         control.ResetArm();
@@ -85,10 +74,31 @@ public class RedLeftAuto extends LinearOpMode {
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(new Pose2d(52.2, -28, Math.toRadians(180)))
-                        .splineToLinearHeading(new Pose2d(50,-15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(50,-15, Math.toRadians(90)), Math.toRadians(90))
                         .build());
 
         telemetry.update();
-
+    }
+    public void DeliverPixelToBoardRoutine(){
+        Pose2d deliverPos;
+        control.DeliverPixelToBoardPos();
+        sleep(750);
+        if(control.autoPosition == 1){
+            deliverPos = new Pose2d(52.2, -28, Math.toRadians(180));
+        }
+        else if(control.autoPosition == 2) {
+            deliverPos = new Pose2d(52.2, -28, Math.toRadians(180));
+        }
+        else{
+            deliverPos = new Pose2d(52.2, -28, Math.toRadians(180));
+        }
+        Actions.runBlocking(
+                drive.actionBuilder(new Pose2d(30,-9, Math.toRadians(180)))
+                        .setTangent(0)
+                        .splineToLinearHeading(deliverPos, Math.toRadians(0))
+                        .build());
+        control.ReleaseRight();
+        control.ReleaseLeft();
+        sleep(750);
     }
 }
