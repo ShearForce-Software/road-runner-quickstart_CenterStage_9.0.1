@@ -250,15 +250,15 @@ public class  UniversalControlClass {
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         SetSlidePower(SLIDE_POWER);
     }
+    public void SlidesToAuto(){
+        leftSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
+        rightSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        SetSlidePower(SLIDE_POWER);
+    }
     public void DeliverPixelToBoardPos(){
-        if (!IsDriverControl) {
-            leftSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
-            rightSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
-            leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while(leftSlide.isBusy()){}
-            SetSlidePower(SLIDE_POWER);
-        }
+        SlidesToAuto();
         armRotLeft.setPosition(.8);
         armRotRight.setPosition(.8);
         SpecialSleep(150);
