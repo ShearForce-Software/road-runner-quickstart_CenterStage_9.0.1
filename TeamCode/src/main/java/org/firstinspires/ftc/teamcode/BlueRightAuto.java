@@ -12,16 +12,19 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous(name="Blue Right", preselectTeleOp="1 Manual Control")
 public class BlueRightAuto extends LinearOpMode {
-    UniversalControlClass control = new UniversalControlClass(true, false,this);
+    UniversalControlClass control = new UniversalControlClass(true, false, this);
     private HuskyLens huskyLens;
     private final int READ_PERIOD = 1;
     int leftRightSpikeBound = 150;
     int autoPosition = 0;
     public double pixelDeliverFirstPos = 14.5;
-    public void runOpMode(){
-        Pose2d startPose = new Pose2d(-38.5,62.5,Math.toRadians(270));
+    MecanumDrive drive;
+    Pose2d startPose;
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+    public void runOpMode() {
+        startPose = new Pose2d(-38.5, 62.5, Math.toRadians(270));
+
+        drive = new MecanumDrive(hardwareMap, startPose);
 
         control.Init(hardwareMap);
         control.HuskyLensInit();
@@ -32,7 +35,7 @@ public class BlueRightAuto extends LinearOpMode {
         control.WebcamInit(hardwareMap);
         telemetry.update();
 
-        while(!isStarted()){
+        while (!isStarted()) {
             control.DetectTeamArtBlue();
             telemetry.update();
         }
@@ -43,9 +46,9 @@ public class BlueRightAuto extends LinearOpMode {
 
         // drive to the middle floor delivery position
         Actions.runBlocking(
-            drive.actionBuilder(startPose)
-                    .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
-                .build());
+                drive.actionBuilder(startPose)
+                        .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                        .build());
 
         // Drop the LEFT pixel (put PURPLE on LEFT, YELLOW on RIGHT) on the line
         control.DropOnLine();
@@ -54,15 +57,15 @@ public class BlueRightAuto extends LinearOpMode {
 
         // drive to the backboard area
         Actions.runBlocking(
-            drive.actionBuilder(new Pose2d(-38.5, 12.5, Math.toRadians(270)))
-                    .splineToLinearHeading(new Pose2d(-38,9, Math.toRadians(270)), Math.toRadians(270))
-                    //.setTangent(0)
-                    .splineToLinearHeading(new Pose2d(-30,9, Math.toRadians(180)), Math.toRadians(0))
-            //.setTangent(0)
-                    .splineToLinearHeading(new Pose2d(30,9, Math.toRadians(180)), Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(52.2,28, Math.toRadians(180)), Math.toRadians(0))
-            .build());
-
+                drive.actionBuilder(new Pose2d(-38.5, 12.5, Math.toRadians(270)))
+                        .splineToLinearHeading(new Pose2d(-38, 9, Math.toRadians(270)), Math.toRadians(270))
+                        //.setTangent(0)
+                        .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                        //.setTangent(0)
+                        .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                        //  .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(180)), Math.toRadians(0))
+                        .build());
+        BlueBoardDelivery();
         // Raise Arm to delivery position
         control.ReadyToLiftSlides();
         sleep(150);
@@ -73,16 +76,16 @@ public class BlueRightAuto extends LinearOpMode {
         // try to find the right April Tag
         control.NavToTag();
         telemetry.addData("Target - ", control.DESIRED_TAG_ID);
-        telemetry.addData("rangeError: ",control.rangeError);
+        telemetry.addData("rangeError: ", control.rangeError);
         telemetry.addData("yawError: ", control.yawError);
         telemetry.update();
         sleep(2000); //TEMP to debug the values
 
-    // adjust the position to go the correct position for the april tag
-    //Actions.runBlocking(
-    //       drive.actionBuilder(new Pose2d(50, 36, Math.toRadians(180)))
-    //            .splineToLinearHeading(new Pose2d(50+control.rangeError,36+control.yawError, Math.toRadians(180)), Math.toRadians(0))
-    //            .build());
+        // adjust the position to go the correct position for the april tag
+        //Actions.runBlocking(
+        //       drive.actionBuilder(new Pose2d(50, 36, Math.toRadians(180)))
+        //            .splineToLinearHeading(new Pose2d(50+control.rangeError,36+control.yawError, Math.toRadians(180)), Math.toRadians(0))
+        //            .build());
 
         // Drop the pixel on the board
         control.ReleaseRight();
@@ -97,94 +100,79 @@ public class BlueRightAuto extends LinearOpMode {
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(new Pose2d(52.2, 28, Math.toRadians(180)))
-                        .splineToLinearHeading(new Pose2d(50,15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(50, 15, Math.toRadians(270)), Math.toRadians(270))
                         .build());
 
         telemetry.update();
-       // public void TeamArtDelivery()
-        {
-            Pose2d deliveryPosition;
-            Pose2d startPosition;
-            //If team art is at left, robot must drive past the spike mark and rotate 45 degrees clockwise and deliver pixel
+    }
+    // public void TeamArtDelivery()
+    //  {
+    //   Pose2d deliveryPose;
 
-            // If team art is at center, robot must drive past spike mark and carefully place pixel on spike mark
+    //If team art is at left, robot must drive past the spike mark and rotate 45 degrees clockwise and deliver pixel
 
-            // If team art is at right, robot must  drive past spike mark and rotate 45 degrees counterclockwise and deliver the pixel
+    // If team art is at center, robot must drive past spike mark and carefully place pixel on spike mark
 
+    // If team art is at right, robot must  drive past spike mark and rotate 45 degrees counterclockwise and deliver the pixel
+
+    //  }
+    public void BlueBoardDelivery() {
+
+        if (autoPosition == 1) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(52.2, 34, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else if (autoPosition == 2) {
+
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else if (autoPosition == 3) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(52.2, 22, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
         }
-     //   public void redAudienceTeamArtDelivery()
-        {
-            if (autoPosition == 1)
-            {
-                //Pose2d deliverPose = new Pose2d(-44,-29,Math.toRadians(270));
-            }
-            else if (autoPosition ==2)
-            {
-                //delivery position = (-36,-20)
-            }
-            else if (autoPosition == 3)
-            {
+    }
 
-            }
-            else
-            {
-                //delivery position = (-36,-20)
-            }
+    public void TeamArtPixelDelivery() {
+
+        if (autoPosition == 1) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else if (autoPosition == 2) {
+
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else if (autoPosition == 3) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
         }
-       // public void redCloseTeamArtDelivery()
-        {
-            if (autoPosition == 1)
-            {
-                //delivery position = (-34,-29)
-            } else if (autoPosition ==2)
-            {
-
-            }
-            else if (autoPosition == 3)
-            {
-
-            }
-            else
-            {
-                // delivery position = to AutoPosition2
-            }
-        }
-        //public void blueAudienceTeamArtDelivery()
-        {
-            if (autoPosition == 1)
-            {
-                //delivery position = (-34,-29)
-            } else if (autoPosition ==2)
-            {
-
-            }
-            else if (autoPosition == 3)
-            {
-
-            }
-            else
-            {
-                // delivery position = to AutoPosition2
-            }
-        }
-        //public void blueCloseTeamArtDelivery()
-        {
-            if (autoPosition == 1)
-            {
-                //delivery position = (-34,-29)
-            } else if (autoPosition ==2)
-            {
-
-            }
-            else if (autoPosition == 3)
-            {
-
-            }
-            else
-            {
-                // delivery position = to AutoPosition2
-            }
-        }
-
     }
 }
