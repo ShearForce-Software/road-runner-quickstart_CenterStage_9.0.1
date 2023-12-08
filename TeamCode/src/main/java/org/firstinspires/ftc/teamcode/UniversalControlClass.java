@@ -256,6 +256,7 @@ public class  UniversalControlClass {
             rightSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
             leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while(leftSlide.isBusy()){}
             SetSlidePower(SLIDE_POWER);
         }
         armRotLeft.setPosition(.8);
