@@ -8,10 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name="Red Left", preselectTeleOp = "1 Manual Control")
 public class RedLeftAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
-    private HuskyLens huskyLens;
-    private final int READ_PERIOD = 1;
-    int leftRightSpikeBound = 150;
-    int autoPosition = 0;
     public double pixelDeliverFirstPos = 14.5;
 
     Pose2d startPose;
