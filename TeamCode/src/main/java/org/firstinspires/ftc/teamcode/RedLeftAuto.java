@@ -56,7 +56,7 @@ public class RedLeftAuto extends LinearOpMode {
                     //.splineToLinearHeading(new Pose2d(52.2,-28, Math.toRadians(180)), Math.toRadians(0))
             .build());
 
-        // Raise Arm to delivery position
+        // Rotate Arm slightly so can flip arm over or raise safely
         control.ReadyToLiftSlides();
         sleep(150);
 
@@ -78,6 +78,8 @@ public class RedLeftAuto extends LinearOpMode {
     }
     public void DeliverPixelToBoardRoutine(){
         Pose2d deliverPos;
+        control.SlidesToAuto();
+        sleep(500);
         control.DeliverPixelToBoardPos();
         sleep(750);
         if(control.autoPosition == 1){

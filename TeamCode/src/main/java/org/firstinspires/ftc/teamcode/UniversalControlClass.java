@@ -261,7 +261,6 @@ public class  UniversalControlClass {
         SetSlidePower(SLIDE_POWER);
     }
     public void DeliverPixelToBoardPos(){
-        SlidesToAuto();
         armRotLeft.setPosition(.8);
         armRotRight.setPosition(.8);
         SpecialSleep(150);
