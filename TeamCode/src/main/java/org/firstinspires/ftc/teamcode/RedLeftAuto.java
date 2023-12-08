@@ -47,6 +47,7 @@ public class RedLeftAuto extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.SafeStow();
+        control.SpecialSleep(10000);
 
         // drive to the backboard area
         Actions.runBlocking(
@@ -84,13 +85,13 @@ public class RedLeftAuto extends LinearOpMode {
         control.DeliverPixelToBoardPos();
         sleep(750);
         if(control.autoPosition == 1){
-            deliverPos = new Pose2d(52.2, -28, Math.toRadians(180));
+            deliverPos = new Pose2d(52.2, -34, Math.toRadians(180));
         }
         else if(control.autoPosition == 2) {
             deliverPos = new Pose2d(52.2, -28, Math.toRadians(180));
         }
         else{
-            deliverPos = new Pose2d(52.2, -28, Math.toRadians(180));
+            deliverPos = new Pose2d(52.2, -22, Math.toRadians(180));
         }
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(30,-9, Math.toRadians(180)))

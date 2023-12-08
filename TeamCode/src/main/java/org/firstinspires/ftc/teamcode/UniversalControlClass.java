@@ -72,6 +72,7 @@ public class  UniversalControlClass {
     public static final double SLIDE_POWER   = 0.75;
     public static final int SLIDE_MAX_HEIGHT = -2850;
     public static final int SLIDE_MIN_HEIGHT = 0;
+    public static final int SLIDE_AUTO_HEIGHT = -750;
     public static final int SLIDE_LOW_HEIGHT = -1300;
     public static final int SLIDE_MEDIUM_HEIGHT = -2000;
     public double wristPosition = 0.0;
@@ -205,7 +206,7 @@ public class  UniversalControlClass {
         armRotLeft.setPosition(.96);
         armRotRight.setPosition(.96);
         SpecialSleep(500);
-        grabberLeft.setPosition(0);
+        grabberRight.setPosition(0);
         SpecialSleep(500);
     }
     public void SafeStow(){
@@ -249,12 +250,18 @@ public class  UniversalControlClass {
         SetSlidePower(SLIDE_POWER);
     }
     public void DeliverPixelToBoardPos(){
+        if (!IsDriverControl) {
+            leftSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
+            rightSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
+            leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            SetSlidePower(SLIDE_POWER);
+        }
         armRotLeft.setPosition(.8);
         armRotRight.setPosition(.8);
         SpecialSleep(150);
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
-
     }
     public void ResetArm(){
         ManualStartPos();
