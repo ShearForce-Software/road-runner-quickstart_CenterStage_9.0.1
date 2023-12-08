@@ -64,7 +64,8 @@ public class  UniversalControlClass {
     boolean IsFieldCentric;
     int hopperDistance = 30;
     double  grabberPosition = 0; // Start at minimum rotational position
-    int spikeBound = 160;
+    int leftSpikeBound = 100;
+    int rightSpikeBound = 200;
     int autoPosition;
     public static double grabPosition = 0.5;
     public static double dropPosition = 0;
@@ -620,7 +621,8 @@ public class  UniversalControlClass {
         } else {
             opMode.telemetry.addData(">>", "Press start to continue");
         }
-        huskyLens.selectAlgorithm(HuskyLens.Algorithm.OBJECT_TRACKING);
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION
+        );
         //TODO: is there anything we have to do to import model?
         opMode.telemetry.update();
     }
@@ -631,18 +633,18 @@ public class  UniversalControlClass {
             int xVal = blocks[0].x;
             opMode.telemetry.addData("Team Art Detected: ", true);
             opMode.telemetry.addData("Team Art X position: ", xVal);
-            if (xVal < spikeBound){
+            if (xVal <= leftSpikeBound){
+                autoPosition = 1;
+                DESIRED_TAG_ID = 1;
+            }
+            else if ((xVal > leftSpikeBound) && (xVal < rightSpikeBound)){
                 autoPosition = 2;
                 DESIRED_TAG_ID = 2;
             }
-            else if (xVal > spikeBound){
+            else if (xVal >= rightSpikeBound)
+            {
                 autoPosition = 3;
                 DESIRED_TAG_ID = 3;
-            }
-            else
-            {
-                autoPosition = 1;
-                DESIRED_TAG_ID = 1;
             }
             opMode.telemetry.addData("Auto position: ", autoPosition);
         }
@@ -660,18 +662,18 @@ public class  UniversalControlClass {
             int xVal = blocks[0].x;
             opMode.telemetry.addData("Team Art Detected: ", true);
             opMode.telemetry.addData("Team Art X position: ", xVal);
-            if (xVal < spikeBound){
-                autoPosition = 2;
+            if (xVal <= leftSpikeBound){
+                autoPosition = 1;
                 DESIRED_TAG_ID = 5;
             }
-            else if (xVal > spikeBound){
-                autoPosition = 3;
+            else if ((xVal > leftSpikeBound) && (xVal < rightSpikeBound)){
+                autoPosition = 2;
                 DESIRED_TAG_ID = 6;
             }
-            else
+            else if (xVal >= rightSpikeBound)
             {
-                autoPosition = 1;
-                DESIRED_TAG_ID = 4;
+                autoPosition = 3;
+                DESIRED_TAG_ID = 7;
             }
             opMode.telemetry.addData("Auto position: ", autoPosition);
         }
@@ -679,7 +681,7 @@ public class  UniversalControlClass {
             //pick a spot
             opMode.telemetry.addData("!!Team Art NOT DETECTED!! ", "DEFAULT TO CENTER");
             autoPosition = 2;
-            DESIRED_TAG_ID = 5;
+            DESIRED_TAG_ID = 6;
         }
     }
     public void LaunchAirplane() {
