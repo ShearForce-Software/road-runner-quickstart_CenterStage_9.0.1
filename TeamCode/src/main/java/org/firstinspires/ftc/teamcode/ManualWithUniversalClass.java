@@ -21,6 +21,12 @@ public class ManualWithUniversalClass extends LinearOpMode {
             while (opModeIsActive()) {
                 theRobot.driveControlsFieldCentric();
                 theRobot.PickupRoutine();
+                if(gamepad1.dpad_left) {
+                    theRobot.driveControlsRobotCentric();
+                }
+                if(gamepad1.dpad_right){
+                    theRobot.driveControlsFieldCentric();
+                }
                 //theRobot.CheckForSlideBottom();
                 if (gamepad2.right_bumper) { // intake in
                     theRobot.EnableAutoIntake();
