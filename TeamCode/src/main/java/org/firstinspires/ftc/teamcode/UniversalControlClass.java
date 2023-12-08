@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -45,6 +46,7 @@ public class  UniversalControlClass {
     CRServo intakeRight;
     RevColorSensorV3 leftColorSensor;
     RevColorSensorV3 rightColorSensor;
+    RevColorSensorV3 clawDistanceSensor;
     HuskyLens huskyLens;
     IMU imu;
     Servo   grabberLeft;
@@ -139,6 +141,7 @@ public class  UniversalControlClass {
 
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
         rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
+        clawDistanceSensor = hardwareMap.get(RevColorSensorV3.class, "ClawSensor");
         //InitBlinkin(hardwareMap);
         huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens1");
 
@@ -472,11 +475,80 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("Right Hopper: ", rightColorSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.addData("LeftScissor: ", leftScissor.getPower());
         opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
-
+        opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.addData("WRIST_GRAB_PIXEL_POS: ", WRIST_GRAB_PIXEL_POS);
 
     }
+    public void StopNearBoard(){
+        while(clawDistanceSensor.getDistance(DistanceUnit.MM) > 30){
+            moveRobot(-.25,0.0,0);
+            opMode.sleep(100);
+            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 30){
+                moveRobot(0.0,0.0,0);
 
+            }
+        }
+    }
+    public void moveRobot(double x, double y, double yaw) {
+        // Calculate wheel powers.
+        double leftFrontPower    =  x -y -yaw;
+        double rightFrontPower   =  x +y +yaw;
+        double leftBackPower     =  x +y -yaw;
+        double rightBackPower    =  x -y +yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the wheels.
+        leftFront.setPower(leftFrontPower *.5);
+        rightFront.setPower(rightFrontPower *.5);
+        leftRear.setPower(leftBackPower *.5);
+        rightRear.setPower(rightBackPower *.5);
+    }
+    public void DriveToTag() {
+        double drive = 0.0;        // Desired forward power/speed (-1 to +1)
+        double strafe = 0.0;        // Desired strafe power/speed (-1 to +1)
+        double turn = 0.0;        // Desired turning power/speed (-1 to +1)
+
+        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+        NavToTag();
+        double headingError = desiredTag.ftcPose.bearing;
+
+        double timeout = opMode.getRuntime() + 5;
+
+        while ((rangeError > DESIRED_DISTANCE) &&
+                ((headingError > 2.0) || (headingError < -2.0)) &&
+                ((yawError > 2.0) || (yawError < -2.0)) && (opMode.getRuntime() < timeout)) {
+            // Determine heading, range and Yaw (tag image rotation) errors
+            NavToTag();
+            headingError = desiredTag.ftcPose.bearing;
+
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+            drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+            opMode.telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+            opMode.telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+            opMode.telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
+            opMode.telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
+            opMode.telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+            opMode.telemetry.update();
+
+            // Apply desired axes motions to the drivetrain.
+            moveRobot(drive, strafe, turn);
+            opMode.sleep(10);
+        }
+    }
     public void SetScissorLiftPower(double power){
         leftScissor.setPower(power);
         rightScissor.setPower(power);

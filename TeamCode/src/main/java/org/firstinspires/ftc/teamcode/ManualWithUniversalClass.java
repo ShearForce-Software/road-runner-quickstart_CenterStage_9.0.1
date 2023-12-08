@@ -19,6 +19,10 @@ public class ManualWithUniversalClass extends LinearOpMode {
 
         try {
             while (opModeIsActive()) {
+                if (isStopRequested()){
+                    theRobot.ServoStop();
+                    sleep(100);
+                }
                 theRobot.driveControlsFieldCentric();
                 theRobot.PickupRoutine();
                 if(gamepad1.dpad_left) {
@@ -30,6 +34,9 @@ public class ManualWithUniversalClass extends LinearOpMode {
                 //theRobot.CheckForSlideBottom();
                 if (gamepad2.right_bumper) { // intake in
                     theRobot.EnableAutoIntake();
+                }
+                if (gamepad1.b){
+                    theRobot.StopNearBoard();
                 }
                 if (gamepad2.dpad_left) {
                     theRobot.ServoOuttake();
