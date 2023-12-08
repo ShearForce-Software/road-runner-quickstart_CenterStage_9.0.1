@@ -4,12 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.UniversalControlClass;
-
 @TeleOp(name = "1 Manual Control")
 public class ManualWithUniversalClass extends LinearOpMode {
     UniversalControlClass theRobot = new UniversalControlClass(true, true, this);
     static final double SCALE = 0.001;
-
     public void runOpMode() {
         theRobot.Init(this.hardwareMap);
         theRobot.ManualStartPos();
@@ -23,6 +21,12 @@ public class ManualWithUniversalClass extends LinearOpMode {
             while (opModeIsActive()) {
                 theRobot.driveControlsFieldCentric();
                 theRobot.PickupRoutine();
+                if(gamepad1.dpad_left) {
+                    theRobot.driveControlsRobotCentric();
+                }
+                if(gamepad1.dpad_right){
+                    theRobot.driveControlsFieldCentric();
+                }
                 //theRobot.CheckForSlideBottom();
                 if (gamepad2.right_bumper) { // intake in
                     theRobot.EnableAutoIntake();
@@ -63,21 +67,29 @@ public class ManualWithUniversalClass extends LinearOpMode {
                     theRobot.LaunchAirplane();
                 }
 
-                if (gamepad2.left_stick_y < -0.10) {
-                    theRobot.SetSlidePower(-.5);
-                } else if (gamepad2.left_stick_y > 0.1) {
-                    theRobot.SetSlidePower(.5);
-                } else if (gamepad2.dpad_up) {
-                    theRobot.SetSlidePower(0);
-                }
+            if (gamepad2.left_stick_y < -0.10)
+            {
+                theRobot.SetSlidePower(-.5);
+            }
+            else if (gamepad2.left_stick_y > 0.1)
+            {
+                theRobot.SetSlidePower(.5);
+            }
+            else if (gamepad2.dpad_up)
+            {
+                theRobot.SetSlidePower(0);
+            }
 
-                if (gamepad2.right_stick_x > 0.1) {
-                    theRobot.ArmWrist(theRobot.getWristPosition() + 0.01);
-                    theRobot.SpecialSleep(150);
-                } else if (gamepad2.right_stick_x < -0.1) {
-                    theRobot.ArmWrist(theRobot.getWristPosition() - 0.01);
-                    theRobot.SpecialSleep(150);
-                }
+            if (gamepad2.right_stick_x > 0.1)
+            {
+                theRobot.ArmWrist(theRobot.getWristPosition() + 0.01);
+                theRobot.SpecialSleep(150);
+            }
+            else if (gamepad2.right_stick_x < -0.1)
+            {
+                theRobot.ArmWrist(theRobot.getWristPosition() - 0.01);
+                theRobot.SpecialSleep(150);
+            }
 
                 if (gamepad1.left_trigger != 0) {
                     theRobot.SetScissorLiftPower(gamepad1.left_trigger);
@@ -110,6 +122,5 @@ public class ManualWithUniversalClass extends LinearOpMode {
             // throw the exception higher for other handlers to run
             throw e;
         }
-
     }
 }
