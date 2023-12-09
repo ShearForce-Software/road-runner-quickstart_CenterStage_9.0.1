@@ -148,12 +148,14 @@ public class  UniversalControlClass {
         //TODO: set motor direction, zero power brake behavior, stop and reset encoders, etc
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.REVERSE);
-        armRotLeft.setDirection(Servo.Direction.REVERSE);
-        armRotRight.setDirection(Servo.Direction.FORWARD);
+        armRotLeft.setDirection(Servo.Direction.FORWARD);  // Updated for Axon: To FORWARD
+        armRotRight.setDirection(Servo.Direction.REVERSE); // Updated for Axon: To REVERSE
         wristLeft.setDirection(Servo.Direction.REVERSE);
+        wristRight.setDirection(Servo.Direction.FORWARD);
         grabberLeft.setDirection(Servo.Direction.REVERSE);
         grabberRight.setDirection(Servo.Direction.FORWARD);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
