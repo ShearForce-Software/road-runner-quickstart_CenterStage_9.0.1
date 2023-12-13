@@ -11,6 +11,7 @@ public class RedLeftAuto extends LinearOpMode {
     public double pixelDeliverFirstPos = 14.5;
 
     Pose2d startPose;
+    int autoPosition = 0;
     MecanumDrive drive;
     public void runOpMode(){
     startPose = new Pose2d(-38.5,-62.5,Math.toRadians(90));
@@ -99,5 +100,63 @@ public class RedLeftAuto extends LinearOpMode {
         control.ReleaseRight();
         control.ReleaseLeft();
         sleep(750);
+    }
+    public void RedLeftTeamArtDelivery()
+    {
+        if (autoPosition == 1) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(270)), Math.toRadians(135))
+                            .build());
+        } else if (autoPosition == 2) {
+
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else if (autoPosition == 3) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(45))
+                            .build());
+        }
+    }
+    public void BlueRightTeamArtPixelDelivery() {
+
+        if (autoPosition == 1) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(270)), Math.toRadians(135))
+                            .build());
+        } else if (autoPosition == 2) {
+
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else if (autoPosition == 3) {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .build());
+        } else {
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(45))
+                            .build());
+        }
     }
 }

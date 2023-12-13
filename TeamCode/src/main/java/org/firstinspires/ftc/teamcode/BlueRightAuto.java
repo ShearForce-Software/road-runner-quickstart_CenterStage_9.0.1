@@ -156,7 +156,7 @@ public class BlueRightAuto extends LinearOpMode {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(270)), Math.toRadians(135))
+                            .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(270)), Math.toRadians(-45))
                             .build());
         } else if (autoPosition == 2) {
 
@@ -175,7 +175,7 @@ public class BlueRightAuto extends LinearOpMode {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
-                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(45))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(225))
                             .build());
         }
     }
