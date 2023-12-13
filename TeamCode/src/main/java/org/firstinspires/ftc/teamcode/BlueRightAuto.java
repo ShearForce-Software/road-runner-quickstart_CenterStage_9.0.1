@@ -44,12 +44,15 @@ public class BlueRightAuto extends LinearOpMode {
         // lock the pixels
         control.GrabPixels();
 
+        // Drives to left, center, or right positions based on team art location.
+        BlueRightTeamArtPixelDelivery();
+
         // drive to the middle floor delivery position
-        Actions.runBlocking(
+       /* Actions.runBlocking(
                 drive.actionBuilder(startPose)
                         .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
                         .build());
-
+    */
         // Drop the LEFT pixel (put PURPLE on LEFT, YELLOW on RIGHT) on the line
         control.DropOnLine();
         // put the arm back in a safe to travel position
@@ -88,6 +91,7 @@ public class BlueRightAuto extends LinearOpMode {
         //            .build());
 
         // Drop the pixel on the board
+      //  BlueBoardDelivery();
         control.ReleaseRight();
         control.ReleaseLeft();
         sleep(750);
@@ -146,13 +150,13 @@ public class BlueRightAuto extends LinearOpMode {
         }
     }
 
-    public void TeamArtPixelDelivery() {
+    public void BlueRightTeamArtPixelDelivery() {
 
         if (autoPosition == 1) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(270)), Math.toRadians(135))
                             .build());
         } else if (autoPosition == 2) {
 
@@ -171,7 +175,7 @@ public class BlueRightAuto extends LinearOpMode {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
-                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(270))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(45))
                             .build());
         }
     }
