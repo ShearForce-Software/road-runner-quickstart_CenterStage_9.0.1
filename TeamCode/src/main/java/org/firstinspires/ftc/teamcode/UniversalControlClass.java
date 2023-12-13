@@ -826,6 +826,18 @@ public class  UniversalControlClass {
         rightFront.setPower(frontRightPower*.75);
         rightRear.setPower(backRightPower*.75);
     }
+    public void RunDriveControls() {
+        if (IsFieldCentric) {
+            driveControlsFieldCentric();
+        }
+        else {
+            driveControlsRobotCentric();
+        }
+    }
+    public void SetFieldCentricMode(boolean fieldCentricEnabled) {
+        IsFieldCentric = fieldCentricEnabled;
+    }
+
     public void SpecialSleep(long milliseconds) {
         for (long stop = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(milliseconds); stop > System.nanoTime(); ) {
             if (!opMode.opModeIsActive() || opMode.isStopRequested()) return;
