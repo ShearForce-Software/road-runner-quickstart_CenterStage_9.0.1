@@ -484,11 +484,11 @@ public class  UniversalControlClass {
         opMode.telemetry.update();
     }
     public void StopNearBoard(){
-        while(clawDistanceSensor.getDistance(DistanceUnit.MM) > 55){
-            moveRobot(-.25,0.0,0);
+        while(clawDistanceSensor.getDistance(DistanceUnit.MM) > 70){
+            moveRobot(-.3,0.0,0);
             ShowSlideTelemetry();
             opMode.sleep(100);
-            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 55){
+            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 70){
                 moveRobot(0.0,0.0,0);
                 break;
             }
