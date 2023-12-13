@@ -9,6 +9,11 @@ public class ManualWithUniversalClass extends LinearOpMode {
     UniversalControlClass theRobot = new UniversalControlClass(true, true, this);
     static final double SCALE = 0.001;
     public void runOpMode() {
+        double armRotationLeftPosition = 0.07;
+        double armRotationRightPosition = 0.07;
+        final double MAX_POS     =  1.0;     // Maximum rotational position
+        final double MIN_POS     =  0.0;     // Minimum rotational position
+        final double MIN_POS_ARM     =  0.04;     // Minimum rotational position
         theRobot.Init(this.hardwareMap);
         theRobot.ManualStartPos();
         theRobot.ShowSlideTelemetry();
@@ -97,6 +102,29 @@ public class ManualWithUniversalClass extends LinearOpMode {
                 theRobot.ArmWrist(theRobot.getWristPosition() - 0.01);
                 theRobot.SpecialSleep(150);
             }
+                // incrementally rotate arm rotation servo
+                if (gamepad2.left_stick_y != 0) {
+                    armRotationLeftPosition += -gamepad2.left_stick_y * SCALE;
+                    armRotationRightPosition += -gamepad2.left_stick_y * SCALE;
+                    if (armRotationLeftPosition >= MAX_POS) {
+                        armRotationLeftPosition = MAX_POS;
+                    }
+                    if (armRotationLeftPosition <= MIN_POS_ARM) {
+
+                        armRotationLeftPosition = MIN_POS_ARM;
+                    }
+                    if (armRotationRightPosition >= MAX_POS) {
+                        armRotationRightPosition = MAX_POS;
+                    }
+                    if (armRotationRightPosition <= MIN_POS_ARM) {
+                        armRotationRightPosition = MIN_POS_ARM;
+                    }
+                    theRobot.armRotLeft.setPosition(armRotationLeftPosition);
+                    theRobot.armRotRight.setPosition(armRotationRightPosition);
+
+
+                }
+
 
                 if (gamepad1.left_trigger != 0) {
                     theRobot.SetScissorLiftPower(gamepad1.left_trigger);

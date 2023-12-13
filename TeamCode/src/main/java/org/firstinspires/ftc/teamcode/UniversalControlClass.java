@@ -83,7 +83,7 @@ public class  UniversalControlClass {
     static final double MAX_WRIST_POS = 1.0;
     static final double MIN_WRIST_POS = 0.0;
     public double WRIST_GRAB_PIXEL_POS = 0.61;
-    public double WRIST_DELIVER_TO_BOARD_POS = 0.13;
+    public double WRIST_DELIVER_TO_BOARD_POS = 1;
     static final double MAX_WHOLE_ARM_POS = 1.0;
     static final double MIN_WHOLE_ARM_POS = 0.04;
     //NAV TO TAG VARIABLES
@@ -209,9 +209,12 @@ public class  UniversalControlClass {
         grabberLeft.setPosition(.72);
     }
     public void DropOnLine(){
-        armRotLeft.setPosition(.96);
-        armRotRight.setPosition(.96);
+        armRotLeft.setPosition(.8);
+        armRotRight.setPosition(.8);
         SpecialSleep(500);
+        wristLeft.setPosition(1);
+        wristRight.setPosition(1);
+        SpecialSleep(250);
         grabberRight.setPosition(0);
         SpecialSleep(500);
     }
@@ -239,8 +242,8 @@ public class  UniversalControlClass {
         wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
     }
     public void ReadyToLiftSlides(){ // slight move before lifting slides
-        armRotLeft.setPosition(.09);
-        armRotRight.setPosition(.09);
+        armRotLeft.setPosition(.08);
+        armRotRight.setPosition(.08);
         SpecialSleep(150);
         //wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
         //wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
@@ -263,8 +266,8 @@ public class  UniversalControlClass {
         SetSlidePower(SLIDE_POWER);
     }
     public void DeliverPixelToBoardPos(){
-        armRotLeft.setPosition(.8);
-        armRotRight.setPosition(.8);
+        armRotLeft.setPosition(.58);
+        armRotRight.setPosition(.58);
         SpecialSleep(150);
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
@@ -478,15 +481,16 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
         opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.addData("WRIST_GRAB_PIXEL_POS: ", WRIST_GRAB_PIXEL_POS);
-
+        opMode.telemetry.update();
     }
     public void StopNearBoard(){
-        while(clawDistanceSensor.getDistance(DistanceUnit.MM) > 30){
+        while(clawDistanceSensor.getDistance(DistanceUnit.MM) > 55){
             moveRobot(-.25,0.0,0);
+            ShowSlideTelemetry();
             opMode.sleep(100);
-            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 30){
+            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 55){
                 moveRobot(0.0,0.0,0);
-
+                break;
             }
         }
     }
