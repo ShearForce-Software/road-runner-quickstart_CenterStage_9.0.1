@@ -82,8 +82,8 @@ public class  UniversalControlClass {
     public double wholeArmPosition = 0.04;
     static final double MAX_WRIST_POS = 1.0;
     static final double MIN_WRIST_POS = 0.0;
-    public double WRIST_GRAB_PIXEL_POS = 0.61;
-    public double WRIST_DELIVER_TO_BOARD_POS = 1;
+    public double WRIST_GRAB_PIXEL_POS = 0.45;
+    public double WRIST_DELIVER_TO_BOARD_POS = 0.85;
     static final double MAX_WHOLE_ARM_POS = 1.0;
     static final double MIN_WHOLE_ARM_POS = 0.04;
     //NAV TO TAG VARIABLES
@@ -199,21 +199,21 @@ public class  UniversalControlClass {
     public void AutoStartPos(){
         grabberLeft.setPosition(0);
         grabberRight.setPosition(0);
-        armRotLeft.setPosition(.17);
-        armRotRight.setPosition(.17);
-        wristLeft.setPosition(MIN_WRIST_POS);  // Point straight up
-        wristRight.setPosition(MIN_WRIST_POS);
+        armRotLeft.setPosition(.16);
+        armRotRight.setPosition(.16);
+        wristLeft.setPosition(.85);
+        wristRight.setPosition(.85);
     }
     public void GrabPixels(){
         grabberRight.setPosition(.72);
         grabberLeft.setPosition(.72);
     }
     public void DropOnLine(){
-        armRotLeft.setPosition(.8);
-        armRotRight.setPosition(.8);
+        armRotLeft.setPosition(.72);
+        armRotRight.setPosition(.72);
         SpecialSleep(500);
-        wristLeft.setPosition(1);
-        wristRight.setPosition(1);
+        wristLeft.setPosition(.85);
+        wristRight.setPosition(.85);
         SpecialSleep(250);
         grabberRight.setPosition(0);
         SpecialSleep(500);
@@ -223,8 +223,8 @@ public class  UniversalControlClass {
         grabberRight.setPosition(.72);
         armRotLeft.setPosition(.16);
         armRotRight.setPosition(.16);
-        wristLeft.setPosition(.06);
-        wristRight.setPosition(.06);
+        wristLeft.setPosition(.85);
+        wristRight.setPosition(.85);
     }
     public void ManualStartPos(){
         armRotLeft.setPosition(.07);

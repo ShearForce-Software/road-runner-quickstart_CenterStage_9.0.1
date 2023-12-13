@@ -79,14 +79,14 @@ public class ManualWithUniversalClass extends LinearOpMode {
                     theRobot.LaunchAirplane();
                 }
 
-            if (gamepad2.left_stick_y < -0.10)
-            {
-                theRobot.SetSlidePower(-.5);
-            }
-            else if (gamepad2.left_stick_y > 0.1)
-            {
-                theRobot.SetSlidePower(.5);
-            }
+//            if (gamepad2.left_stick_y < -0.10)
+//            {
+//                theRobot.SetSlidePower(-.5);
+//            }
+//            else if (gamepad2.left_stick_y > 0.1)
+//            {
+//                theRobot.SetSlidePower(.5);
+//            }
             else if (gamepad2.dpad_up)
             {
                 theRobot.SetSlidePower(0);
