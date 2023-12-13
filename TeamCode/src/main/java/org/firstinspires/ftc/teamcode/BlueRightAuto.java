@@ -121,7 +121,7 @@ public class BlueRightAuto extends LinearOpMode {
 
     //  }
     public void BlueBoardDelivery() {
-
+        // Look for potential errors
         if (autoPosition == 1) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
