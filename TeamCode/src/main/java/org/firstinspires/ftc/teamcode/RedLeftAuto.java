@@ -107,26 +107,26 @@ public class RedLeftAuto extends LinearOpMode {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(90)), Math.toRadians(135))
+                            .splineToLinearHeading(new Pose2d(-38.5, -18.5, Math.toRadians(90)), Math.toRadians(135))
                             .build());
         } else if (control.autoPosition == 2) {
 
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(90)), Math.toRadians(90))
+                            .splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
                             .build());
         } else if (control.autoPosition == 3) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(90)), Math.toRadians(45))
+                            .splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(45))
                             .build());
         } else {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(90)), Math.toRadians(90))
+                            .splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
                             .build());
         }
     }
