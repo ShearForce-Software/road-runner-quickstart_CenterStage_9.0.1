@@ -474,13 +474,11 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("Arm Servo Left: ", armRotLeft.getPosition());
         opMode.telemetry.addData("Arm Servo Right: ", armRotRight.getPosition());
         opMode.telemetry.addData("Wrist Position: ", wristLeft.getPosition());
-        opMode.telemetry.addData("Whole Arm Position: ", wholeArmPosition);
         opMode.telemetry.addData("Left Hopper: ", leftColorSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.addData("Right Hopper: ", rightColorSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.addData("LeftScissor: ", leftScissor.getPower());
         opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
         opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
-        opMode.telemetry.addData("WRIST_GRAB_PIXEL_POS: ", WRIST_GRAB_PIXEL_POS);
         opMode.telemetry.update();
     }
     public void StopNearBoard(){
