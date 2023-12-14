@@ -16,7 +16,7 @@ public class BlueRightAuto extends LinearOpMode {
     private HuskyLens huskyLens;
     private final int READ_PERIOD = 1;
     int leftRightSpikeBound = 150;
-    int autoPosition = 0;
+    //int autoPosition = 0;
     public double pixelDeliverFirstPos = 14.5;
     MecanumDrive drive;
     Pose2d startPose;
@@ -126,20 +126,20 @@ public class BlueRightAuto extends LinearOpMode {
     //  }
     public void BlueBoardDelivery() {
         // Look for potential errors
-        if (autoPosition == 1) {
+        if (control.autoPosition == 1) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
                             .splineToLinearHeading(new Pose2d(52.2, 34, Math.toRadians(270)), Math.toRadians(270))
                             .build());
-        } else if (autoPosition == 2) {
+        } else if (control.autoPosition == 2) {
 
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
                             .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(270))
                             .build());
-        } else if (autoPosition == 3) {
+        } else if (control.autoPosition == 3) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
@@ -156,20 +156,20 @@ public class BlueRightAuto extends LinearOpMode {
 
     public void BlueRightTeamArtPixelDelivery() {
 
-        if (autoPosition == 1) {
+        if (control.autoPosition == 1) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(270)), Math.toRadians(-45))
                             .build());
-        } else if (autoPosition == 2) {
+        } else if (control.autoPosition == 2) {
 
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
                             .build());
-        } else if (autoPosition == 3) {
+        } else if (control.autoPosition == 3) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
