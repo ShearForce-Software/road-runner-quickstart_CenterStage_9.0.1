@@ -130,26 +130,26 @@ public class BlueRightAuto extends LinearOpMode {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
-                            .splineToLinearHeading(new Pose2d(52.2, 34, Math.toRadians(270)), Math.toRadians(270))
+                            .splineToLinearHeading(new Pose2d(52.2, 34, Math.toRadians(180)), Math.toRadians(0))
                             .build());
         } else if (control.autoPosition == 2) {
 
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
-                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(270))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(180)), Math.toRadians(0))
                             .build());
         } else if (control.autoPosition == 3) {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
-                            .splineToLinearHeading(new Pose2d(52.2, 22, Math.toRadians(270)), Math.toRadians(270))
+                            .splineToLinearHeading(new Pose2d(52.2, 22, Math.toRadians(180)), Math.toRadians(0))
                             .build());
         } else {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
-                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(270))
+                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(180)), Math.toRadians(0))
                             .build());
         }
     }
