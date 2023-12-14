@@ -58,8 +58,8 @@ public class RedLeftAuto extends LinearOpMode {
             .build());
 
         // Rotate Arm slightly so can flip arm over or raise safely
-        control.ReadyToLiftSlides();
-        sleep(150);
+        //control.ReadyToLiftSlides();
+        //sleep(150);
 
         //move arm, slides, drive, and release pixels to board
         DeliverPixelToBoardRoutine();

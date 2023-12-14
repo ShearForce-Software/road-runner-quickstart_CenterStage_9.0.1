@@ -57,6 +57,7 @@ public class BlueRightAuto extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.SafeStow();
+        control.SpecialSleep(10000);
 
         // drive to the backboard area
         Actions.runBlocking(
@@ -68,11 +69,14 @@ public class BlueRightAuto extends LinearOpMode {
                         .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
                         //  .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(180)), Math.toRadians(0))
                         .build());
+
+        // drive to the correct backboard spot based on the team art
         BlueBoardDelivery();
+
+        //control.ReadyToLiftSlides();
+        //sleep(150);
         // Raise Arm to delivery position
-        control.ReadyToLiftSlides();
-        sleep(150);
-        control.SlidesLow();
+        control.SlidesToAuto();
         sleep(150);
         control.DeliverPixelToBoardPos();
 
@@ -174,8 +178,8 @@ public class BlueRightAuto extends LinearOpMode {
         } else {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
-                            .splineToLinearHeading(new Pose2d(52.2, 28, Math.toRadians(270)), Math.toRadians(225))
+                    drive.actionBuilder(startPose)
+                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
                             .build());
         }
     }
