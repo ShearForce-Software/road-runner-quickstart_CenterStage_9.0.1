@@ -55,12 +55,12 @@ public class RedRightAuto extends LinearOpMode {
     public void RedBoardDelivery() {
         // Look for potential errors
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(50,-34, Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,-22, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(38, -34, Math.toRadians(180)), Math.toRadians(90))
-                            .splineToLinearHeading(new Pose2d(50, -34, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToLinearHeading(new Pose2d(38, -22, Math.toRadians(180)), Math.toRadians(90))
+                            .splineToLinearHeading(deliverToBoardPose, Math.toRadians(180))
                             .build());
         } else if (control.autoPosition == 2) {
             deliverToBoardPose = new Pose2d(50,-28, Math.toRadians(180));
@@ -68,15 +68,15 @@ public class RedRightAuto extends LinearOpMode {
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(new Pose2d(38, -28, Math.toRadians(180)), Math.toRadians(90))
-                            .splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToLinearHeading(deliverToBoardPose, Math.toRadians(180))
                             .build());
         } else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(50,-22, Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,-34, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(38, 22, Math.toRadians(180)), Math.toRadians(90))
-                            .splineToLinearHeading(new Pose2d(50, 22, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToLinearHeading(new Pose2d(38, -34, Math.toRadians(180)), Math.toRadians(90))
+                            .splineToLinearHeading(deliverToBoardPose, Math.toRadians(180))
                             .build());
         } else {
             deliverToBoardPose = new Pose2d(50,-28, Math.toRadians(180));
@@ -84,7 +84,7 @@ public class RedRightAuto extends LinearOpMode {
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(new Pose2d(38, 34, Math.toRadians(180)), Math.toRadians(90))
-                            .splineToLinearHeading(new Pose2d(50, 34, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToLinearHeading(deliverToBoardPose, Math.toRadians(180))
                             .build());
         }
     }
@@ -103,8 +103,8 @@ public class RedRightAuto extends LinearOpMode {
                        //Actions.runBlocking(
                             //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                             drive.actionBuilder(deliverToBoardPose)
-                                    .splineToLinearHeading(new Pose2d(12, 35, Math.toRadians(180)), Math.toRadians(180))
-                                    .splineToLinearHeading(new Pose2d(12, 36, Math.toRadians(270)), Math.toRadians(180))
+                                    .splineToLinearHeading(new Pose2d(12, -35, Math.toRadians(180)), Math.toRadians(180))
+                                    .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                                     .build());
         } else if (control.autoPosition == 1) {
             deliverToFloorPose = new Pose2d(-12, -35, Math.toRadians(180));

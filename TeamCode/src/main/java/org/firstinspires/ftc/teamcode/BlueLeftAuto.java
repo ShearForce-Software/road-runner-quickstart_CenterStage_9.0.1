@@ -98,12 +98,12 @@ public class BlueLeftAuto extends LinearOpMode {
                             .splineToLinearHeading (deliverToFloorPose, Math.toRadians(180))
                             .build());
         } else if (control.autoPosition == 2) {
-            deliverToFloorPose = new Pose2d(14.5, 12.5, Math.toRadians(270));
+            deliverToFloorPose = new Pose2d(12, 36, Math.toRadians(90));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(deliverToBoardPose)
                             .splineToLinearHeading(new Pose2d(12, 35, Math.toRadians(180)), Math.toRadians(180))
-                            .splineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)), Math.toRadians(180))
+                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                             .build());
         } else if (control.autoPosition == 3) {
             deliverToFloorPose = new Pose2d(-12, 35, Math.toRadians(180));
@@ -113,10 +113,11 @@ public class BlueLeftAuto extends LinearOpMode {
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                             .build());
         } else {
+            deliverToFloorPose = new Pose2d(10.5, 35, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(deliverToBoardPose)
-                            .splineToLinearHeading(new Pose2d(14.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                             .build());
         }
     }
