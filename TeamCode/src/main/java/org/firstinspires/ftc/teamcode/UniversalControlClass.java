@@ -75,7 +75,7 @@ public class  UniversalControlClass {
     public static final double SLIDE_POWER   = 0.75;
     public static final int SLIDE_MAX_HEIGHT = -2850;
     public static final int SLIDE_MIN_HEIGHT = 0;
-    public static final int SLIDE_AUTO_HEIGHT = -500;
+    public static final int SLIDE_AUTO_HEIGHT = -350;
     public static final int SLIDE_LOW_HEIGHT = -1300;
     public static final int SLIDE_MEDIUM_HEIGHT = -2000;
     public double wristPosition = 0.0;
@@ -281,7 +281,7 @@ public class  UniversalControlClass {
         if (AutoIntake){
             ServoIntake();
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)){
-                opMode.gamepad1.rumble(1);
+                opMode.gamepad1.rumble(1000);
                 ServoStop();
                 GrabPixelPos();
                 SpecialSleep(500);
@@ -484,11 +484,11 @@ public class  UniversalControlClass {
     }
     public void StopNearBoard(){
         double timeout = opMode.getRuntime() + 3;
-        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 70) && (opMode.getRuntime() < timeout)){
-            moveRobot(-.6,0.0,0);
+        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 80) && (opMode.getRuntime() < timeout)){
+            moveRobot(-.55,0.0,0);
             ShowSlideTelemetry();
             opMode.sleep(100);
-            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 70){
+            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 80){
                 moveRobot(0.0,0.0,0);
                 opMode.sleep(100);
                 ReleaseLeft();

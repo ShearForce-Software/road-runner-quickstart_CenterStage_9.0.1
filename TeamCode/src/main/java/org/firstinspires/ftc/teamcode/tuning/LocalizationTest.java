@@ -13,7 +13,7 @@ public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-35.5, 62.5, Math.toRadians(270)));
+            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, 62.5, Math.toRadians(270)));
 
             waitForStart();
 
