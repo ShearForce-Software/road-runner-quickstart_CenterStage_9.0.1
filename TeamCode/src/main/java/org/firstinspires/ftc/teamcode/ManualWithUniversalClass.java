@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.UniversalControlClass;
 @TeleOp(name = "1 Manual Control")
@@ -141,17 +142,16 @@ public class ManualWithUniversalClass extends LinearOpMode {
                 if (gamepad2.dpad_up)
                 {
                     // slowly raise the slides up
-                    theRobot.SetSlidePower(-.5);
+                    theRobot.leftSlide.setTargetPosition(-1800);
+                    theRobot.rightSlide.setTargetPosition(-1800);
+                    theRobot.leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    theRobot.rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    theRobot.SetSlidePower(.5);
                 }
                 else if (gamepad2.dpad_down)
                 {
                     // slowly lower the slides
-                    theRobot.SetSlidePower(.5);
-                }
-                else if (gamepad2.dpad_left)
-                {
-                    // stop the slides
-                    theRobot.SetSlidePower(0);
+                    theRobot.SlidesDown();
                 }
                 // special combo (left tiny button and top right button together)
                 if (gamepad2.back && gamepad2.y) {

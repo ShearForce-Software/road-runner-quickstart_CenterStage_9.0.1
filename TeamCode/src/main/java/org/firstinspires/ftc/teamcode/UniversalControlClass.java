@@ -132,7 +132,6 @@ public class  UniversalControlClass {
         leftScissor = hardwareMap.get(DcMotor.class, "centerOdometry");
         rightScissor = hardwareMap.get(DcMotor.class, "rightScissor");
         leftScissor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightScissor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftScissor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightScissor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftScissor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -169,6 +168,7 @@ public class  UniversalControlClass {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
         imu.initialize(parameters);
+        droneLauncher.setPosition(.1);
     }
 
     public void WebcamInit (HardwareMap hardwareMap){
@@ -767,9 +767,10 @@ public class  UniversalControlClass {
     public void LaunchAirplane() {
         if (droneLauncher.getPosition() < 0.5) {
             droneLauncher.setPosition(1);
+
             SpecialSleep(150);
         } else {
-            droneLauncher.setPosition(0);
+            droneLauncher.setPosition(0.1);
             SpecialSleep(150);
         }
     }

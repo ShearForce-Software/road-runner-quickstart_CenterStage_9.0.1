@@ -49,6 +49,7 @@ public class BlueRightAuto extends LinearOpMode {
         // put the arm back in a safe to travel position
         control.SafeStow();
         //control.SpecialSleep(10000);
+        control.SpecialSleep(8000);
 
         // drive to the backboard area
         Actions.runBlocking(
