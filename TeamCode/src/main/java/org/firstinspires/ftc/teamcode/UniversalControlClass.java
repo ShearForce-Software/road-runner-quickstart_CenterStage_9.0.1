@@ -281,6 +281,7 @@ public class  UniversalControlClass {
         if (AutoIntake){
             ServoIntake();
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)){
+                opMode.gamepad1.rumble(1);
                 ServoStop();
                 GrabPixelPos();
                 SpecialSleep(500);
@@ -482,12 +483,16 @@ public class  UniversalControlClass {
         opMode.telemetry.update();
     }
     public void StopNearBoard(){
-        while(clawDistanceSensor.getDistance(DistanceUnit.MM) > 70){
-            moveRobot(-.3,0.0,0);
+        double timeout = opMode.getRuntime() + 3;
+        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 70) && (opMode.getRuntime() < timeout)){
+            moveRobot(-.6,0.0,0);
             ShowSlideTelemetry();
             opMode.sleep(100);
             if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 70){
                 moveRobot(0.0,0.0,0);
+                opMode.sleep(100);
+                ReleaseLeft();
+                ReleaseRight();
                 break;
             }
         }
