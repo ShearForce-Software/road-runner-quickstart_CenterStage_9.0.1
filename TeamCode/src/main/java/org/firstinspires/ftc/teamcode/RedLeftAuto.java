@@ -22,7 +22,7 @@ public class RedLeftAuto extends LinearOpMode {
 
         telemetry.update();
 
-        control.WebcamInit(hardwareMap);
+        //control.WebcamInit(hardwareMap);
         telemetry.update();
 
         while(!isStarted()){
@@ -44,7 +44,7 @@ public class RedLeftAuto extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.SafeStow();
-        control.SpecialSleep(10000);
+        //control.SpecialSleep(10000);
 
         // drive to the backboard area
         Actions.runBlocking(

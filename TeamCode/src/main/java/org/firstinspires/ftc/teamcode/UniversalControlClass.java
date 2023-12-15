@@ -75,7 +75,7 @@ public class  UniversalControlClass {
     public static final double SLIDE_POWER   = 0.75;
     public static final int SLIDE_MAX_HEIGHT = -2850;
     public static final int SLIDE_MIN_HEIGHT = 0;
-    public static final int SLIDE_AUTO_HEIGHT = -750;
+    public static final int SLIDE_AUTO_HEIGHT = -500;
     public static final int SLIDE_LOW_HEIGHT = -1300;
     public static final int SLIDE_MEDIUM_HEIGHT = -2000;
     public double wristPosition = 0.0;

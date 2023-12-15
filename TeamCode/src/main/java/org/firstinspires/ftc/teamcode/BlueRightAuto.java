@@ -20,9 +20,11 @@ public class BlueRightAuto extends LinearOpMode {
     public double pixelDeliverFirstPos = 14.5;
     MecanumDrive drive;
     Pose2d startPose;
+    Pose2d deliverToFloorPose;
+    Pose2d deliverToBoardPose;
 
     public void runOpMode() {
-        startPose = new Pose2d(-38.5, 62.5, Math.toRadians(270));
+        startPose = new Pose2d(-35.5, 62.5, Math.toRadians(270));
 
         drive = new MecanumDrive(hardwareMap, startPose);
 
@@ -32,7 +34,7 @@ public class BlueRightAuto extends LinearOpMode {
 
         telemetry.update();
 
-        control.WebcamInit(hardwareMap);
+        //control.WebcamInit(hardwareMap);
         telemetry.update();
 
         while (!isStarted()) {
@@ -57,11 +59,11 @@ public class BlueRightAuto extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.SafeStow();
-        control.SpecialSleep(10000);
+        //control.SpecialSleep(10000);
 
         // drive to the backboard area
         Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(-38.5, 12.5, Math.toRadians(270)))
+                drive.actionBuilder(deliverToFloorPose)
                         .splineToLinearHeading(new Pose2d(-38, 9, Math.toRadians(270)), Math.toRadians(270))
                         //.setTangent(0)
                         .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
@@ -81,13 +83,13 @@ public class BlueRightAuto extends LinearOpMode {
         control.DeliverPixelToBoardPos();
 
         // try to find the right April Tag
-        control.NavToTag();
+       /* control.NavToTag();
         telemetry.addData("Target - ", control.DESIRED_TAG_ID);
         telemetry.addData("rangeError: ", control.rangeError);
         telemetry.addData("yawError: ", control.yawError);
         telemetry.update();
         sleep(2000); //TEMP to debug the values
-
+*/
         // adjust the position to go the correct position for the april tag
         //Actions.runBlocking(
         //       drive.actionBuilder(new Pose2d(50, 36, Math.toRadians(180)))
@@ -156,24 +158,35 @@ public class BlueRightAuto extends LinearOpMode {
 
     public void BlueRightTeamArtPixelDelivery() {
 
+        Pose2d aTempPose = new Pose2d(-38.5, 21.5, Math.toRadians(270));
+
+        Actions.runBlocking(
+                //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                drive.actionBuilder(startPose)
+                        .splineToLinearHeading(aTempPose, Math.toRadians(270))
+                        .build());
+
         if (control.autoPosition == 1) {
+            deliverToFloorPose = new Pose2d(-34.5, 32, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 18.5, Math.toRadians(270)), Math.toRadians(-45))
+                    drive.actionBuilder(aTempPose)
+                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                             .build());
         } else if (control.autoPosition == 2) {
+            deliverToFloorPose = new Pose2d(-38.5, 12.5, Math.toRadians(270));
 
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                    drive.actionBuilder(aTempPose)
+                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
                             .build());
         } else if (control.autoPosition == 3) {
+            deliverToFloorPose = new Pose2d(-38.5, 20.5, Math.toRadians(315));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                    drive.actionBuilder(aTempPose)
+                            .splineToLinearHeading (deliverToFloorPose, Math.toRadians(315))
                             .build());
         } else {
             Actions.runBlocking(
