@@ -16,6 +16,7 @@ public class BlueRightAuto extends LinearOpMode {
     MecanumDrive drive;
     Pose2d startPose;
     Pose2d deliverToFloorPose;
+    Pose2d deliverToBoardPose;
 
     public void runOpMode() {
         startPose = new Pose2d(-35.5, 62.5, Math.toRadians(270));
@@ -71,9 +72,13 @@ public class BlueRightAuto extends LinearOpMode {
         control.SlidesToAuto();
         sleep(150);
         control.DeliverPixelToBoardPos();
-        control.StopNearBoard();
+        control.StopNearBoardAuto();
         sleep(200);
 
+        Actions.runBlocking(
+                drive.actionBuilder(deliverToBoardPose)
+                        .lineToX(47)
+                        .build());
         // Drop the pixel on the board
         control.ReleaseRight();
         control.ReleaseLeft();
@@ -95,6 +100,7 @@ public class BlueRightAuto extends LinearOpMode {
     public void BlueBoardDelivery() {
         // Look for potential errors
         if (control.autoPosition == 1) {
+            deliverToBoardPose = new Pose2d(50,34,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
@@ -102,7 +108,7 @@ public class BlueRightAuto extends LinearOpMode {
                             .splineToLinearHeading(new Pose2d(50, 34, Math.toRadians(180)), Math.toRadians(0))
                             .build());
         } else if (control.autoPosition == 2) {
-
+            deliverToBoardPose = new Pose2d(50,28,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
@@ -110,6 +116,7 @@ public class BlueRightAuto extends LinearOpMode {
                             .splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(180)), Math.toRadians(0))
                             .build());
         } else if (control.autoPosition == 3) {
+            deliverToBoardPose = new Pose2d(50,22,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
@@ -117,6 +124,7 @@ public class BlueRightAuto extends LinearOpMode {
                             .splineToLinearHeading(new Pose2d(50, 22, Math.toRadians(180)), Math.toRadians(0))
                             .build());
         } else {
+            deliverToBoardPose = new Pose2d(50,28,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))

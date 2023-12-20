@@ -40,15 +40,7 @@ public class ManualWithUniversalClass extends LinearOpMode {
                    *************************************************
                  */
                 // Drive Controls uses left_stick_y, left_stick_x, and right_stick_x
-                theRobot.RunDriveControls();
-                if(gamepad1.dpad_left) {
-                    // set drive controls to Robot Centric
-                    theRobot.SetFieldCentricMode(false);
-                }
-                if(gamepad1.dpad_right){
-                    // set drive controls to Field Centric
-                    theRobot.SetFieldCentricMode(true);
-                }
+                theRobot.driveControlsFieldCentric();
                 if (gamepad1.a && !gamepad1.start) {
                     theRobot.LaunchAirplane();
                 }

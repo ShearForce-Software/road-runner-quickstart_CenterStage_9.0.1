@@ -497,6 +497,21 @@ public class  UniversalControlClass {
             }
         }
     }
+    public void StopNearBoardAuto(){
+        double timeout = opMode.getRuntime() + 3;
+        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 80) && (opMode.getRuntime() < timeout)){
+            moveRobot(-.55,0.0,0);
+            ShowSlideTelemetry();
+            opMode.sleep(100);
+            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 80){
+                moveRobot(0.0,0.0,0);
+                opMode.sleep(100);
+                ReleaseLeft();
+                ReleaseRight();
+                break;
+            }
+        }
+    }
     public void moveRobot(double x, double y, double yaw) {
         // Calculate wheel powers.
         double leftFrontPower    =  x -y -yaw;
@@ -767,7 +782,6 @@ public class  UniversalControlClass {
     public void LaunchAirplane() {
         if (droneLauncher.getPosition() < 0.5) {
             droneLauncher.setPosition(1);
-
             SpecialSleep(150);
         } else {
             droneLauncher.setPosition(0.1);
