@@ -4,8 +4,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Right", preselectTeleOp = "1 Manual Control")
-public class RedRightAuto extends LinearOpMode {
+@Autonomous(name="Red Board", preselectTeleOp = "1 Manual Control")
+public class RedBoardAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     MecanumDrive drive;
     Pose2d startPose;
@@ -36,7 +36,7 @@ public class RedRightAuto extends LinearOpMode {
         control.DeliverPixelToBoardPos();
         control.ReleaseLeft();
         sleep(400);
-        control.ResetArm();
+        control.ResetArmAuto();
         sleep(400);
         RedRightTeamArtPixelDelivery();
         control.DropOnLine();

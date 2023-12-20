@@ -21,6 +21,7 @@ public class ManualWithUniversalClass extends LinearOpMode {
         theRobot.Init(this.hardwareMap);
         theRobot.ManualStartPos();
         theRobot.ShowSlideTelemetry();
+
         telemetry.update();
         waitForStart();
 

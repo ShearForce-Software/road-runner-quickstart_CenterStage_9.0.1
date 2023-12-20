@@ -1,17 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
-import java.util.concurrent.TimeUnit;
-
-@Autonomous(name="Blue Right", preselectTeleOp="1 Manual Control")
-public class BlueRightAuto extends LinearOpMode {
+@Autonomous(name="Blue Far", preselectTeleOp="1 Manual Control")
+public class BlueFarAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
     MecanumDrive drive;
     Pose2d startPose;
@@ -72,7 +66,7 @@ public class BlueRightAuto extends LinearOpMode {
         control.SlidesToAuto();
         sleep(150);
         control.DeliverPixelToBoardPos();
-        control.StopNearBoardAuto();
+        control.StopNearBoardAuto(true);
         sleep(200);
 
         Actions.runBlocking(

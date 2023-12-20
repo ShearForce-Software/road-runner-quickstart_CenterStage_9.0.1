@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Left", preselectTeleOp = "1 Manual Control")
-public class RedLeftAuto extends LinearOpMode {
+@Autonomous(name="Red Far", preselectTeleOp = "1 Manual Control")
+public class RedFarAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     MecanumDrive drive;
     Pose2d startPose;
@@ -68,7 +67,7 @@ public class RedLeftAuto extends LinearOpMode {
         control.SlidesToAuto();
         sleep(150);
         control.DeliverPixelToBoardPos();
-        control.StopNearBoardAuto();
+        control.StopNearBoardAuto(true);
         sleep(200);
 
         //Drop the pixel on the board

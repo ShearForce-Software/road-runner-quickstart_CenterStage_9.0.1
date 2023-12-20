@@ -272,6 +272,14 @@ public class  UniversalControlClass {
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
     }
+    public void ResetArmAuto(){
+        armRotLeft.setPosition(.07);
+        armRotRight.setPosition(.07);
+        wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
+        wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
+        SpecialSleep(500);
+        SlidesDown();
+    }
     public void ResetArm(){
         ManualStartPos();
         SpecialSleep(500);
@@ -436,7 +444,6 @@ public class  UniversalControlClass {
             }else{
                 rightSlide.setPower(slidePower);
             }
-
             SpecialSleep(150);
         }
 
@@ -497,7 +504,7 @@ public class  UniversalControlClass {
             }
         }
     }
-    public void StopNearBoardAuto(){
+    public void StopNearBoardAuto(boolean releaseBoth){
         double timeout = opMode.getRuntime() + 3;
         while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 80) && (opMode.getRuntime() < timeout)){
             moveRobot(-.55,0.0,0);
@@ -507,9 +514,11 @@ public class  UniversalControlClass {
                 moveRobot(0.0,0.0,0);
                 opMode.sleep(100);
                 ReleaseLeft();
-                ReleaseRight();
+                if (releaseBoth) ReleaseRight();
                 break;
             }
+            ReleaseLeft();
+            if (releaseBoth) ReleaseRight();
         }
     }
     public void moveRobot(double x, double y, double yaw) {
