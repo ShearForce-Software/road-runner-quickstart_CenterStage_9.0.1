@@ -47,23 +47,24 @@ public class MeepMeepTesting {
                         drive.trajectorySequenceBuilder(new Pose2d(12, 62.5, Math.toRadians(270)))
                                 // Position 1 - board
                                 //.splineToLinearHeading(new Pose2d(38, 40, Math.toRadians(180)), Math.toRadians(270))
-                                //.splineToLinearHeading(new Pose2d(50, 40, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(46, 38, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 2 - board
-                                .splineToLinearHeading(new Pose2d(38, 34, Math.toRadians(180)), Math.toRadians(270))
-                                .splineToLinearHeading(new Pose2d(50, 34, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(38, 34, Math.toRadians(180)), Math.toRadians(270))
+                                //.splineToLinearHeading(new Pose2d(46, 33, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 3 - board
-                                //.splineToLinearHeading(new Pose2d(38, 28, Math.toRadians(180)), Math.toRadians(270))
-                                //.splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(38, 34, Math.toRadians(180)), Math.toRadians(270))
+                                .splineToLinearHeading(new Pose2d(46, 33, Math.toRadians(180)), Math.toRadians(180))
+
                                 // Position 1 - floor
                                 //.splineToLinearHeading (new Pose2d(10.5, 35, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 2 - floor
-
-                                .splineToLinearHeading(new Pose2d(16, 30, Math.toRadians(180)), Math.toRadians(180))
-                                .splineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(16, 30, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(12, 35, Math.toRadians(90)), Math.toRadians(180))
                                 // Position 3 - floor
-                                //.splineToLinearHeading(new Pose2d(-12, 35, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(-12, 35, Math.toRadians(180)), Math.toRadians(180))
+
                                 // Parking Position
-                                //.splineToLinearHeading(new Pose2d(24,36,Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(24,35,Math.toRadians(180)), Math.toRadians(180))
                                 .setTangent(0)
                                 .splineToLinearHeading(new Pose2d(48,60,Math.toRadians(270)), Math.toRadians(0))
 

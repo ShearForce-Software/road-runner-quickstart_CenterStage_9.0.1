@@ -18,6 +18,10 @@ public class BlueBoardAuto extends LinearOpMode {
         control.HuskyLensInit();
         control.AutoStartPos();
 
+        drive.localizer.update();
+
+
+
         telemetry.update();
 
         while (!isStarted()) {
@@ -31,6 +35,12 @@ public class BlueBoardAuto extends LinearOpMode {
         sleep(400);
         control.DeliverPixelToBoardPos();
 
+        drive.updatePoseEstimate();
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading (deg)", Math.toDegrees(drive.pose.heading.toDouble()));
+        telemetry.update();
+
         control.StopNearBoardAuto(false);
         control.ReleaseLeft();
         sleep(400);
@@ -42,20 +52,39 @@ public class BlueBoardAuto extends LinearOpMode {
         control.SlidesDown();
         sleep(400);
 
+        drive.updatePoseEstimate();
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading (deg)", Math.toDegrees(drive.pose.heading.toDouble()));
+        telemetry.update();
+
+
         BlueLeftTeamArtPixelDelivery();
         control.DropOnLine();
         sleep(400);
         control.ResetArm();
         sleep(400);
 
+        drive.updatePoseEstimate();
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading (deg)", Math.toDegrees(drive.pose.heading.toDouble()));
+        telemetry.update();
+
         // Move the robot to the parking position
         Actions.runBlocking(
-                //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(deliverToFloorPose)
                         .splineToLinearHeading(new Pose2d(24,35,Math.toRadians(180)), Math.toRadians(180))
                         .setTangent(0)
                         .splineToLinearHeading(new Pose2d(48,60,Math.toRadians(270)), Math.toRadians(0))
                         .build());
+
+        drive.updatePoseEstimate();
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading (deg)", Math.toDegrees(drive.pose.heading.toDouble()));
+        telemetry.update();
+
         telemetry.update();
     }
     public void BlueBoardDelivery() {
