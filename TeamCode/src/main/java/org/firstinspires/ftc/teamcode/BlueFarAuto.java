@@ -50,7 +50,7 @@ public class BlueFarAuto extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(deliverToFloorPose)
                         .splineToLinearHeading(new Pose2d(-38, 9, Math.toRadians(270)), Math.toRadians(270))
-                        //.setTangent(0)
+                        .setTangent(0)
                         .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
                         //.setTangent(0)
                         .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
