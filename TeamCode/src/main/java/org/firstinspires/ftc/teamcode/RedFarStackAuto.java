@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Far", preselectTeleOp = "1 Manual Control")
+@Autonomous(name="Red Far Stack", preselectTeleOp = "1 Manual Control")
 public class RedFarStackAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     MecanumDrive drive;
