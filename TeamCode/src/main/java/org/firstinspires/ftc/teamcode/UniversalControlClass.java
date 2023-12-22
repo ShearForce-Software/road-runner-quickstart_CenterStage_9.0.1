@@ -300,7 +300,25 @@ public class  UniversalControlClass {
                 AutoIntake = false;
             }
         }
-
+    }
+    public void AutoPickupRoutine(){
+        double timeout = opMode.getRuntime() + 3;
+        EnableAutoIntake();
+        ServoIntake();
+        while(AutoIntake && (opMode.getRuntime() < timeout)){
+            if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
+                opMode.gamepad1.rumble(1000);
+                ServoStop();
+                GrabPixelPos();
+                SpecialSleep(500);
+                GrabPixels();
+                SpecialSleep(750);
+                ServoOuttake();
+                ReadyToLiftSlides();
+                AutoIntake = false;
+            }
+            SpecialSleep(100);
+        }
     }
     public void EnableAutoIntake(){
         AutoIntake = true;
