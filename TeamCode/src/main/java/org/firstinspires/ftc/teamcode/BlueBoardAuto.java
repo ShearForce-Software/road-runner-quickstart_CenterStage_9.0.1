@@ -32,6 +32,7 @@ public class BlueBoardAuto extends LinearOpMode {
         BlueBoardDelivery();
         control.SlidesToAuto();
         sleep(400);
+
         control.DeliverPixelToBoardPos();
 
         drive.updatePoseEstimate();
