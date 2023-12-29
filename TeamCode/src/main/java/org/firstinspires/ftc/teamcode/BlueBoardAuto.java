@@ -4,6 +4,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @Autonomous(name="Blue Board", preselectTeleOp="1 Manual Control")
 public class BlueBoardAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
@@ -28,6 +30,7 @@ public class BlueBoardAuto extends LinearOpMode {
             telemetry.update();
         }
         waitForStart();
+
         control.GrabPixels();
         BlueBoardDelivery();
         control.SlidesToAuto();

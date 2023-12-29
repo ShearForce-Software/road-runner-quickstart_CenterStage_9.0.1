@@ -201,8 +201,8 @@ public class  UniversalControlClass {
         grabberRight.setPosition(0);
         armRotLeft.setPosition(.16);
         armRotRight.setPosition(.16);
-        wristLeft.setPosition(.85);
-        wristRight.setPosition(.85);
+        wristLeft.setPosition(.95);
+        wristRight.setPosition(.95);
     }
     public void GrabPixels(){
         grabberRight.setPosition(.72);
@@ -223,8 +223,8 @@ public class  UniversalControlClass {
         grabberRight.setPosition(.72);
         armRotLeft.setPosition(.16);
         armRotRight.setPosition(.16);
-        wristLeft.setPosition(.85);
-        wristRight.setPosition(.85);
+        wristLeft.setPosition(.95);
+        wristRight.setPosition(.95);
     }
     public void ManualStartPos(){
         armRotLeft.setPosition(.07);
@@ -302,12 +302,12 @@ public class  UniversalControlClass {
         }
     }
     public void AutoPickupRoutine(){
-        double timeout = opMode.getRuntime() + 3;
+        //TODO: FIX TIMEOUT
+        //double timeout = opMode.getRuntime() + 3;
         EnableAutoIntake();
         ServoIntake();
-        while(AutoIntake && (opMode.getRuntime() < timeout)){
+        while(AutoIntake){
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
-                opMode.gamepad1.rumble(1000);
                 ServoStop();
                 GrabPixelPos();
                 SpecialSleep(500);
@@ -510,8 +510,9 @@ public class  UniversalControlClass {
     public void StopNearBoard(){
         double timeout = opMode.getRuntime() + 3;
         while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 80) && (opMode.getRuntime() < timeout)){
+            opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
+            opMode.telemetry.update();
             moveRobot(-.55,0.0,0);
-            ShowSlideTelemetry();
             opMode.sleep(100);
             if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 80){
                 moveRobot(0.0,0.0,0);
@@ -524,11 +525,11 @@ public class  UniversalControlClass {
     }
     public void StopNearBoardAuto(boolean releaseBoth){
         double timeout = opMode.getRuntime() + 3;
-        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 80) && (opMode.getRuntime() < timeout)){
+        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 50) && (opMode.getRuntime() < timeout)){
             moveRobot(-.55,0.0,0);
             ShowSlideTelemetry();
             opMode.sleep(100);
-            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 80){
+            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 50){
                 moveRobot(0.0,0.0,0);
                 opMode.sleep(100);
                 ReleaseLeft();
@@ -540,6 +541,8 @@ public class  UniversalControlClass {
         }
     }
     public void moveRobot(double x, double y, double yaw) {
+        opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
+        opMode.telemetry.update();
         // Calculate wheel powers.
         double leftFrontPower    =  x -y -yaw;
         double rightFrontPower   =  x +y +yaw;
@@ -563,6 +566,9 @@ public class  UniversalControlClass {
         rightFront.setPower(rightFrontPower *.5);
         leftRear.setPower(leftBackPower *.5);
         rightRear.setPower(rightBackPower *.5);
+
+        opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
+        opMode.telemetry.update();
     }
     public void DriveToTag() {
         double drive = 0.0;        // Desired forward power/speed (-1 to +1)

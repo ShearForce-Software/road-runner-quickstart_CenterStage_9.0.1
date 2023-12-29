@@ -43,19 +43,20 @@ public class BlueFarStackAuto extends LinearOpMode {
         // Drop the LEFT pixel (put PURPLE on LEFT, YELLOW on RIGHT) on the line
         control.DropOnLine();
         // put the arm back in a safe to travel position
-        control.SafeStow();
+        control.ResetArmAuto();
         //control.SpecialSleep(10000);
-        control.SpecialSleep(8000);
+        //control.SpecialSleep(8000);
+
+        control.AutoPickupRoutine();
 
         // drive to stack
         Actions.runBlocking(
                 drive.actionBuilder(deliverToFloorPose)
+                        .lineToY(10)
                         .splineToLinearHeading(new Pose2d(-38.5, 12, Math.toRadians(180)), Math.toRadians(0))
                         .splineToLinearHeading(stackPose, Math.toRadians(0))
                         .build()
         );
-        control.EnableAutoIntake();
-        control.AutoPickupRoutine();
 
         // drive to the backboard area
         Actions.runBlocking(
