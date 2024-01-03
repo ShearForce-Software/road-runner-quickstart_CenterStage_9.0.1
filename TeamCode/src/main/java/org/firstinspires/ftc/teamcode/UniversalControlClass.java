@@ -196,6 +196,41 @@ public class  UniversalControlClass {
             }
         }
     }
+    public void DriveToTag() {
+        double drive = 0.0;        // Desired forward power/speed (-1 to +1)
+        double strafe = 0.0;        // Desired strafe power/speed (-1 to +1)
+        double turn = 0.0;        // Desired turning power/speed (-1 to +1)
+
+        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+        NavToTag();
+        double headingError = desiredTag.ftcPose.bearing;
+
+        double timeout = opMode.getRuntime() + 5;
+
+        while ((rangeError > DESIRED_DISTANCE) &&
+                ((headingError > 2.0) || (headingError < -2.0)) &&
+                ((yawError > 2.0) || (yawError < -2.0)) && (opMode.getRuntime() < timeout)) {
+            // Determine heading, range and Yaw (tag image rotation) errors
+            NavToTag();
+            headingError = desiredTag.ftcPose.bearing;
+
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+            drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+            opMode.telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+            opMode.telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+            opMode.telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
+            opMode.telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
+            opMode.telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+            opMode.telemetry.update();
+
+            // Apply desired axes motions to the drivetrain.
+            moveRobot(drive, strafe, turn);
+            opMode.sleep(10);
+        }
+    }
     public void AutoStartPos(){
         grabberLeft.setPosition(0);
         grabberRight.setPosition(0);
@@ -250,14 +285,6 @@ public class  UniversalControlClass {
         //SpecialSleep(150);
     }
 
-    public void PrepareSlidesToFlipArm()
-    {
-        leftSlide.setTargetPosition(-300);
-        rightSlide.setTargetPosition(-300);
-        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        SetSlidePower(SLIDE_POWER);
-    }
     public void SlidesToAuto(){
         leftSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
         rightSlide.setTargetPosition(SLIDE_AUTO_HEIGHT);
@@ -303,11 +330,22 @@ public class  UniversalControlClass {
     }
     public void AutoPickupRoutine(){
         //TODO: FIX TIMEOUT
-        //double timeout = opMode.getRuntime() + 3;
+        double timeout = opMode.getRuntime() + 3;
         EnableAutoIntake();
         ServoIntake();
-        while(AutoIntake){
+        while((AutoIntake) && (opMode.getRuntime() <= timeout)){
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
+                ServoStop();
+                GrabPixelPos();
+                SpecialSleep(500);
+                GrabPixels();
+                SpecialSleep(750);
+                ServoOuttake();
+                ReadyToLiftSlides();
+                AutoIntake = false;
+            }
+            else if(opMode.getRuntime()==timeout){
+                //after timeout, run pickup routine anyways
                 ServoStop();
                 GrabPixelPos();
                 SpecialSleep(500);
@@ -345,13 +383,11 @@ public class  UniversalControlClass {
         wristRight.setPosition(wristPosition);
     }
 
-    // SPECIAL routine to change the wrist position that equals the right spot
-    // to grab the pixels, if the servo gets shifted out of position
-    public void ResetWristGrabPixelPos()
-    {
+    public void ResetWristGrabPixelPos() {
+        // SPECIAL routine to change the wrist position that equals the right spot
+        // to grab the pixels, if the servo gets shifted out of position
         WRIST_GRAB_PIXEL_POS = wristLeft.getPosition();
         WRIST_DELIVER_TO_BOARD_POS = WRIST_GRAB_PIXEL_POS - 0.48;
-
     }
     public double getWristPosition(){
         return wristLeft.getPosition();
@@ -370,12 +406,6 @@ public class  UniversalControlClass {
     public double getWholeArmPosition(){
         return wholeArmPosition;
     }
-    public void GrabLeft(){
-        grabberLeft.setPosition(.72);
-    }
-    public void GrabRight(){
-        grabberRight.setPosition(.72);
-    }
     public void ReleaseLeft(){
         grabberLeft.setPosition(0);
     }
@@ -393,33 +423,6 @@ public class  UniversalControlClass {
     public void ServoStop(){
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
-    }
-    public void CheckForSlideBottom(){
-        if((leftSlide.getTargetPosition()==SLIDE_MIN_HEIGHT)&&(leftSlide.isBusy())){
-            if(rightSlideLimit.isPressed()||leftSlideLimit.isPressed()){
-                leftSlide.setPower(0);
-                rightSlide.setPower(0);
-                leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-
-            else{
-                leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                while((!rightSlideLimit.isPressed())&&(!leftSlideLimit.isPressed())){
-                    leftSlide.setPower(1);
-                    rightSlide.setPower(1);
-                    driveControlsFieldCentric();
-                    SpecialSleep(1);
-                }
-                leftSlide.setPower(0);
-                rightSlide.setPower(0);
-                leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-        }
     }
     public void SlidesLow(){
         leftSlide.setTargetPosition(SLIDE_LOW_HEIGHT);
@@ -472,10 +475,6 @@ public class  UniversalControlClass {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    public void ManualSlide(double power){
-        leftSlide.setPower(power);
-        rightSlide.setPower(power);
     }
     public void SetSlidePower(double power){
         //TODO: CLAIRE slides w/ limit switch
@@ -570,41 +569,6 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
         opMode.telemetry.update();
     }
-    public void DriveToTag() {
-        double drive = 0.0;        // Desired forward power/speed (-1 to +1)
-        double strafe = 0.0;        // Desired strafe power/speed (-1 to +1)
-        double turn = 0.0;        // Desired turning power/speed (-1 to +1)
-
-        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-        NavToTag();
-        double headingError = desiredTag.ftcPose.bearing;
-
-        double timeout = opMode.getRuntime() + 5;
-
-        while ((rangeError > DESIRED_DISTANCE) &&
-                ((headingError > 2.0) || (headingError < -2.0)) &&
-                ((yawError > 2.0) || (yawError < -2.0)) && (opMode.getRuntime() < timeout)) {
-            // Determine heading, range and Yaw (tag image rotation) errors
-            NavToTag();
-            headingError = desiredTag.ftcPose.bearing;
-
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-            opMode.telemetry.addData("Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-            opMode.telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
-            opMode.telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
-            opMode.telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
-            opMode.telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-            opMode.telemetry.update();
-
-            // Apply desired axes motions to the drivetrain.
-            moveRobot(drive, strafe, turn);
-            opMode.sleep(10);
-        }
-    }
     public void SetScissorLiftPower(double power){
         leftScissor.setPower(power);
         rightScissor.setPower(power);
@@ -649,99 +613,60 @@ public class  UniversalControlClass {
         }
     }
     public void SetBlinkinToPixelColor() {
-        int red = leftColorSensor.red();
-        int green = leftColorSensor.green();
-        int blue = leftColorSensor.blue();
-        // Check for White Pixel
-        if(red < 4000 && red > 1000 && green < 6000 && green > 3000 && blue < 7000 && blue > 3000) {
-           Set_Blinkin_Left_White();
+        int redLeft = leftColorSensor.red();
+        int greenLeft = leftColorSensor.green();
+        int blueLeft = leftColorSensor.blue();
+        int redRight = rightColorSensor.red();
+        int greenRight = rightColorSensor.green();
+        int blueRight = rightColorSensor.blue();
+
+        // Left sensor left blinkin
+        if(redLeft < 4000 && redLeft > 1000 && greenLeft < 6000 && greenLeft > 3000 && blueLeft < 7000 && blueLeft > 3000) {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        // Check for yellow pixel
-        else if(red < 2500 && red > 1000 && green < 3500 && green > 1500 && blue < 1000 && blue >0 )
-        {
-            Set_Blinkin_Left_Yellow();
+        else if(redLeft < 2500 && redLeft > 1000 && greenLeft < 3500 && greenLeft > 1500 && blueLeft < 1000 && blueLeft >0 ) {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        // Check for green pixel
-        else if(red < 1000 && red > 0 && green < 6000 && green > 1500 && blue < 1000 && blue >0 )
-        {
-            Set_Blinkin_Left_Green();
+        else if(redLeft < 1000 && redLeft > 0 && greenLeft < 6000 && greenLeft > 1500 && blueLeft < 1000 && blueLeft >0 ) {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        // Check for purple pixel
-        else if(red < 3500 && red > 1000 && green < 4000 && green > 2000 && blue < 7000 && blue > 3500 )
-        {
-            Set_Blinkin_Left_Violet();
+        else if(redLeft < 3500 && redLeft > 1000 && greenLeft < 4000 && greenLeft > 2000 && blueLeft < 7000 && blueLeft > 3500 ) {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
         else {
-            Set_Blinkin_Left_Black();
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-    }
-    public void Set_Blinkin_Left_Green() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_Green() {
-        Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-        blinkinLedDriverRight.setPattern(Blinken_right_pattern);
-    }
-    public void Set_Blinkin_Left_Violet() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_Violet() {
-        Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
-        blinkinLedDriverRight.setPattern(Blinken_right_pattern);
-    }
-    public void Set_Blinkin_Left_Yellow() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_Yellow() {
-        Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-        blinkinLedDriverRight.setPattern(Blinken_right_pattern);
-    }
-    public void Set_Blinkin_Left_White() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_White() {
-        Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
-        blinkinLedDriverRight.setPattern(Blinken_right_pattern);
-    }
-    public void Set_Blinkin_Left_Black() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_Black() {
-        Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
-        blinkinLedDriverRight.setPattern(Blinken_right_pattern);
-    }
-    public void Set_Blinkin_Left_Red() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_Red() {
-        Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
-        blinkinLedDriverRight.setPattern(Blinken_right_pattern);
-    }
-    public void Set_Blinkin_Left_Blue() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_Blue() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Left_ShearForce() {
-        Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_FOREST_PALETTE;
-        blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
-    }
-    public void Set_Blinkin_Right_ShearForce() {
-        Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_FOREST_PALETTE;
-        blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+
+        //Right sensor right blinkin
+        if(redRight < 4000 && redRight > 1000 && greenRight < 6000 && greenRight > 3000 && blueRight < 7000 && blueRight > 3000) {
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+        }
+        else if(redRight < 2500 && redRight > 1000 && greenRight < 3500 && greenRight > 1500 && blueRight < 1000 && blueRight >0 ) {
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+        }
+        else if(redRight < 1000 && redRight > 0 && greenRight < 6000 && greenRight > 1500 && blueRight < 1000 && blueRight >0 ) {
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+        }
+        else if(redRight < 3500 && redRight > 1000 && greenRight < 4000 && greenRight > 2000 && blueRight < 7000 && blueRight > 3500 ) {
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+        }
+        else {
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+        }
     }
     public void Show_Blinkin_Telemetry() {
         opMode.telemetry.addData("Blinkin Left: ", Blinken_left_pattern.toString());
-        // opMode.telemetry.addData("Blinkin Right: ", Blinken_right_pattern.toString());
+        opMode.telemetry.addData("Blinkin Right: ", Blinken_right_pattern.toString());
     }
     public void HuskyLensInit(){
         if (!huskyLens.knock()) {
@@ -751,11 +676,9 @@ public class  UniversalControlClass {
         }
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION
         );
-        //TODO: is there anything we have to do to import model?
         opMode.telemetry.update();
     }
     public void DetectTeamArtBlue() {
-        //TODO: MADDIE/JACOB detect team art location and set variable for location
         HuskyLens.Block[] blocks = huskyLens.blocks();
         if (blocks.length > 0){
             int xVal = blocks[0].x;
@@ -784,7 +707,6 @@ public class  UniversalControlClass {
         }
     }
     public void DetectTeamArtRed() {
-        //TODO: MADDIE/JACOB detect team art location and set variable for location
         HuskyLens.Block[] blocks = huskyLens.blocks();
         if (blocks.length > 0){
             int xVal = blocks[0].x;
@@ -820,9 +742,6 @@ public class  UniversalControlClass {
             droneLauncher.setPosition(0.1);
             SpecialSleep(150);
         }
-    }
-    public void Hang() {
-        //TODO: UNASSIGNED Hang from bar
     }
     public void driveControlsRobotCentric() {
         double y = opMode.gamepad1.left_stick_y;
