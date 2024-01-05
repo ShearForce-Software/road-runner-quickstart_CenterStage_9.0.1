@@ -30,21 +30,16 @@ public class RedFarStackAuto extends LinearOpMode {
 
         // lock the pixels
         control.GrabPixels();
+        control.ReleaseLeft();
 
         //Drives to LCR drop on line
         RedLeftTeamArtPixelDelivery();
 
-        // drive to the middle floor delivery position
-        /*Actions.runBlocking(
-            drive.actionBuilder(startPose)
-                    .splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
-                .build());*/
-
         // Drop the LEFT pixel (put PURPLE on LEFT, YELLOW on RIGHT) on the line
         control.DropOnLine();
         // put the arm back in a safe to travel position
-        control.SafeStow();
-        control.SpecialSleep(8000);
+        control.ResetArmAuto();
+       // control.SpecialSleep(8000);
 
         //drive to stack
         Actions.runBlocking((
@@ -109,15 +104,7 @@ public class RedFarStackAuto extends LinearOpMode {
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30,-9, Math.toRadians(180)))
                             .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(50, -22, Math.toRadians(180)), Math.toRadians(0))
-                            .build());
-        } else if (control.autoPosition == 2) {
-            deliverToBoardPose = new Pose2d(50,-28,Math.toRadians(180));
-            Actions.runBlocking(
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(new Pose2d(30, -9, Math.toRadians(180)))
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
         } else if (control.autoPosition == 3) {
             deliverToBoardPose = new Pose2d(50,-34,Math.toRadians(180));
@@ -125,7 +112,7 @@ public class RedFarStackAuto extends LinearOpMode {
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, -9, Math.toRadians(180)))
                             .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(50, -34, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
         } else {
             deliverToBoardPose = new Pose2d(50,-28,Math.toRadians(180));
@@ -133,7 +120,7 @@ public class RedFarStackAuto extends LinearOpMode {
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, -9, Math.toRadians(180)))
                             .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
         }
     }

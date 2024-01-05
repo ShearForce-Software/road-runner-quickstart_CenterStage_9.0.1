@@ -334,29 +334,20 @@ public class  UniversalControlClass {
         EnableAutoIntake();
         ServoIntake();
         while((AutoIntake) && (opMode.getRuntime() <= timeout)){
+            moveRobot(2, 0, 0);
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
-                ServoStop();
-                GrabPixelPos();
-                SpecialSleep(500);
-                GrabPixels();
-                SpecialSleep(750);
-                ServoOuttake();
-                ReadyToLiftSlides();
-                AutoIntake = false;
+                break;
             }
-            else if(opMode.getRuntime()==timeout){
-                //after timeout, run pickup routine anyways
-                ServoStop();
-                GrabPixelPos();
-                SpecialSleep(500);
-                GrabPixels();
-                SpecialSleep(750);
-                ServoOuttake();
-                ReadyToLiftSlides();
-                AutoIntake = false;
-            }
-            SpecialSleep(100);
+            opMode.sleep(100);
         }
+        ServoStop();
+        GrabPixelPos();
+        SpecialSleep(500);
+        GrabPixels();
+        SpecialSleep(750);
+        ServoOuttake();
+        ReadyToLiftSlides();
+        AutoIntake = false;
     }
     public void EnableAutoIntake(){
         AutoIntake = true;
