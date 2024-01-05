@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,8 +12,7 @@ public class RedFarStackAuto extends LinearOpMode {
     Pose2d startPose;
     Pose2d deliverToFloorPose;
     Pose2d deliverToBoardPose;
-    Pose2d stackPose = new Pose2d(-54, -12, Math.toRadians(180));
-
+    Vector2d stackVec = new Vector2d(-56, -12);
     public void runOpMode(){
         startPose = new Pose2d(-35.5,-62.5,Math.toRadians(90));
         drive = new MecanumDrive(hardwareMap, startPose);
@@ -41,29 +41,34 @@ public class RedFarStackAuto extends LinearOpMode {
         control.ResetArmAuto();
        // control.SpecialSleep(8000);
 
-        //drive to stack
-        Actions.runBlocking((
-                drive.actionBuilder(deliverToFloorPose)
-                        .splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                        .splineToLinearHeading(stackPose, Math.toRadians(0))
-                        .build()
-                ));
-        control.EnableAutoIntake();
+        if(control.autoPosition == 1) {
+            Actions.runBlocking(
+                    drive.actionBuilder(deliverToFloorPose)
+                            .strafeTo(new Vector2d(-36, 12))
+                            .splineToConstantHeading(stackVec, Math.toRadians(180))
+                            .build());
+        }
+        else{
+            //drive to stack
+            Actions.runBlocking(
+                    drive.actionBuilder(deliverToFloorPose)
+                            .lineToY(-10)
+                            .splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToConstantHeading(stackVec, Math.toRadians(180))
+                            .build());
+        }
         control.AutoPickupRoutine();
 
         // drive to the backboard area
         Actions.runBlocking(
-            drive.actionBuilder(stackPose)
+            drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                     .setTangent(0)
                     .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
                     .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
             .build());
 
-        // Rotate Arm slightly so can flip arm over or raise safely
-        //control.ReadyToLiftSlides();
-        //sleep(150);
-
-        //move arm, slides, drive, and release pixels to board
+        // drive to the correct backboard spot based on the team art
         RedBoardDelivery();
 
         // Return Arm to Ready position
@@ -73,12 +78,6 @@ public class RedFarStackAuto extends LinearOpMode {
         control.StopNearBoardAuto(true);
         sleep(200);
 
-        //Drop the pixel on the board
-        control.ReleaseRight();
-        control.ReleaseLeft();
-        sleep(750);
-
-        //return the arm to ready position
         Actions.runBlocking(
                 drive.actionBuilder(deliverToBoardPose)
                         .lineToX(47)
@@ -93,20 +92,24 @@ public class RedFarStackAuto extends LinearOpMode {
                 drive.actionBuilder(new Pose2d(50, -28, Math.toRadians(180)))
                         .splineToLinearHeading(new Pose2d(48,-15, Math.toRadians(90)), Math.toRadians(90))
                         .build());
-
+        control.ServoStop();
+        sleep(100);
         telemetry.update();
     }
     public void RedBoardDelivery() {
         // Look for potential errors
+        //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(50,-22,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,-23.5,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30,-9, Math.toRadians(180)))
                             .setTangent(0)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
-        } else if (control.autoPosition == 3) {
+        }
+        //***POSITION 3***
+        else if (control.autoPosition == 3) {
             deliverToBoardPose = new Pose2d(50,-34,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
@@ -114,8 +117,10 @@ public class RedFarStackAuto extends LinearOpMode {
                             .setTangent(0)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
-        } else {
-            deliverToBoardPose = new Pose2d(50,-28,Math.toRadians(180));
+        }
+        //***POSITION 2***
+        else {
+            deliverToBoardPose = new Pose2d(50,-29,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, -9, Math.toRadians(180)))
@@ -133,35 +138,33 @@ public class RedFarStackAuto extends LinearOpMode {
                 drive.actionBuilder(startPose)
                         .splineToLinearHeading(aTempPose, Math.toRadians(90))
                         .build());
-
-        if (control.autoPosition == 3) {
-            deliverToFloorPose = new Pose2d(-34.5, -32, Math.toRadians(180));
-            Actions.runBlocking(
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(aTempPose)
-                            .splineToLinearHeading (new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
-                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
-                            .build());
-        } else if (control.autoPosition == 2) {
-            deliverToFloorPose = new Pose2d(-38.5, -12.5, Math.toRadians(90));
-
-            Actions.runBlocking(
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(aTempPose)
-                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(90))
-                            .build());
-        } else if (control.autoPosition == 1) {
+        //***POSITION 1***
+        if (control.autoPosition == 1) {
             deliverToFloorPose = new Pose2d(-38.5, -20.5, Math.toRadians(45));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(aTempPose)
                             .splineToLinearHeading (deliverToFloorPose, Math.toRadians(45))
                             .build());
-        } else {
+
+        }
+        //***POSITION 3***
+        else if (control.autoPosition == 3) {
+            deliverToFloorPose = new Pose2d(-34.5, -32, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                    drive.actionBuilder(startPose)
-                            .splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
+                    drive.actionBuilder(aTempPose)
+                            .splineToLinearHeading(new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
+                            .build());
+        }
+        //***POSITION 2***
+        else {
+            deliverToFloorPose = new Pose2d(-38.5, -12.5, Math.toRadians(90));
+            Actions.runBlocking(
+                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                    drive.actionBuilder(aTempPose)
+                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(90))
                             .build());
         }
     }
