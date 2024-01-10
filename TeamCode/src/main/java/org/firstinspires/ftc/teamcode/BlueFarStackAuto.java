@@ -42,7 +42,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         //control.SpecialSleep(10000);
         //control.SpecialSleep(8000);
 
-        if(control.autoPosition==1) {
+        if(control.autoPosition == 1) {
             // drive to stack
             Actions.runBlocking(
                     drive.actionBuilder(deliverToFloorPose)

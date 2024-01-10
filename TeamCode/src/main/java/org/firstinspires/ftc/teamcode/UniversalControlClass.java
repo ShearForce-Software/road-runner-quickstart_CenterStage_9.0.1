@@ -329,12 +329,11 @@ public class  UniversalControlClass {
         }
     }
     public void AutoPickupRoutine(){
-        //TODO: FIX TIMEOUT
         double timeout = opMode.getRuntime() + 3;
         EnableAutoIntake();
         ServoIntake();
         while((AutoIntake) && (opMode.getRuntime() <= timeout)){
-            moveRobot(2, 0, 0);
+            moveRobot(.75, 0, 0);
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
                 break;
             }

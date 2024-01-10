@@ -41,10 +41,10 @@ public class RedFarStackAuto extends LinearOpMode {
         control.ResetArmAuto();
        // control.SpecialSleep(8000);
 
-        if(control.autoPosition == 1) {
+        if(control.autoPosition == 3) {
             Actions.runBlocking(
                     drive.actionBuilder(deliverToFloorPose)
-                            .strafeTo(new Vector2d(-36, 12))
+                            .strafeTo(new Vector2d(-36, -12))
                             .splineToConstantHeading(stackVec, Math.toRadians(180))
                             .build());
         }
@@ -100,7 +100,7 @@ public class RedFarStackAuto extends LinearOpMode {
         // Look for potential errors
         //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(50,-23.5,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,-28,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30,-9, Math.toRadians(180)))
@@ -110,7 +110,7 @@ public class RedFarStackAuto extends LinearOpMode {
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(50,-34,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,-38,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, -9, Math.toRadians(180)))
@@ -120,7 +120,7 @@ public class RedFarStackAuto extends LinearOpMode {
         }
         //***POSITION 2***
         else {
-            deliverToBoardPose = new Pose2d(50,-29,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,-33,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, -9, Math.toRadians(180)))
