@@ -246,10 +246,10 @@ public class  UniversalControlClass {
     public void DropOnLine(){
         armRotLeft.setPosition(.72);
         armRotRight.setPosition(.72);
-        SpecialSleep(500);
+        SpecialSleep(200);
         wristLeft.setPosition(.85);
         wristRight.setPosition(.85);
-        SpecialSleep(250);
+        SpecialSleep(200);
         grabberRight.setPosition(0);
         SpecialSleep(500);
     }
@@ -304,12 +304,12 @@ public class  UniversalControlClass {
         armRotRight.setPosition(.07);
         wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
         wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
-        SpecialSleep(500);
+        SpecialSleep(200);
         SlidesDown();
     }
     public void ResetArm(){
         ManualStartPos();
-        SpecialSleep(500);
+        SpecialSleep(250);
         SlidesDown();
     }
     public void PickupRoutine(){
@@ -329,7 +329,7 @@ public class  UniversalControlClass {
         }
     }
     public void AutoPickupRoutine(){
-        double timeout = opMode.getRuntime() + 3;
+        double timeout = opMode.getRuntime() + 1.5;
         EnableAutoIntake();
         ServoIntake();
         while((AutoIntake) && (opMode.getRuntime() <= timeout)){
@@ -341,9 +341,9 @@ public class  UniversalControlClass {
         }
         ServoStop();
         GrabPixelPos();
-        SpecialSleep(500);
+        SpecialSleep(400);
         GrabPixels();
-        SpecialSleep(750);
+        SpecialSleep(400);
         ServoOuttake();
         ReadyToLiftSlides();
         AutoIntake = false;

@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -78,9 +79,9 @@ public class MeepMeepTesting {
                         drive.trajectorySequenceBuilder(new Pose2d(-35.5,-62.5,Math.toRadians(90)))
                                 .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
                                 // Position 1 - floor
-                                .splineToLinearHeading (new Pose2d(-38.5, -20.5, Math.toRadians(45)), Math.toRadians(45))
+                                //.splineToLinearHeading (new Pose2d(-38.5, -20.5, Math.toRadians(45)), Math.toRadians(45))
                                 // Position 2 - floor
-                                //.splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
                                 // Position 3 - floor
                                 //.splineToLinearHeading (new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
                                 //.splineToLinearHeading(new Pose2d(-34.5, -32, Math.toRadians(180)), Math.toRadians(180))
@@ -88,29 +89,32 @@ public class MeepMeepTesting {
                                 .splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
                                 .splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(0))
                                 // Drive to the backboard area
-                                .splineToLinearHeading(new Pose2d(-38,-9, Math.toRadians(90)), Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(-38,-9, Math.toRadians(180)), Math.toRadians(90))
                                 .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
                                 .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
                                 // Position 1 - board
-                                .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(50, -22, Math.toRadians(180)), Math.toRadians(0))
-                                // Position 2 - board
                                 //.setTangent(0)
-                                //.splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToLinearHeading(new Pose2d(50, -22, Math.toRadians(180)), Math.toRadians(0))
+                                // Position 2 - board
+                                .setTangent(0)
+                                .splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
                                 // Position 3 - board
                                 //.setTangent(0)
                                 //.splineToLinearHeading(new Pose2d(50, -34, Math.toRadians(180)), Math.toRadians(0))
                                 //Drive to stack
-                                .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(0))
+                                .setReversed(true)
+                                .setTangent(180)
+                                .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(-38.5, -9, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(180))
                                 //Drive to board
-                                .splineToLinearHeading(new Pose2d(-38,-9, Math.toRadians(90)), Math.toRadians(90))
+                                //.splineToLinearHeading(new Pose2d(-38,-9, Math.toRadians(180)), Math.toRadians(90))
+                                .setTangent(0)
                                 .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
                                 .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
-                                // Position 1 - board
+                                // Position 2 - board
                                 .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(50, -22, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
                                 // Parking Position
                                 .splineToLinearHeading(new Pose2d(48,-15, Math.toRadians(90)), Math.toRadians(90))
 
