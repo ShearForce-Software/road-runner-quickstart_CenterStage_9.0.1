@@ -12,7 +12,7 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
     Pose2d startPose;
     Pose2d deliverToFloorPose;
     Pose2d deliverToBoardPose;
-    Vector2d stackVec = new Vector2d(-56, -12);
+    //Vector2d stackVec = new Vector2d(-56, -12);
     Pose2d stackPose = new Pose2d(-56, -12, Math.toRadians(180));
     public void runOpMode(){
         startPose = new Pose2d(-35.5,-62.5,Math.toRadians(90));
@@ -62,6 +62,7 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
         control.AutoPickupRoutine();
 
         // drive to the backboard area
+        drive.updatePoseEstimate();
         Actions.runBlocking(
             drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                     .setTangent(0)
@@ -79,8 +80,9 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
         control.StopNearBoardAuto(true);
         sleep(200);
 
+        drive.updatePoseEstimate();
         Actions.runBlocking(
-                drive.actionBuilder(deliverToBoardPose)
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .lineToX(47)
                         .build());
 
@@ -88,6 +90,7 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
         sleep(200);
 
         //drive back to stack
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
@@ -101,6 +104,7 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
         control.AutoPickupRoutine();
 
         //drive back to board
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
@@ -116,8 +120,9 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
         control.StopNearBoardAuto(true);
         sleep(200);
 
+        drive.updatePoseEstimate();
         Actions.runBlocking(
-                drive.actionBuilder(deliverToBoardPose)
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .lineToX(47)
                         .build());
 

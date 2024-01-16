@@ -38,6 +38,7 @@ public class RedBoardAuto extends LinearOpMode {
         sleep(400);
         control.ResetArmAuto();
         sleep(400);
+
         RedRightTeamArtPixelDelivery();
         control.DropOnLine();
         sleep(400);

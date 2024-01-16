@@ -61,6 +61,7 @@ public class RedFarStackAuto extends LinearOpMode {
         control.AutoPickupRoutine();
 
         // drive to the backboard area
+        drive.updatePoseEstimate();
         Actions.runBlocking(
             drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                     .setTangent(0)
@@ -78,8 +79,9 @@ public class RedFarStackAuto extends LinearOpMode {
         control.StopNearBoardAuto(true);
         sleep(200);
 
+        drive.updatePoseEstimate();
         Actions.runBlocking(
-                drive.actionBuilder(deliverToBoardPose)
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .lineToX(47)
                         .build());
 

@@ -15,135 +15,203 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
 
-
-                        // BlueRightAuto
-                        //drive.trajectorySequenceBuilder(new Pose2d(-35.5, 62.5, Math.toRadians(270)))
-                          //      .splineToLinearHeading(new Pose2d(-38.5, 33, Math.toRadians(270)), Math.toRadians(270))
+/*
+                        // BlueFarStackAuto
+                        drive.trajectorySequenceBuilder(new Pose2d(-35.5, 62.5, Math.toRadians(270)))
+                                .splineToLinearHeading(new Pose2d(-38.5, 33, Math.toRadians(270)), Math.toRadians(270))
                                 // Position - 1 floor
-                            //    .splineToLinearHeading (new Pose2d(-27, 33, Math.toRadians(180)), Math.toRadians(180))
-                              //  .splineToLinearHeading(new Pose2d(-34.5, 32, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading (new Pose2d(-27, 33, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(-34.5, 32, Math.toRadians(180)), Math.toRadians(180))
                                 // Position - 2 floor
-                              //  .splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
+                                //.splineToLinearHeading(new Pose2d(-38.5, 12.5, Math.toRadians(270)), Math.toRadians(270))
                                 // Position - 3 floor
-                                //.splineToLinearHeading (new Pose2d(-38.5, 20.5, Math.toRadians(315)), Math.toRadians(315))
+                                .splineToLinearHeading (new Pose2d(-37.0, 20.5, Math.toRadians(315)), Math.toRadians(315))
                                 // Drive to stack
-                                //.setTangent(270)
+                                // Position - 1
+                                //.strafeTo(new Vector2d(-36, 12))
+                                //.splineToConstantHeading(new Vector2d(-56, 12), Math.toRadians(180))
+                                // Position 2
+                                //.lineTo(new Vector2d(-38.5, 10)) //.lineToY(10)
                                 //.splineToLinearHeading(new Pose2d(-38.5, 12, Math.toRadians(180)), Math.toRadians(0))
-                                //.splineToLinearHeading(new Pose2d(-54, 12, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToLinearHeading(new Pose2d(-50, 12, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToConstantHeading(new Vector2d(-56, 12), Math.toRadians(180))
+                                // Position 3
+                                .lineTo(new Vector2d(-37.0, 10)) //.lineToY(10)
+                                .splineToLinearHeading(new Pose2d(-38.5, 12, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(-50, 12, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToConstantHeading(new Vector2d(-56, 12), Math.toRadians(180))
                                 // Drive to backboard area
-                                //.setTangent(0)
-                                //.splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                                //.splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                                .setTangent(0)
+                                .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
                                 // Position - 1 board
                                 //.setTangent(0)
                                 //.splineToLinearHeading(new Pose2d(50, 34, Math.toRadians(180)), Math.toRadians(0))
                                 // Position - 2 board
                                 //.setTangent(0)
-                                //.splineToLinearHeading(new Pose2d(50, 28, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToLinearHeading(new Pose2d(50, 29, Math.toRadians(180)), Math.toRadians(0))
                                 // Position - 3 board
-                                //.setTangent(0)
-                                //.splineToLinearHeading(new Pose2d(50, 22, Math.toRadians(180)), Math.toRadians(0))
+                                .setTangent(0)
+                                .splineToLinearHeading(new Pose2d(50, 23.5, Math.toRadians(180)), Math.toRadians(0))
                                 // Parking Position
-                                //.splineToLinearHeading(new Pose2d(48, 15, Math.toRadians(270)), Math.toRadians(270))
+                                .lineTo(new Vector2d(47, 34)) //lineToX(47)
+                                .splineToLinearHeading(new Pose2d(48, 15, Math.toRadians(270)), Math.toRadians(270))
+*/
 
-
-
-                        // BlueLeftAuto
-                        //drive.trajectorySequenceBuilder(new Pose2d(12, 62.5, Math.toRadians(270)))
+/*
+                        // BlueBoardAuto
+                        drive.trajectorySequenceBuilder(new Pose2d(12, 62.5, Math.toRadians(270)))
                                 // Position 1 - board
-                                //.splineToLinearHeading(new Pose2d(38, 40, Math.toRadians(180)), Math.toRadians(270))
-                                //.splineToLinearHeading(new Pose2d(46, 38, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(38, 40, Math.toRadians(180)), Math.toRadians(270))
+                                .splineToLinearHeading(new Pose2d(46, 38, Math.toRadians(180)), Math.toRadians(180))
+                                .lineTo(new Vector2d(44.0, 38)) //.lineToX(44)
                                 // Position 2 - board
                                 //.splineToLinearHeading(new Pose2d(38, 34, Math.toRadians(180)), Math.toRadians(270))
                                 //.splineToLinearHeading(new Pose2d(46, 33, Math.toRadians(180)), Math.toRadians(180))
+                                //.lineTo(new Vector2d(44.0, 33)) //.lineToX(44)
                                 // Position 3 - board
-                                //.splineToLinearHeading(new Pose2d(38, 34, Math.toRadians(180)), Math.toRadians(270))
-                                //.splineToLinearHeading(new Pose2d(46, 33, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(38, 28, Math.toRadians(180)), Math.toRadians(270))
+                                //.splineToLinearHeading(new Pose2d(46, 26, Math.toRadians(180)), Math.toRadians(180))
+                                //.lineTo(new Vector2d(44.0, 26)) //.lineToX(44)
 
                                 // Position 1 - floor
-                                //.splineToLinearHeading (new Pose2d(10.5, 35, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading (new Pose2d(10.5, 35, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 2 - floor
                                 //.splineToLinearHeading(new Pose2d(16, 30, Math.toRadians(180)), Math.toRadians(180))
                                 //.splineToLinearHeading(new Pose2d(12, 35, Math.toRadians(90)), Math.toRadians(180))
                                 // Position 3 - floor
-                                //.splineToLinearHeading(new Pose2d(-12, 35, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(12, 35, Math.toRadians(180)), Math.toRadians(180))
 
                                 // Parking Position
-//                                .splineToLinearHeading(new Pose2d(24,35,Math.toRadians(180)), Math.toRadians(180))
-//                                .setTangent(0)
-//                                .splineToLinearHeading(new Pose2d(48,60,Math.toRadians(270)), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(24,35,Math.toRadians(180)), Math.toRadians(180))
+                                .setTangent(0)
+                                .splineToLinearHeading(new Pose2d(48,60,Math.toRadians(270)), Math.toRadians(0))
+*/
 
-
-
-                        // RedLeftAuto
+/*
+                        // RedFarStackAuto
                         drive.trajectorySequenceBuilder(new Pose2d(-35.5,-62.5,Math.toRadians(90)))
                                 .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
                                 // Position 1 - floor
-                                //.splineToLinearHeading (new Pose2d(-38.5, -20.5, Math.toRadians(45)), Math.toRadians(45))
+                                //.splineToLinearHeading (new Pose2d(-39.5, -20.5, Math.toRadians(45)), Math.toRadians(45))
                                 // Position 2 - floor
-                                .splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
+                                //.splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
                                 // Position 3 - floor
-                                //.splineToLinearHeading (new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
-                                //.splineToLinearHeading(new Pose2d(-34.5, -32, Math.toRadians(180)), Math.toRadians(180))
-                                //Drive to stack
-                                .splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToLinearHeading (new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(-34.5, -32, Math.toRadians(180)), Math.toRadians(180))
+                                // Position 1 - Drive to stack
+                                //.lineTo(new Vector2d(-39.5, -10)) //.lineToY(-10)
+                                //.splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToConstantHeading(new Vector2d(-56, -12), Math.toRadians(180))
+                                // Position 2 - Drive to stack
+                                //.lineTo(new Vector2d(-38.5, -10)) //.lineToY(-10)
+                                //.splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToConstantHeading(new Vector2d(-56, -12), Math.toRadians(180))
+                                // Position 3 - Drive to stack
+                                .strafeTo(new Vector2d(-36, -12))
+                                .splineToConstantHeading(new Vector2d(-56, -12), Math.toRadians(180))
                                 // Drive to the backboard area
-                                .splineToLinearHeading(new Pose2d(-38,-9, Math.toRadians(180)), Math.toRadians(90))
+                                .setTangent(0)
                                 .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
                                 .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
                                 // Position 1 - board
                                 //.setTangent(0)
-                                //.splineToLinearHeading(new Pose2d(50, -22, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
+                                //.lineTo(new Vector2d(47.0, -28)) //.lineToX(47)
                                 // Position 2 - board
-                                .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
-                                // Position 3 - board
                                 //.setTangent(0)
-                                //.splineToLinearHeading(new Pose2d(50, -34, Math.toRadians(180)), Math.toRadians(0))
-                                //Drive to stack
-                                .setReversed(true)
-                                .setTangent(180)
-                                .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(180))
-                                //.splineToLinearHeading(new Pose2d(-38.5, -9, Math.toRadians(180)), Math.toRadians(180))
-                                .splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(180))
-                                //Drive to board
-                                //.splineToLinearHeading(new Pose2d(-38,-9, Math.toRadians(180)), Math.toRadians(90))
+                                //.splineToLinearHeading(new Pose2d(50, -33, Math.toRadians(180)), Math.toRadians(0))
+                                //.lineTo(new Vector2d(47.0, -33)) //.lineToX(47)
+                                // Position 3 - board
                                 .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
-                                // Position 2 - board
-                                .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(50, -38, Math.toRadians(180)), Math.toRadians(0))
+                                .lineTo(new Vector2d(47.0, -38)) //.lineToX(47)
                                 // Parking Position
                                 .splineToLinearHeading(new Pose2d(48,-15, Math.toRadians(90)), Math.toRadians(90))
+*/
+
+                        // RedFarMultipleCyclesAuto
+                                drive.trajectorySequenceBuilder(new Pose2d(-35.5,-62.5,Math.toRadians(90)))
+                                        .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
+                                        // Position 1 - floor
+                                        //.splineToLinearHeading (new Pose2d(-38.5, -20.5, Math.toRadians(45)), Math.toRadians(45))
+                                        // Position 2 - floor
+                                        //.splineToLinearHeading(new Pose2d(-38.5, -12.5, Math.toRadians(90)), Math.toRadians(90))
+                                        // Position 3 - floor
+                                        .splineToLinearHeading (new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
+                                        .splineToLinearHeading(new Pose2d(-34.5, -32, Math.toRadians(180)), Math.toRadians(180))
+                                        // Position 1 - Drive to stack
+                                        //.lineTo(new Vector2d(-39.5, -10)) //.lineToY(-10)
+                                        //.splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
+                                        //.splineToConstantHeading(new Vector2d(-56, -12), Math.toRadians(180))
+                                        // Position 2 - Drive to stack
+                                        //.lineTo(new Vector2d(-38.5, -10)) //.lineToY(-10)
+                                        //.splineToLinearHeading(new Pose2d(-38.5, -12, Math.toRadians(180)), Math.toRadians(0))
+                                        //.splineToConstantHeading(new Vector2d(-56, -12), Math.toRadians(180))
+                                        // Position 3 - Drive to stack
+                                        .strafeTo(new Vector2d(-36, -12))
+                                        .splineToConstantHeading(new Vector2d(-56, -12), Math.toRadians(180))
+                                        // Drive to the backboard area
+                                        .setTangent(0)
+                                        .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
+                                        .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
+                                        // Position 1 - board
+                                        //.setTangent(0)
+                                        //.splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(0))
+                                        //.lineTo(new Vector2d(47.0, -28)) //.lineToX(47)
+                                        // Position 2 - board
+                                        //.setTangent(0)
+                                        //.splineToLinearHeading(new Pose2d(50, -33, Math.toRadians(180)), Math.toRadians(0))
+                                        //.lineTo(new Vector2d(47.0, -33)) //.lineToX(47)
+                                        // Position 3 - board
+                                        .setTangent(0)
+                                        .splineToLinearHeading(new Pose2d(50, -38, Math.toRadians(180)), Math.toRadians(0))
+                                        .lineTo(new Vector2d(47.0, -38)) //.lineToX(47)
+                                        // *** Drive back to Stack ***
+                                        .setReversed(true)
+                                        .setTangent(180)
+                                        .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(180))
+                                        .splineToLinearHeading(new Pose2d(-50,-12, Math.toRadians(180)), Math.toRadians(180))
+                                        // Drive back to Board
+                                        .setTangent(0)
+                                        .splineToLinearHeading(new Pose2d(-30,-9, Math.toRadians(180)), Math.toRadians(0))
+                                        .splineToLinearHeading(new Pose2d(30,-9, Math.toRadians(180)), Math.toRadians(0))
+                                        // Deliver to middle of board
+                                        .setTangent(0)
+                                        .splineToLinearHeading(new Pose2d(50, -33, Math.toRadians(180)), Math.toRadians(0))
+                                        .lineTo(new Vector2d(47.0, -33)) //.lineToX(47)
+                                        // Parking Position
+                                        .splineToLinearHeading(new Pose2d(48,-15, Math.toRadians(90)), Math.toRadians(90))
+
 
 /*
-                                // RedRightAuto
-                         /*drive.trajectorySequenceBuilder(new Pose2d(12, -62.5, Math.toRadians(90)))
+                                // RedBoardAuto
+                         drive.trajectorySequenceBuilder(new Pose2d(12, -62.5, Math.toRadians(90)))
                                 // Position 1 - board
-                                .splineToLinearHeading(new Pose2d(38, -22, Math.toRadians(180)), Math.toRadians(90))
-                                .splineToLinearHeading(new Pose2d(50, -22, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(38, -22, Math.toRadians(180)), Math.toRadians(90))
+                                //.splineToLinearHeading(new Pose2d(50, -22, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 2 - board
                                 //.splineToLinearHeading(new Pose2d(38, -28, Math.toRadians(180)), Math.toRadians(90))
                                 //.splineToLinearHeading(new Pose2d(50, -28, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 3 - board
-                                //.splineToLinearHeading(new Pose2d(38, -34, Math.toRadians(180)), Math.toRadians(90))
-                                //.splineToLinearHeading(new Pose2d(50, -34, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(38, -34, Math.toRadians(180)), Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(50, -34, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 1 - floor
-                                .splineToLinearHeading(new Pose2d(-12, -35, Math.toRadians(180)), Math.toRadians(180))
+                                //.splineToLinearHeading(new Pose2d(-12, -35, Math.toRadians(180)), Math.toRadians(180))
                                 // Position 2 - floor
                                 //.splineToLinearHeading(new Pose2d(12, -35, Math.toRadians(180)), Math.toRadians(180))
                                 //.splineToLinearHeading(new Pose2d(12, -36, Math.toRadians(270)), Math.toRadians(180))
                                 // Position 3 - floor
-                                //.splineToLinearHeading (new Pose2d(10.5, -35, Math.toRadians(180)), Math.toRadians(180))
+                                .splineToLinearHeading (new Pose2d(10.5, -35, Math.toRadians(180)), Math.toRadians(180))
                                 // Parking Position
                                 .splineToLinearHeading(new Pose2d(24,-35,Math.toRadians(180)), Math.toRadians(180))
                                 .setTangent(0)
                                 .splineToLinearHeading(new Pose2d(48,-60,Math.toRadians(90)), Math.toRadians(0))
-
-
 */
+
+
                                 .build()
                 );
 

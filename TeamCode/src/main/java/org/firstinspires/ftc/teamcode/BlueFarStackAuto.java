@@ -64,6 +64,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         control.AutoPickupRoutine();
 
         // drive to the backboard area
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .setTangent(0)
@@ -81,8 +82,9 @@ public class BlueFarStackAuto extends LinearOpMode {
         control.StopNearBoardAuto(true);
         sleep(200);
 
+        drive.updatePoseEstimate();
         Actions.runBlocking(
-                drive.actionBuilder(deliverToBoardPose)
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .lineToX(47)
                         .build());
 
@@ -91,9 +93,10 @@ public class BlueFarStackAuto extends LinearOpMode {
         sleep(400);
 
         // Move the robot to the parking position
+        drive.updatePoseEstimate();
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-                drive.actionBuilder(new Pose2d(50, 28, Math.toRadians(180)))
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .splineToLinearHeading(new Pose2d(48, 15, Math.toRadians(270)), Math.toRadians(270))
                         .build());
         control.ServoStop();

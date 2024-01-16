@@ -4,8 +4,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 @Autonomous(name="Blue Board", preselectTeleOp="1 Manual Control")
 public class BlueBoardAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
@@ -47,8 +45,9 @@ public class BlueBoardAuto extends LinearOpMode {
         control.StopNearBoardAuto(false);
         control.ReleaseLeft();
         sleep(400);
+        drive.updatePoseEstimate();
         Actions.runBlocking(
-                drive.actionBuilder(deliverToBoardPose)
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .lineToX(44)
                         .build());
         control.SafeStow();
@@ -123,29 +122,25 @@ public class BlueBoardAuto extends LinearOpMode {
         if (control.autoPosition == 1) {
             deliverToFloorPose = new Pose2d(10.5, 35, Math.toRadians(180));
             Actions.runBlocking(
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(deliverToBoardPose)
                             .splineToLinearHeading (deliverToFloorPose, Math.toRadians(180))
                             .build());
         } else if (control.autoPosition == 2) {
             deliverToFloorPose = new Pose2d(12, 35, Math.toRadians(90));
             Actions.runBlocking(
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(deliverToBoardPose)
-                            .splineToLinearHeading(new Pose2d(16, 30, Math.toRadians(180)), Math.toRadians(180))
+                            .splineToLinearHeading(new Pose2d(-16, 30, Math.toRadians(180)), Math.toRadians(180))
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                             .build());
         } else if (control.autoPosition == 3) {
-            deliverToFloorPose = new Pose2d(-12, 35, Math.toRadians(180));
+            deliverToFloorPose = new Pose2d(12, 35, Math.toRadians(180));
             Actions.runBlocking(
-                    //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(deliverToBoardPose)
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                             .build());
         } else {
             deliverToFloorPose = new Pose2d(10.5, 35, Math.toRadians(180));
             Actions.runBlocking(
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(deliverToBoardPose)
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                             .build());
