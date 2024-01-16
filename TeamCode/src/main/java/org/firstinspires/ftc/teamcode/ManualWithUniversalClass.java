@@ -29,6 +29,7 @@ public class ManualWithUniversalClass extends LinearOpMode {
             while (opModeIsActive()) {
                 if (isStopRequested()){
                     theRobot.ServoStop();
+                    theRobot.DisableAutoIntake();
                     sleep(100);
                 }
                 theRobot.PickupRoutine();
@@ -158,12 +159,14 @@ public class ManualWithUniversalClass extends LinearOpMode {
 
             // Stop must have been pressed to get here, make sure the continuous rotation servos are stopped
             theRobot.ServoStop();
+            theRobot.DisableAutoIntake();
             sleep(150);
 
         } catch (Exception e) {
             // something went wrong and has crashed
             // Make sure the continuous rotation servos are stopped
             theRobot.ServoStop();
+            theRobot.DisableAutoIntake();
             sleep(150);
 
             // throw the exception higher for other handlers to run
