@@ -40,7 +40,7 @@ public class RedFarStackAuto extends LinearOpMode {
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
        // control.SpecialSleep(8000);
-
+        control.ServoIntake();
         if(control.autoPosition == 3) {
             Actions.runBlocking(
                     drive.actionBuilder(deliverToFloorPose)
@@ -112,7 +112,7 @@ public class RedFarStackAuto extends LinearOpMode {
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(50,-38,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,-38.5,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, -9, Math.toRadians(180)))

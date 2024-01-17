@@ -141,7 +141,7 @@ public class  UniversalControlClass {
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
         rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
         clawDistanceSensor = hardwareMap.get(RevColorSensorV3.class, "ClawSensor");
-        //InitBlinkin(hardwareMap);
+        InitBlinkin(hardwareMap);
         huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens1");
 
         //TODO: set motor direction, zero power brake behavior, stop and reset encoders, etc
@@ -316,6 +316,7 @@ public class  UniversalControlClass {
         if (AutoIntake){
             ServoIntake();
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)){
+                SetBlinkinToPixelColor();
                 opMode.gamepad1.rumble(1000);
                 ServoStop();
                 GrabPixelPos();
@@ -357,9 +358,10 @@ public class  UniversalControlClass {
     public void InitBlinkin(HardwareMap hardwareMap) {
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class,"leftBlinkin");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class,"rightBlinkin");
-        leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
+        //leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
 
-        blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
+        blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+        blinkinLedDriverRight.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
     }
     public void ArmWrist(double position){
         if (position > MAX_WRIST_POS){
@@ -398,9 +400,11 @@ public class  UniversalControlClass {
     }
     public void ReleaseLeft(){
         grabberLeft.setPosition(0);
+        blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
     }
     public void ReleaseRight(){
         grabberRight.setPosition(0);
+        blinkinLedDriverRight.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
     }
     public void ServoIntake() {
         intakeRight.setPower(-1.0);
@@ -494,16 +498,17 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("LeftScissor: ", leftScissor.getPower());
         opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
         opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
+        showColorSensorTelemetry();
         opMode.telemetry.update();
     }
     public void StopNearBoard(){
         double timeout = opMode.getRuntime() + 3;
-        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 80) && (opMode.getRuntime() < timeout)){
+        while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 78) && (opMode.getRuntime() < timeout)){
             opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
             opMode.telemetry.update();
             moveRobot(-.55,0.0,0);
             opMode.sleep(100);
-            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 80){
+            if(clawDistanceSensor.getDistance(DistanceUnit.MM) <= 78){
                 moveRobot(0.0,0.0,0);
                 opMode.sleep(100);
                 ReleaseLeft();
@@ -611,19 +616,19 @@ public class  UniversalControlClass {
         int blueRight = rightColorSensor.blue();
 
         // Left sensor left blinkin
-        if(redLeft < 4000 && redLeft > 1000 && greenLeft < 6000 && greenLeft > 3000 && blueLeft < 7000 && blueLeft > 3000) {
+        if(redLeft < 5000 && redLeft > 500 && greenLeft < 10000 && greenLeft > 5000 && blueLeft < 9500 && blueLeft > 5000) {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        else if(redLeft < 2500 && redLeft > 1000 && greenLeft < 3500 && greenLeft > 1500 && blueLeft < 1000 && blueLeft >0 ) {
+        else if(redLeft < 2500 && redLeft > 1000 && greenLeft < 5000 && greenLeft > 1500 && blueLeft < 1500 && blueLeft >0 ) {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        else if(redLeft < 1000 && redLeft > 0 && greenLeft < 6000 && greenLeft > 1500 && blueLeft < 1000 && blueLeft >0 ) {
+        else if(redLeft < 1000 && redLeft > 0 && greenLeft < 6000 && greenLeft > 1500 && blueLeft < 1500 && blueLeft >0 ) {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        else if(redLeft < 3500 && redLeft > 1000 && greenLeft < 4000 && greenLeft > 2000 && blueLeft < 7000 && blueLeft > 3500 ) {
+        else if(redLeft < 3500 && redLeft > 1000 && greenLeft < 4700 && greenLeft > 2000 && blueLeft < 7000 && blueLeft > 3500 ) {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
@@ -633,19 +638,19 @@ public class  UniversalControlClass {
         }
 
         //Right sensor right blinkin
-        if(redRight < 4000 && redRight > 1000 && greenRight < 6000 && greenRight > 3000 && blueRight < 7000 && blueRight > 3000) {
+        if(redRight < 5000 && redRight > 500 && greenRight < 10000 && greenRight > 5000 && blueRight < 9500 && blueRight > 5000) {
             Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
-        else if(redRight < 2500 && redRight > 1000 && greenRight < 3500 && greenRight > 1500 && blueRight < 1000 && blueRight >0 ) {
+        else if(redRight < 2500 && redRight > 1000 && greenRight < 5000 && greenRight > 1500 && blueRight < 1500 && blueRight >0 ) {
             Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
-        else if(redRight < 1000 && redRight > 0 && greenRight < 6000 && greenRight > 1500 && blueRight < 1000 && blueRight >0 ) {
+        else if(redRight < 1000 && redRight > 0 && greenRight < 6000 && greenRight > 1500 && blueRight < 1500 && blueRight >0 ) {
             Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
-        else if(redRight < 3500 && redRight > 1000 && greenRight < 4000 && greenRight > 2000 && blueRight < 7000 && blueRight > 3500 ) {
+        else if(redRight < 3500 && redRight > 1000 && greenRight < 4700 && greenRight > 2000 && blueRight < 7000 && blueRight > 3500 ) {
             Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
@@ -654,7 +659,7 @@ public class  UniversalControlClass {
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
     }
-    public void Show_Blinkin_Telemetry() {
+    public void ShowBlinkinTelemetry() {
         opMode.telemetry.addData("Blinkin Left: ", Blinken_left_pattern.toString());
         opMode.telemetry.addData("Blinkin Right: ", Blinken_right_pattern.toString());
     }
@@ -691,9 +696,9 @@ public class  UniversalControlClass {
         }
         else{
             //pick a spot
-            opMode.telemetry.addData("!!Team Art NOT DETECTED!! ", "DEFAULT TO CENTER");
-            autoPosition = 2;
-            DESIRED_TAG_ID = 2;
+            opMode.telemetry.addData("!!Team Art NOT DETECTED!! ", "DEFAULT TO POSITION 1");
+            autoPosition = 1;
+            DESIRED_TAG_ID = 1;
         }
     }
     public void DetectTeamArtRed() {

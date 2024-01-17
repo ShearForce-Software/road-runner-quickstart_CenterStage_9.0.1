@@ -41,7 +41,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         control.ResetArmAuto();
         //control.SpecialSleep(10000);
         //control.SpecialSleep(8000);
-
+        control.ServoIntake();
         if(control.autoPosition == 1) {
             // drive to stack
             Actions.runBlocking(
@@ -107,7 +107,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         // Look for potential errors
         //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(50,34,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,34.5,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
@@ -117,7 +117,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(50,23.5,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50,24.5,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.
                     // yawError, Math.toRadians(180)))
