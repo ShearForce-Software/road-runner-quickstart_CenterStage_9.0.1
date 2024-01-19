@@ -379,7 +379,7 @@ public class  UniversalControlClass {
         // SPECIAL routine to change the wrist position that equals the right spot
         // to grab the pixels, if the servo gets shifted out of position
         WRIST_GRAB_PIXEL_POS = wristLeft.getPosition();
-        WRIST_DELIVER_TO_BOARD_POS = WRIST_GRAB_PIXEL_POS - 0.48;
+        WRIST_DELIVER_TO_BOARD_POS = WRIST_GRAB_PIXEL_POS + 0.4;
     }
     public double getWristPosition(){
         return wristLeft.getPosition();
