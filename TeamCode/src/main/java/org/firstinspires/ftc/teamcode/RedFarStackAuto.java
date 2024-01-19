@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Far Stack", preselectTeleOp = "1 Manual Control")
+@Autonomous(name="Red Far Stack")
 public class RedFarStackAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     MecanumDrive drive;
@@ -133,7 +133,7 @@ public class RedFarStackAuto extends LinearOpMode {
     }
     public void RedLeftTeamArtPixelDelivery() {
 
-        Pose2d aTempPose = new Pose2d(-38.5, -33, Math.toRadians(90));
+        Pose2d aTempPose = new Pose2d(-38, -33, Math.toRadians(90));
 
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))

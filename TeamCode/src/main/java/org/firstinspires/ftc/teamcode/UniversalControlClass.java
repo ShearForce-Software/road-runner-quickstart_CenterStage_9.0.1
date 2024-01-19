@@ -76,8 +76,8 @@ public class  UniversalControlClass {
     public static final int SLIDE_MAX_HEIGHT = -2850;
     public static final int SLIDE_MIN_HEIGHT = 0;
     public static final int SLIDE_AUTO_HEIGHT = -350;
-    public static final int SLIDE_LOW_HEIGHT = -1300;
-    public static final int SLIDE_MEDIUM_HEIGHT = -2000;
+    public static final int SLIDE_LOW_HEIGHT = -400;
+    public static final int SLIDE_MEDIUM_HEIGHT = -1500;
     public double wristPosition = 0.0;
     public double wholeArmPosition = 0.04;
     static final double MAX_WRIST_POS = 1.0;
@@ -316,13 +316,13 @@ public class  UniversalControlClass {
         if (AutoIntake){
             ServoIntake();
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)){
-                SetBlinkinToPixelColor();
                 opMode.gamepad1.rumble(1000);
                 ServoStop();
                 GrabPixelPos();
                 SpecialSleep(500);
                 GrabPixels();
                 SpecialSleep(750);
+                SetBlinkinToPixelColor();
                 ServoOuttake();
                 ReadyToLiftSlides();
                 AutoIntake = false;
@@ -498,7 +498,7 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("LeftScissor: ", leftScissor.getPower());
         opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
         opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
-        showColorSensorTelemetry();
+        //showColorSensorTelemetry();
         opMode.telemetry.update();
     }
     public void StopNearBoard(){
@@ -572,15 +572,19 @@ public class  UniversalControlClass {
         //double rightColor = rightColorSensor.getLightDetected();
     }
     public void showColorSensorTelemetry(){
-        int leftColor = leftColorSensor.getNormalizedColors().toColor();
-        opMode.telemetry.addData("leftColorNorm: ", leftColor);
+        //int leftColor = leftColorSensor.getNormalizedColors().toColor();
+        //opMode.telemetry.addData("leftColorNorm: ", leftColor);
         opMode.telemetry.addData("leftColor(red): ", leftColorSensor.red());
         opMode.telemetry.addData("leftColor(green): ", leftColorSensor.green());
         opMode.telemetry.addData("leftColor(blue): ", leftColorSensor.blue());
+        opMode.telemetry.addData("rightColor(red): ", rightColorSensor.red());
+        opMode.telemetry.addData("rightColor(green): ", rightColorSensor.green());
+        opMode.telemetry.addData("rightColor(blue): ", rightColorSensor.blue());
         //opMode.telemetry.addData("rightColor: ", rightColor);
-        opMode.telemetry.addData("leftColorNorm(red): ", leftColorSensor.getNormalizedColors().red);
-        opMode.telemetry.addData("leftColorNorm(green): ", leftColorSensor.getNormalizedColors().green);
-        opMode.telemetry.addData("leftColorNorm(blue): ", leftColorSensor.getNormalizedColors().blue);
+        //opMode.telemetry.addData("leftColorNorm(red): ", leftColorSensor.getNormalizedColors().red);
+        //opMode.telemetry.addData("leftColorNorm(green): ", leftColorSensor.getNormalizedColors().green);
+        //opMode.telemetry.addData("leftColorNorm(blue): ", leftColorSensor.getNormalizedColors().blue);
+        /*
         int red = leftColorSensor.red();
         int green = leftColorSensor.green();
         int blue = leftColorSensor.blue();
@@ -606,6 +610,8 @@ public class  UniversalControlClass {
         else {
             opMode.telemetry.addData("Left: ", "unknown");
         }
+
+         */
     }
     public void SetBlinkinToPixelColor() {
         int redLeft = leftColorSensor.red();
@@ -658,6 +664,7 @@ public class  UniversalControlClass {
             Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
+        showColorSensorTelemetry();
     }
     public void ShowBlinkinTelemetry() {
         opMode.telemetry.addData("Blinkin Left: ", Blinken_left_pattern.toString());
