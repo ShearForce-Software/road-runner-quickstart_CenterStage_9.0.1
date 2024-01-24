@@ -8,11 +8,12 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepTesting {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(600);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setDimensions(17, 15)
                 .followTrajectorySequence(drive ->
 
 /*
@@ -88,7 +89,7 @@ public class MeepMeepTesting {
                                 .splineToLinearHeading(new Pose2d(48,60,Math.toRadians(270)), Math.toRadians(0))
 */
 
-/*
+
                         // RedFarStackAuto
                         drive.trajectorySequenceBuilder(new Pose2d(-35.5,-62.5,Math.toRadians(90)))
                                 .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
@@ -130,8 +131,8 @@ public class MeepMeepTesting {
                                 .lineTo(new Vector2d(47.0, -38)) //.lineToX(47)
                                 // Parking Position
                                 .splineToLinearHeading(new Pose2d(48,-15, Math.toRadians(90)), Math.toRadians(90))
-*/
 
+/*
                         // RedFarMultipleCyclesAuto
                                 drive.trajectorySequenceBuilder(new Pose2d(-35.5,-62.5,Math.toRadians(90)))
                                         .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
@@ -184,7 +185,7 @@ public class MeepMeepTesting {
                                         .lineTo(new Vector2d(47.0, -33)) //.lineToX(47)
                                         // Parking Position
                                         .splineToLinearHeading(new Pose2d(48,-15, Math.toRadians(90)), Math.toRadians(90))
-
+*/
 
 /*
                                 // RedBoardAuto
