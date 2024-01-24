@@ -779,8 +779,7 @@ public class  UniversalControlClass {
     }
     public void driveControlsFieldCentric() {
         double y = -opMode.gamepad1.left_stick_y;
-        // double x = opMode.gamepad1.left_stick_x * 1.1;  strafe scale factor moved to rotX
-        double x = opMode.gamepad1.left_stick_x;
+        double x = opMode.gamepad1.left_stick_x * 1.1;
         double rx = opMode.gamepad1.right_stick_x;
 
         double botHeading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
@@ -788,18 +787,16 @@ public class  UniversalControlClass {
         double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
         double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
 
-        rotX = rotX * 1.1;  // Counteract for imperfect strafing
-
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (rotY + rotX + rx) / denominator;
         double backLeftPower = (rotY - rotX + rx) / denominator;
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
 
-        leftFront.setPower(frontLeftPower*.9);
-        leftRear.setPower(backLeftPower*.9);
-        rightFront.setPower(frontRightPower*.9);
-        rightRear.setPower(backRightPower*.9);
+        leftFront.setPower(frontLeftPower*.75);
+        leftRear.setPower(backLeftPower*.75);
+        rightFront.setPower(frontRightPower*.75);
+        rightRear.setPower(backRightPower*.75);
     }
     public void RunDriveControls() {
         if (IsFieldCentric) {

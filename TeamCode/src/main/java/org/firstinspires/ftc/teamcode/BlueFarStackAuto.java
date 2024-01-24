@@ -40,7 +40,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
         //control.SpecialSleep(10000);
-        //control.SpecialSleep(8000);
+        control.SpecialSleep(6000);
         control.ServoIntake();
         if(control.autoPosition == 1) {
             // drive to stack
