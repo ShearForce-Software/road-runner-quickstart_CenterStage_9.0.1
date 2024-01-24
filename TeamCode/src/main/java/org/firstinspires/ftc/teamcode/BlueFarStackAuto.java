@@ -1,4 +1,9 @@
 package org.firstinspires.ftc.teamcode;
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -66,11 +71,13 @@ public class BlueFarStackAuto extends LinearOpMode {
         // drive to the backboard area
         drive.updatePoseEstimate();
         Actions.runBlocking(
+                new ParallelAction(stopSpinners()),
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .setTangent(0)
                         .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
-                        .build());
+
+                .build());
 
         // drive to the correct backboard spot based on the team art
         BlueBoardDelivery();
@@ -175,5 +182,24 @@ public class BlueFarStackAuto extends LinearOpMode {
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
                             .build());
         }
+    }
+    public Action stopSpinners() {
+        return new StopSpinners();
+    }
+    public class StopSpinners implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                control.ServoStop();
+                initialized = true;
+            }
+
+
+            packet.put("disable Intakes", 0);
+            return true;
+        }
+
     }
 }
