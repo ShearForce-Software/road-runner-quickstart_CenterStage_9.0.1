@@ -83,7 +83,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         }
         else if (jaredTestSuggestion) {
             // Pre-create the trajectory before asking parallel action to execute it
-            Action TrajectoryAction1 = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+            Action StackToBoardArea_TrajectoryAction = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                     .setTangent(0)
                     .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
                     .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
@@ -92,7 +92,7 @@ public class BlueFarStackAuto extends LinearOpMode {
             // Tell it to do two things at once
             Actions.runBlocking(new ParallelAction(
                     stopSpinners(),
-                    TrajectoryAction1
+                    StackToBoardArea_TrajectoryAction
             ));
 
         }
