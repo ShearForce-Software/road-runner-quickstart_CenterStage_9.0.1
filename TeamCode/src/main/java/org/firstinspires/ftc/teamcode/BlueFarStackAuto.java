@@ -19,6 +19,8 @@ public class BlueFarStackAuto extends LinearOpMode {
     Pose2d deliverToFloorPose;
     Pose2d deliverToBoardPose;
     Vector2d stackVec = new Vector2d(-56, 12);
+    boolean aidanParallelTestEnabled = false;
+
     public void runOpMode() {
         startPose = new Pose2d(-35.5, 62.5, Math.toRadians(270));
         drive = new MecanumDrive(hardwareMap, startPose);
@@ -71,9 +73,22 @@ public class BlueFarStackAuto extends LinearOpMode {
 
         // drive to the backboard area
         drive.updatePoseEstimate();
-        Actions.runBlocking(new SequentialAction(
-                new ParallelAction(stopSpinners()),
-                new ParallelAction(driveAcrossField())));
+
+        if (aidanParallelTestEnabled) {
+            Actions.runBlocking(new ParallelAction(
+                    stopSpinners(),
+                    driveAcrossField()
+                    ));
+        }
+        else {
+            Actions.runBlocking(
+                    drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                            .build());
+
+        }
 
 
 
