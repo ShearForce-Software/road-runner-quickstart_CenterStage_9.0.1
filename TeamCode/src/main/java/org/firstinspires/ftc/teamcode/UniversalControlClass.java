@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.MecanumDrive.PARAMS;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 @Config
@@ -522,6 +524,7 @@ public class  UniversalControlClass {
         showColorSensorTelemetry();
         opMode.telemetry.update();
     }
+
     public void StopNearBoard(){
         double timeout = opMode.getRuntime() + 3;
         while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 78) && (opMode.getRuntime() < timeout)){
