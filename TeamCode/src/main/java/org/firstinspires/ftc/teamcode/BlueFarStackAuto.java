@@ -71,13 +71,13 @@ public class BlueFarStackAuto extends LinearOpMode {
         // drive to the backboard area
         drive.updatePoseEstimate();
         Actions.runBlocking(
-                new ParallelAction(stopSpinners()),
+                new ParallelAction(stopSpinners(),
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .setTangent(0)
                         .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
 
-                .build());
+                .build()));
 
         // drive to the correct backboard spot based on the team art
         BlueBoardDelivery();
