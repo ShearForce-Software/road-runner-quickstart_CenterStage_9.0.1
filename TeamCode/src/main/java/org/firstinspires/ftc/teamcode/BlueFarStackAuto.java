@@ -20,6 +20,7 @@ public class BlueFarStackAuto extends LinearOpMode {
     Pose2d deliverToBoardPose;
     Vector2d stackVec = new Vector2d(-56, 12);
     boolean aidanParallelTestEnabled = false;
+    boolean jaredTestSuggestion = false;
 
     public void runOpMode() {
         startPose = new Pose2d(-35.5, 62.5, Math.toRadians(270));
@@ -79,6 +80,21 @@ public class BlueFarStackAuto extends LinearOpMode {
                     stopSpinners(),
                     driveAcrossField()
                     ));
+        }
+        else if (jaredTestSuggestion) {
+            // Pre-create the trajectory before asking parallel action to execute it
+            Action TrajectoryAction1 = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                    .setTangent(0)
+                    .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                    .build();
+
+            // Tell it to do two things at once
+            Actions.runBlocking(new ParallelAction(
+                    stopSpinners(),
+                    TrajectoryAction1
+            ));
+
         }
         else {
             Actions.runBlocking(
