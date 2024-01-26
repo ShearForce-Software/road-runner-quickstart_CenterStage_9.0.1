@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.MecanumDrive.PARAMS;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 @Config
@@ -102,6 +104,13 @@ public class  UniversalControlClass {
     double rangeError = 0;
     double yawError = 0;
     private double slidePower = 0.0;
+    int redLeft = 0;
+    int greenLeft = 0;
+    int blueLeft = 0;
+    int redRight = 0;
+    int greenRight = 0;
+    int blueRight = 0;
+    static boolean allianceColorIsBlue = false;
 
     //TODO: Add any other specification variables
     public UniversalControlClass(boolean isDriverControl, boolean isFieldCentric, LinearOpMode opMode) {
@@ -142,6 +151,8 @@ public class  UniversalControlClass {
         rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorRight");
         clawDistanceSensor = hardwareMap.get(RevColorSensorV3.class, "ClawSensor");
         InitBlinkin(hardwareMap);
+        leftColorSensor.enableLed(false);
+        rightColorSensor.enableLed(false);
         huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens1");
 
         //TODO: set motor direction, zero power brake behavior, stop and reset encoders, etc
@@ -400,11 +411,23 @@ public class  UniversalControlClass {
     }
     public void ReleaseLeft(){
         grabberLeft.setPosition(0);
-        blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+        if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }
     }
     public void ReleaseRight(){
         grabberRight.setPosition(0);
-        blinkinLedDriverRight.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+        if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }
     }
     public void ServoIntake() {
         intakeRight.setPower(-1.0);
@@ -498,9 +521,10 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("LeftScissor: ", leftScissor.getPower());
         opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
         opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
-        //showColorSensorTelemetry();
+        showColorSensorTelemetry();
         opMode.telemetry.update();
     }
+
     public void StopNearBoard(){
         double timeout = opMode.getRuntime() + 3;
         while((clawDistanceSensor.getDistance(DistanceUnit.MM) > 78) && (opMode.getRuntime() < timeout)){
@@ -574,12 +598,12 @@ public class  UniversalControlClass {
     public void showColorSensorTelemetry(){
         //int leftColor = leftColorSensor.getNormalizedColors().toColor();
         //opMode.telemetry.addData("leftColorNorm: ", leftColor);
-        opMode.telemetry.addData("leftColor(red): ", leftColorSensor.red());
-        opMode.telemetry.addData("leftColor(green): ", leftColorSensor.green());
-        opMode.telemetry.addData("leftColor(blue): ", leftColorSensor.blue());
-        opMode.telemetry.addData("rightColor(red): ", rightColorSensor.red());
-        opMode.telemetry.addData("rightColor(green): ", rightColorSensor.green());
-        opMode.telemetry.addData("rightColor(blue): ", rightColorSensor.blue());
+        opMode.telemetry.addData("leftColor(red): ", redLeft);
+        opMode.telemetry.addData("leftColor(green): ", greenLeft);
+        opMode.telemetry.addData("leftColor(blue): ", blueLeft);
+        opMode.telemetry.addData("rightColor(red): ", redRight);
+        opMode.telemetry.addData("rightColor(green): ", greenRight);
+        opMode.telemetry.addData("rightColor(blue): ", blueRight);
         //opMode.telemetry.addData("rightColor: ", rightColor);
         //opMode.telemetry.addData("leftColorNorm(red): ", leftColorSensor.getNormalizedColors().red);
         //opMode.telemetry.addData("leftColorNorm(green): ", leftColorSensor.getNormalizedColors().green);
@@ -614,57 +638,62 @@ public class  UniversalControlClass {
          */
     }
     public void SetBlinkinToPixelColor() {
-        int redLeft = leftColorSensor.red();
-        int greenLeft = leftColorSensor.green();
-        int blueLeft = leftColorSensor.blue();
-        int redRight = rightColorSensor.red();
-        int greenRight = rightColorSensor.green();
-        int blueRight = rightColorSensor.blue();
+        redLeft = leftColorSensor.red();
+        greenLeft = leftColorSensor.green();
+        blueLeft = leftColorSensor.blue();
+        redRight = rightColorSensor.red();
+        greenRight = rightColorSensor.green();
+        blueRight = rightColorSensor.blue();
 
         // Left sensor left blinkin
-        if(redLeft < 5000 && redLeft > 500 && greenLeft < 10000 && greenLeft > 5000 && blueLeft < 9500 && blueLeft > 5000) {
+        if(redLeft > (blueLeft / 2) && greenLeft > redLeft && blueLeft > redLeft) {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        else if(redLeft < 2500 && redLeft > 1000 && greenLeft < 5000 && greenLeft > 1500 && blueLeft < 1500 && blueLeft >0 ) {
-            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+        else if(greenLeft > redLeft && redLeft > blueLeft) {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.GOLD;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        else if(redLeft < 1000 && redLeft > 0 && greenLeft < 6000 && greenLeft > 1500 && blueLeft < 1500 && blueLeft >0 ) {
+        else if(greenLeft > (redLeft * 2) && greenLeft > (blueLeft * 2)) {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        else if(redLeft < 3500 && redLeft > 1000 && greenLeft < 4700 && greenLeft > 2000 && blueLeft < 7000 && blueLeft > 3500 ) {
-            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+        else if(blueLeft > greenLeft && greenLeft > redLeft) {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.HOT_PINK;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        else {
-            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+        else if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
 
         //Right sensor right blinkin
-        if(redRight < 5000 && redRight > 500 && greenRight < 10000 && greenRight > 5000 && blueRight < 9500 && blueRight > 5000) {
+        if(redRight > (blueRight / 2) && greenRight > redRight && blueRight > redRight) {
             Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
-        else if(redRight < 2500 && redRight > 1000 && greenRight < 5000 && greenRight > 1500 && blueRight < 1500 && blueRight >0 ) {
-            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+        else if(greenRight > redRight && redRight > blueRight) {
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.GOLD;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
-        else if(redRight < 1000 && redRight > 0 && greenRight < 6000 && greenRight > 1500 && blueRight < 1500 && blueRight >0 ) {
+        else if(greenRight > (redRight * 2) && greenRight > (blueRight * 2)) {
             Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
-        else if(redRight < 3500 && redRight > 1000 && greenRight < 4700 && greenRight > 2000 && blueRight < 7000 && blueRight > 3500 ) {
-            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+        else if(blueRight > greenRight && greenRight > redRight) {
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.HOT_PINK;
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
-        else {
-            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
-            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+        else if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
         }
-        showColorSensorTelemetry();
     }
     public void ShowBlinkinTelemetry() {
         opMode.telemetry.addData("Blinkin Left: ", Blinken_left_pattern.toString());
@@ -681,6 +710,14 @@ public class  UniversalControlClass {
         opMode.telemetry.update();
     }
     public void DetectTeamArtBlue() {
+        allianceColorIsBlue = true;
+        if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }
         HuskyLens.Block[] blocks = huskyLens.blocks();
         if (blocks.length > 0){
             int xVal = blocks[0].x;
@@ -709,6 +746,14 @@ public class  UniversalControlClass {
         }
     }
     public void DetectTeamArtRed() {
+        allianceColorIsBlue = false;
+        if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }
         HuskyLens.Block[] blocks = huskyLens.blocks();
         if (blocks.length > 0){
             int xVal = blocks[0].x;

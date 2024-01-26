@@ -41,6 +41,7 @@ public class RedFarStackAuto extends LinearOpMode {
         control.ResetArmAuto();
         control.SpecialSleep(6000);
         control.ServoIntake();
+
         if(control.autoPosition == 3) {
             Actions.runBlocking(
                     drive.actionBuilder(deliverToFloorPose)

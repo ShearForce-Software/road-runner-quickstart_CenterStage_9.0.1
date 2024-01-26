@@ -1,16 +1,22 @@
 package org.firstinspires.ftc.teamcode;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 @Autonomous(name="Blue Far", preselectTeleOp="1 Manual Control")
+
 public class BlueFarAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
     MecanumDrive drive;
     Pose2d startPose;
     Pose2d deliverToFloorPose;
     Pose2d deliverToBoardPose;
+    CRServo intakeLeft;
+    CRServo intakeRight;
 
     public void runOpMode() {
         startPose = new Pose2d(-35.5, 62.5, Math.toRadians(270));
@@ -46,6 +52,7 @@ public class BlueFarAuto extends LinearOpMode {
         //control.SpecialSleep(10000);
         control.SpecialSleep(8000);
 
+
         // drive to the backboard area
         Actions.runBlocking(
                 drive.actionBuilder(deliverToFloorPose)
@@ -59,6 +66,8 @@ public class BlueFarAuto extends LinearOpMode {
 
         // drive to the correct backboard spot based on the team art
         BlueBoardDelivery();
+
+
 
         //control.ReadyToLiftSlides();
         //sleep(150);

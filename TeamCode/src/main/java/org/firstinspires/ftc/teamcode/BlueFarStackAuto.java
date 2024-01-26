@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode;
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,6 +19,9 @@ public class BlueFarStackAuto extends LinearOpMode {
     Pose2d deliverToFloorPose;
     Pose2d deliverToBoardPose;
     Vector2d stackVec = new Vector2d(-56, 12);
+    boolean aidanParallelTestEnabled = false;
+    boolean jaredTestSuggestion = false;
+
     public void runOpMode() {
         startPose = new Pose2d(-35.5, 62.5, Math.toRadians(270));
         drive = new MecanumDrive(hardwareMap, startPose);
@@ -65,12 +74,39 @@ public class BlueFarStackAuto extends LinearOpMode {
 
         // drive to the backboard area
         drive.updatePoseEstimate();
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
-                        .build());
+
+        if (aidanParallelTestEnabled) {
+            Actions.runBlocking(new ParallelAction(
+                    stopSpinners(),
+                    driveAcrossField()
+                    ));
+        }
+        else if (jaredTestSuggestion) {
+            // Pre-create the trajectory before asking parallel action to execute it
+            Action TrajectoryAction1 = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                    .setTangent(0)
+                    .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                    .build();
+
+            // Tell it to do two things at once
+            Actions.runBlocking(new ParallelAction(
+                    stopSpinners(),
+                    TrajectoryAction1
+            ));
+
+        }
+        else {
+            Actions.runBlocking(
+                    drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                            .setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                            .build());
+
+        }
+
+
 
         // drive to the correct backboard spot based on the team art
         BlueBoardDelivery();
@@ -175,5 +211,54 @@ public class BlueFarStackAuto extends LinearOpMode {
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
                             .build());
         }
+    }
+    public Action stopSpinners() {
+        return new StopSpinners();
+    }
+    public class StopSpinners implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                control.ServoStop();
+                initialized = true;
+            }
+//
+
+            packet.put("disable Intakes", 0);
+            return false;
+        }
+
+    }
+    public Action driveAcrossField()
+    {
+        return new DriveAcrossField();
+    }
+    public class DriveAcrossField implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+                drive.updatePoseEstimate();
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                        .setTangent(0)
+                        .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                        .build();
+            }
+            packet.put("drive across blue field", 0);
+            boolean returnValue = true;
+
+            drive.updatePoseEstimate();
+            if ((drive.pose.position.x == 30) && (drive.pose.position.y == 9))
+            {
+                returnValue = false;
+            }
+            return returnValue;
+        }
+
     }
 }
