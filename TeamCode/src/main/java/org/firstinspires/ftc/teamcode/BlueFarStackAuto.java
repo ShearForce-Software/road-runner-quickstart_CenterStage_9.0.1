@@ -73,10 +73,7 @@ public class BlueFarStackAuto extends LinearOpMode {
         drive.updatePoseEstimate();
         Actions.runBlocking(new SequentialAction(
                 new ParallelAction(stopSpinners()),
-                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
-                        .setTangent(0)
-                        .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                new ParallelAction(driveAcrossField())));
 
 
 
