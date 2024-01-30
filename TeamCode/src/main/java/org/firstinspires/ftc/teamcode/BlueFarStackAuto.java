@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -83,17 +84,73 @@ public class BlueFarStackAuto extends LinearOpMode {
         }
         else if (jaredTestSuggestion) {
             // Pre-create the trajectory before asking parallel action to execute it
-            Action TrajectoryAction1 = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+            Action StackToBoardArea_Trajectory = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                     .setTangent(0)
                     .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
                     .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
                     .build();
 
-            // Tell it to do two things at once
+            // Tell it to do two things at once like this
             Actions.runBlocking(new ParallelAction(
-                    stopSpinners(),
-                    TrajectoryAction1
+                    (telemetryPacket) -> {
+                        control.ServoStop();
+                        return false;
+                    },
+                    StackToBoardArea_Trajectory
             ));
+
+            /*
+            // Example Pseudo code for the first third of OPMode moves using only combos of Sequential and Parallel actions
+            Actions.runBlocking(new SequentialAction(
+                    StartToFloor_Trajectory, //TODO - create a trajectoryAction variable named this, populate in BlueRightTeamArtPixelDelivery
+                    // Divide the DropOnLine method into pieces, because can't call sleep() or specialSleep() in here
+                    (telemetryPacket) -> { // Run part 1 of DropOnLine
+                        control.armRotLeft.setPosition(.72);
+                        control.armRotRight.setPosition(.72);
+                        return false;
+                    },
+                    new SleepAction(0.2), // sleep input units are in seconds according to the documentation
+                    (telemetryPacket) -> { // Run part 2 of DropOnLine
+                        control.wristLeft.setPosition(.85);
+                        control.wristRight.setPosition(.85);
+                        return false;
+                    },
+                    new SleepAction(0.2),
+                    (telemetryPacket) -> { // Run part 3 of DropOnLine
+                        control.grabberRight.setPosition(0);
+                        return false;
+                    },
+                    new SleepAction(0.5),
+                    // Drive to the stack while resetting the arm/wrist/slides and turning on the intake in parallel
+                    new ParallelAction(
+                            FloorToStack_Trajectory, //TODO - create a trajectoryAction variable named this, populate in BlueRightTeamArtPixelDelivery
+                            new SequentialAction(
+                                    // Divide the ResetArmAuto into pieces, because can't have sleep() calls in it
+                                    (telemetryPacket) -> { // Run part 1 of ResetArmAuto
+                                        control.armRotLeft.setPosition(.07);
+                                        control.armRotRight.setPosition(.07);
+                                        control.wristLeft.setPosition(control.WRIST_GRAB_PIXEL_POS);
+                                        control.wristRight.setPosition(control.WRIST_GRAB_PIXEL_POS);
+                                        return false;
+                                    },
+                                    new SleepAction(0.2),
+                                    // NOTE this last piece of the ResetArmAuto action (SlidesDown) is going to be more complicated than others
+                                    // will need to create a custom action class like the stopSpinners() method
+                                    // will have to remove the while loop part of the SlidesDown action, and just use the if/else checks
+                                    // to detect when done to change the custom action return value to false
+                                    CustomAction_ResetArmAuto_SlidesDown() //TODO - create a custom action to handle slides down
+                            ),
+                            // in parallel call Servo Intake so servos are spinning before getting to the stack
+                            (telemetryPacket) -> {
+                                control.ServoIntake();
+                                return false;
+                            }
+                    )
+            ));
+            // end runBlocking -- move on to AutoPickupRoutine(); (not part of this sequence because of auto moves needing real sleep --
+            // then create another runblocking to get to the backboard, raising the slides/arms in parallel
+            // AFTER crossing beneath the bridge and then deliver pixels
+            */
 
         }
         else {
@@ -227,7 +284,7 @@ public class BlueFarStackAuto extends LinearOpMode {
 //
 
             packet.put("disable Intakes", 0);
-            return false;
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
 
     }

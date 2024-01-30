@@ -422,11 +422,11 @@ public class  UniversalControlClass {
     public void ReleaseRight(){
         grabberRight.setPosition(0);
         if(allianceColorIsBlue){
-            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
-            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }else {
-            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
-            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
     }
     public void ServoIntake() {
@@ -688,11 +688,11 @@ public class  UniversalControlClass {
             blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
         else if(allianceColorIsBlue){
-            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
-            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }else {
-            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
-            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
     }
     public void ShowBlinkinTelemetry() {
@@ -714,9 +714,13 @@ public class  UniversalControlClass {
         if(allianceColorIsBlue){
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }else {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
         HuskyLens.Block[] blocks = huskyLens.blocks();
         if (blocks.length > 0){
@@ -750,9 +754,13 @@ public class  UniversalControlClass {
         if(allianceColorIsBlue){
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }else {
             Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
             blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
         }
         HuskyLens.Block[] blocks = huskyLens.blocks();
         if (blocks.length > 0){
