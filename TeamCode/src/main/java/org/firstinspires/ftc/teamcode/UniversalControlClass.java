@@ -371,8 +371,17 @@ public class  UniversalControlClass {
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class,"rightBlinkin");
         //leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
 
-        blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
-        blinkinLedDriverRight.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+        if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }
     }
     public void ArmWrist(double position){
         if (position > MAX_WRIST_POS){
