@@ -179,6 +179,7 @@ public class  UniversalControlClass {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
         imu.initialize(parameters);
+        imu.resetYaw();
         droneLauncher.setPosition(.1);
     }
 
@@ -263,6 +264,11 @@ public class  UniversalControlClass {
         SpecialSleep(200);
         grabberRight.setPosition(0);
         SpecialSleep(500);
+        armRotLeft.setPosition(.7);
+        armRotRight.setPosition(.7);
+        wristLeft.setPosition(.83);
+        wristRight.setPosition(.83);
+        SpecialSleep(200);
     }
     public void SafeStow(){
         grabberLeft.setPosition(.72);

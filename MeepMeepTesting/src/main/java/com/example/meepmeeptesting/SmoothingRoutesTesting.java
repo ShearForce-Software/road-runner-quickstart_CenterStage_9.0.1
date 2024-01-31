@@ -15,7 +15,7 @@ public class SmoothingRoutesTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         // BlueFarStackAuto
-                        drive.trajectorySequenceBuilder(new Pose2d(-35.5, 62.5, Math.toRadians(270)))
+                    drive.trajectorySequenceBuilder(new Pose2d(-35.5, 62.5, Math.toRadians(270)))
                                 .splineToLinearHeading(new Pose2d(-38.5, 33, Math.toRadians(270)), Math.toRadians(270))
                                 // Position - 1 floor
                                 //.splineToLinearHeading (new Pose2d(-27, 33, Math.toRadians(180)), Math.toRadians(0))//CHANGED
@@ -32,7 +32,7 @@ public class SmoothingRoutesTesting {
                                 // Drive to backboard area
                                 .setTangent(0)
                                 .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                                .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(50, 9, Math.toRadians(180)), Math.toRadians(0))
                                 // Position - 1 board
                                 //.setTangent(0)
                                 //.splineToLinearHeading(new Pose2d(50, 34, Math.toRadians(180)), Math.toRadians(0))
@@ -40,8 +40,8 @@ public class SmoothingRoutesTesting {
                                 //.setTangent(0)
                                 //.splineToLinearHeading(new Pose2d(50, 29, Math.toRadians(180)), Math.toRadians(0))
                                 // Position - 3 board
-                                .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(50, 24.5, Math.toRadians(180)), Math.toRadians(0))
+                                .setTangent(Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(50, 24.5, Math.toRadians(180)), Math.toRadians(90))
                                 // Parking Position
                                 .splineToLinearHeading(new Pose2d(48, 15, Math.toRadians(270)), Math.toRadians(270))
                                 //.lineTo(new Vector2d(47, 55)) //lineToX(47)
