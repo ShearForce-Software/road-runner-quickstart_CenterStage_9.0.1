@@ -5,22 +5,20 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Blue Far Stack")
-public class BlueFarStackAuto extends LinearOpMode {
+@Autonomous(name="Aidan Test")
+public class AidanTest extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
     MecanumDrive drive;
     Pose2d startPose;
     Pose2d deliverToFloorPose;
     Pose2d deliverToBoardPose;
     Vector2d stackVec = new Vector2d(-56, 12);
-    boolean aidanParallelTestEnabled = false;
+    boolean aidanParallelTestEnabled = true;
     boolean jaredTestSuggestion = false;
 
     public void runOpMode() {
@@ -76,15 +74,15 @@ public class BlueFarStackAuto extends LinearOpMode {
         // drive to the backboard area
         drive.updatePoseEstimate();
 
-        if (aidanParallelTestEnabled) {
+
             Actions.runBlocking(new ParallelAction(
                     stopSpinners(),
                     driveAcrossField()
                     ));
-        }
-        else if (jaredTestSuggestion) {
+
+
             // Pre-create the trajectory before asking parallel action to execute it
-            Action StackToBoardArea_Trajectory = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+     /*       Action StackToBoardArea_Trajectory = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                     .setTangent(0)
                     .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
                     .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
@@ -97,8 +95,8 @@ public class BlueFarStackAuto extends LinearOpMode {
                         return false;
                     },
                     StackToBoardArea_Trajectory
-            ));
-
+           ));
+*/
             /*
             // Example Pseudo code for the first third of OPMode moves using only combos of Sequential and Parallel actions
             Actions.runBlocking(new SequentialAction(
@@ -152,8 +150,8 @@ public class BlueFarStackAuto extends LinearOpMode {
             // AFTER crossing beneath the bridge and then deliver pixels
             */
 
-        }
-        else {
+
+   /*     else {
             Actions.runBlocking(
                     drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                             .setTangent(0)
@@ -162,7 +160,7 @@ public class BlueFarStackAuto extends LinearOpMode {
                             .build());
 
         }
-
+*/
 
 
         // drive to the correct backboard spot based on the team art

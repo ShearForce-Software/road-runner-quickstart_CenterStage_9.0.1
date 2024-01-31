@@ -179,6 +179,7 @@ public class  UniversalControlClass {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
         imu.initialize(parameters);
+        imu.resetYaw();
         droneLauncher.setPosition(.1);
     }
 
@@ -263,6 +264,11 @@ public class  UniversalControlClass {
         SpecialSleep(200);
         grabberRight.setPosition(0);
         SpecialSleep(500);
+        armRotLeft.setPosition(.7);
+        armRotRight.setPosition(.7);
+        wristLeft.setPosition(.83);
+        wristRight.setPosition(.83);
+        SpecialSleep(200);
     }
     public void SafeStow(){
         grabberLeft.setPosition(.72);
@@ -371,8 +377,17 @@ public class  UniversalControlClass {
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class,"rightBlinkin");
         //leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "ColorSensorLeft");
 
-        blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
-        blinkinLedDriverRight.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+        if(allianceColorIsBlue){
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }else {
+            Blinken_left_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            Blinken_right_pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+            blinkinLedDriverRight.setPattern(Blinken_right_pattern);
+            blinkinLedDriverLeft.setPattern(Blinken_left_pattern);
+        }
     }
     public void ArmWrist(double position){
         if (position > MAX_WRIST_POS){
