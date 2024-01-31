@@ -208,7 +208,7 @@ public class BlueFarStackAuto extends LinearOpMode {
                 control.ServoStop();
                 initialized = true;
             }
-//
+
 
             packet.put("disable Intakes", 0);
             return false;
