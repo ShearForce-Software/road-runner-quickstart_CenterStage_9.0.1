@@ -3,8 +3,10 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+@Disabled
 @Autonomous(name="Red Far Stack")
 public class RedFarStackAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
@@ -106,7 +108,6 @@ public class RedFarStackAuto extends LinearOpMode {
         if (control.autoPosition == 1) {
             deliverToBoardPose = new Pose2d(50,-28,Math.toRadians(180));
             Actions.runBlocking(
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30,-9, Math.toRadians(180)))
                             .setTangent(0)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
