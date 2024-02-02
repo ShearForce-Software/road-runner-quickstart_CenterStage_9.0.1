@@ -39,7 +39,6 @@ public class  UniversalControlClass {
     DcMotor rightRear;
     DcMotor rightSlide;
     DcMotor leftSlide;
-
     DcMotor leftScissor;
     DcMotor rightScissor;
     TouchSensor leftSlideLimit;
@@ -77,7 +76,7 @@ public class  UniversalControlClass {
     public static final double SLIDE_POWER   = 0.75;
     public static final int SLIDE_MAX_HEIGHT = -2850;
     public static final int SLIDE_MIN_HEIGHT = 0;
-    public static final int SLIDE_AUTO_HEIGHT = -350;
+    public static final int SLIDE_AUTO_HEIGHT = -450;
     public static final int SLIDE_LOW_HEIGHT = -400;
     public static final int SLIDE_MEDIUM_HEIGHT = -1500;
     public double wristPosition = 0.0;
@@ -263,7 +262,7 @@ public class  UniversalControlClass {
         wristRight.setPosition(.85);
         SpecialSleep(200);
         grabberRight.setPosition(0);
-        SpecialSleep(500);
+        SpecialSleep(200);
         armRotLeft.setPosition(.7);
         armRotRight.setPosition(.7);
         wristLeft.setPosition(.83);
@@ -330,6 +329,7 @@ public class  UniversalControlClass {
         SlidesDown();
     }
     public void PickupRoutine(){
+
         if (AutoIntake){
             ServoIntake();
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)){
@@ -814,8 +814,8 @@ public class  UniversalControlClass {
         }
     }
     public void driveControlsRobotCentric() {
-        double y = opMode.gamepad1.left_stick_y;
-        double x = -opMode.gamepad1.left_stick_x * 1.1;
+        double y = -opMode.gamepad1.left_stick_y;
+        double x = opMode.gamepad1.left_stick_x * 1.1;
         double rx = opMode.gamepad1.right_stick_x;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -830,8 +830,8 @@ public class  UniversalControlClass {
         rightRear.setPower(backRightPower);
     }
     public void driveControlsRobotCentricKID() {
-        double y = opMode.gamepad2.left_stick_y;
-        double x = -opMode.gamepad2.left_stick_x * 1.1;
+        double y = -opMode.gamepad2.left_stick_y;
+        double x = opMode.gamepad2.left_stick_x * 1.1;
         double rx = opMode.gamepad2.right_stick_x;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -847,24 +847,26 @@ public class  UniversalControlClass {
     }
     public void driveControlsFieldCentric() {
         double y = -opMode.gamepad1.left_stick_y;
-        double x = opMode.gamepad1.left_stick_x * 1.1;
+        double x = opMode.gamepad1.left_stick_x;
         double rx = opMode.gamepad1.right_stick_x;
 
-        double botHeading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-        double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        rotX = rotX * 1.1;
+
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
         double frontLeftPower = (rotY + rotX + rx) / denominator;
         double backLeftPower = (rotY - rotX + rx) / denominator;
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
 
-        leftFront.setPower(frontLeftPower*.75);
-        leftRear.setPower(backLeftPower*.75);
-        rightFront.setPower(frontRightPower*.75);
-        rightRear.setPower(backRightPower*.75);
+        leftFront.setPower(frontLeftPower*1.0);
+        leftRear.setPower(backLeftPower*1.0);
+        rightFront.setPower(frontRightPower*1.0);
+        rightRear.setPower(backRightPower*1.0);
     }
     public void RunDriveControls() {
         if (IsFieldCentric) {

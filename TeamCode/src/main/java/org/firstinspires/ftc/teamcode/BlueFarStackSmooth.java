@@ -43,17 +43,15 @@ public class BlueFarStackSmooth extends LinearOpMode {
 
         // Drives to left, center, or right positions based on team art location.
         BlueRightTeamArtPixelDelivery();
-        drive.updatePoseEstimate();
 
         // Drop the LEFT pixel (put PURPLE on LEFT, YELLOW on RIGHT) on the line
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
         //control.SpecialSleep(10000);
-        //control.SpecialSleep(6000);
+        control.SpecialSleep(6000);
         control.ServoIntake();
         // drive to stack
-        drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .splineToLinearHeading(stackPose, Math.toRadians(180))
@@ -61,97 +59,8 @@ public class BlueFarStackSmooth extends LinearOpMode {
         );
         control.AutoPickupRoutine();
 
-        /*
-        // drive to the backboard area
-        drive.updatePoseEstimate();
-        if (aidanParallelTestEnabled) {
-            Actions.runBlocking(new ParallelAction(
-                    stopSpinners(),
-                    driveAcrossField()
-                    ));
-        }
-        else if (jaredTestSuggestion) {
-            // Pre-create the trajectory before asking parallel action to execute it
-            Action StackToBoardArea_Trajectory = drive.actionBuilder(drive.pose)
-                    .setTangent(0)
-                    .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(30, 9, Math.toRadians(180)), Math.toRadians(0))
-                    .build();
-
-            // Tell it to do two things at once like this
-            Actions.runBlocking(new ParallelAction(
-                    (telemetryPacket) -> {
-                        control.ServoStop();
-                        return false;
-                    },
-                    StackToBoardArea_Trajectory
-            ));
-
-            /*
-            // Example Pseudo code for the first third of OPMode moves using only combos of Sequential and Parallel actions
-            Actions.runBlocking(new SequentialAction(
-                    StartToFloor_Trajectory, //TODO - create a trajectoryAction variable named this, populate in BlueRightTeamArtPixelDelivery
-                    // Divide the DropOnLine method into pieces, because can't call sleep() or specialSleep() in here
-                    (telemetryPacket) -> { // Run part 1 of DropOnLine
-                        control.armRotLeft.setPosition(.72);
-                        control.armRotRight.setPosition(.72);
-                        return false;
-                    },
-                    new SleepAction(0.2), // sleep input units are in seconds according to the documentation
-                    (telemetryPacket) -> { // Run part 2 of DropOnLine
-                        control.wristLeft.setPosition(.85);
-                        control.wristRight.setPosition(.85);
-                        return false;
-                    },
-                    new SleepAction(0.2),
-                    (telemetryPacket) -> { // Run part 3 of DropOnLine
-                        control.grabberRight.setPosition(0);
-                        return false;
-                    },
-                    new SleepAction(0.5),
-                    // Drive to the stack while resetting the arm/wrist/slides and turning on the intake in parallel
-                    new ParallelAction(
-                            FloorToStack_Trajectory, //TODO - create a trajectoryAction variable named this, populate in BlueRightTeamArtPixelDelivery
-                            new SequentialAction(
-                                    // Divide the ResetArmAuto into pieces, because can't have sleep() calls in it
-                                    (telemetryPacket) -> { // Run part 1 of ResetArmAuto
-                                        control.armRotLeft.setPosition(.07);
-                                        control.armRotRight.setPosition(.07);
-                                        control.wristLeft.setPosition(control.WRIST_GRAB_PIXEL_POS);
-                                        control.wristRight.setPosition(control.WRIST_GRAB_PIXEL_POS);
-                                        return false;
-                                    },
-                                    new SleepAction(0.2),
-                                    // NOTE this last piece of the ResetArmAuto action (SlidesDown) is going to be more complicated than others
-                                    // will need to create a custom action class like the stopSpinners() method
-                                    // will have to remove the while loop part of the SlidesDown action, and just use the if/else checks
-                                    // to detect when done to change the custom action return value to false
-                                    CustomAction_ResetArmAuto_SlidesDown() //TODO - create a custom action to handle slides down
-                            ),
-                            // in parallel call Servo Intake so servos are spinning before getting to the stack
-                            (telemetryPacket) -> {
-                                control.ServoIntake();
-                                return false;
-                            }
-                    )
-            ));
-            // end runBlocking -- move on to AutoPickupRoutine(); (not part of this sequence because of auto moves needing real sleep --
-            // then create another runblocking to get to the backboard, raising the slides/arms in parallel
-            // AFTER crossing beneath the bridge and then deliver pixels
-        }
-
-        else {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                            .splineToLinearHeading(new Pose2d(30, 7, Math.toRadians(180)), Math.toRadians(0))
-                            .build());
-
-        }*/
-        drive.updatePoseEstimate();
-
         // drive to the correct backboard spot based on the team art
+        drive.updatePoseEstimate();
         BlueBoardDelivery();
 
         // Return Arm to Ready position
@@ -169,7 +78,39 @@ public class BlueFarStackSmooth extends LinearOpMode {
 
         // Return Arm to Ready position
         control.ResetArm();
-        sleep(400);
+        sleep(300);
+
+        /*//TEST MULTIPLE CYCLES
+        drive.updatePoseEstimate();
+        //drive back to stack
+        Actions.runBlocking(
+                //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                drive.actionBuilder(drive.pose)
+                        .setTangent(Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(30,9, Math.toRadians(180)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-50,12, Math.toRadians(180)), Math.toRadians(180))
+                        .build());
+        control.AutoPickupRoutine();
+        //drive back to board
+        drive.updatePoseEstimate();
+        BlueBoardDelivery();
+
+        // Return Arm to Ready position
+        control.SlidesToAuto();
+        sleep(150);
+        control.DeliverPixelToBoardPos();
+        control.StopNearBoardAuto(true);
+        sleep(200);
+
+        drive.updatePoseEstimate();
+        Actions.runBlocking(
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                        .lineToX(47)
+                        .build());
+
+        control.ResetArmAuto();
+        sleep(300);
+        //END OF TEST MULTIPLE CYCLES*/
 
         // Move the robot to the parking position
         drive.updatePoseEstimate();
@@ -186,13 +127,13 @@ public class BlueFarStackSmooth extends LinearOpMode {
         // Look for potential errors
         //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(50,32,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(49,32,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(drive.pose)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                            .splineToLinearHeading(new Pose2d(50, 7, Math.toRadians(180)), Math.toRadians(0))
+                            //.setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-30, 7, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(49, 7, Math.toRadians(180)), Math.toRadians(0))
                             .setTangent(Math.toRadians(90))
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(90))
                             .build());
@@ -200,14 +141,14 @@ public class BlueFarStackSmooth extends LinearOpMode {
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(50,25,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(49,25,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.
                     // yawError, Math.toRadians(180)))
                     drive.actionBuilder(drive.pose)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                            .splineToLinearHeading(new Pose2d(50, 7, Math.toRadians(180)), Math.toRadians(0))
+                            //.setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-30, 7, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(49, 7, Math.toRadians(180)), Math.toRadians(0))
                             .setTangent(Math.toRadians(90))
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(90))
                             .build());
@@ -215,13 +156,13 @@ public class BlueFarStackSmooth extends LinearOpMode {
         }
         //***POSITION 2***
         else {
-            deliverToBoardPose = new Pose2d(50,28,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(49,28,Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(drive.pose)
-                            .setTangent(0)
-                            .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
-                            .splineToLinearHeading(new Pose2d(50, 7, Math.toRadians(180)), Math.toRadians(0))
+                            //.setTangent(0)
+                            .splineToLinearHeading(new Pose2d(-30, 7, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(49, 7, Math.toRadians(180)), Math.toRadians(0))
                             .setTangent(Math.toRadians(90))
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(90))
                             .build());

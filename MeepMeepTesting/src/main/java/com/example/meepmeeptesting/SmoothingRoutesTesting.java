@@ -30,8 +30,28 @@ public class SmoothingRoutesTesting {
                                 //.setTangent(Math.toRadians(270))
                                 .splineToLinearHeading(new Pose2d(-56,12, Math.toRadians(180)), Math.toRadians(180))//CHANGED
                                 // Drive to backboard area
+                                //.setTangent(0)
+                                //.splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(50, 9, Math.toRadians(180)), Math.toRadians(0))
+                                // Position - 1 board
+                                //.setTangent(0)
+                                //.splineToLinearHeading(new Pose2d(50, 34, Math.toRadians(180)), Math.toRadians(0))
+                                // Position - 2 board
+                                //.setTangent(0)
+                                //.splineToLinearHeading(new Pose2d(50, 29, Math.toRadians(180)), Math.toRadians(0))
+                                // Position - 3 board
+                                .setTangent(Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(50, 24.5, Math.toRadians(180)), Math.toRadians(270))
+                                //drive back to stack
+                                //.setReversed(true)
+                                .setTangent(Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(30,9, Math.toRadians(180)), Math.toRadians(180))
+                            //.setTangent(Math.toRadians(180))
+                                .splineToLinearHeading(new Pose2d(-50,12, Math.toRadians(180)), Math.toRadians(180))
+                                // Drive to backboard area
                                 .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
+                                //.splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
                                 .splineToLinearHeading(new Pose2d(50, 9, Math.toRadians(180)), Math.toRadians(0))
                                 // Position - 1 board
                                 //.setTangent(0)
@@ -41,7 +61,7 @@ public class SmoothingRoutesTesting {
                                 //.splineToLinearHeading(new Pose2d(50, 29, Math.toRadians(180)), Math.toRadians(0))
                                 // Position - 3 board
                                 .setTangent(Math.toRadians(90))
-                                .splineToLinearHeading(new Pose2d(50, 24.5, Math.toRadians(180)), Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(50, 24.5, Math.toRadians(180)), Math.toRadians(270))
                                 // Parking Position
                                 .splineToLinearHeading(new Pose2d(48, 15, Math.toRadians(270)), Math.toRadians(270))
                                 //.lineTo(new Vector2d(47, 55)) //lineToX(47)
