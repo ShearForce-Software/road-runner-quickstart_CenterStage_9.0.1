@@ -75,6 +75,12 @@ public class ManualWithUniversalClass extends LinearOpMode {
                     theRobot.ReleaseRight();
                     theRobot.ReleaseLeft();
                 }
+                if (gamepad2.left_trigger != 0){
+                    theRobot.ReleaseLeft();
+                }
+                if (gamepad2.right_trigger != 0){
+                    theRobot.ReleaseRight();
+                }
                 // Slides HIGH
                 if (gamepad2.y && !gamepad2.back) {
                     theRobot.ServoStop();
