@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+@Disabled
 @Autonomous(name="Red Far", preselectTeleOp = "1 Manual Control")
 public class RedFarAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
