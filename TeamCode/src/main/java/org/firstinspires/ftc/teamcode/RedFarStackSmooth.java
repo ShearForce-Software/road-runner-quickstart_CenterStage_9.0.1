@@ -26,7 +26,7 @@ public class RedFarStackSmooth extends LinearOpMode {
         telemetry.update();
 
         while (!isStarted()) {
-            control.DetectTeamArtBlue();
+            control.DetectTeamArtRed();
             telemetry.update();
         }
         waitForStart();

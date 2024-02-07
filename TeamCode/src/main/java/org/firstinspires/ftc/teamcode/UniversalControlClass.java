@@ -798,8 +798,8 @@ public class  UniversalControlClass {
         }
         else{
             //pick a spot
-            opMode.telemetry.addData("!!Team Art NOT DETECTED!! ", "DEFAULT TO CENTER");
-            autoPosition = 2;
+            opMode.telemetry.addData("!!Team Art NOT DETECTED!! ", "DEFAULT TO RIGHT");
+            autoPosition = 3;
             DESIRED_TAG_ID = 6;
         }
     }

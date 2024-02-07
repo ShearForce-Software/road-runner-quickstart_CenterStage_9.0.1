@@ -76,10 +76,10 @@ public class ManualWithUniversalClass extends LinearOpMode {
                     theRobot.ReleaseLeft();
                 }
                 if (gamepad2.left_trigger != 0){
-                    theRobot.ReleaseLeft();
+                    theRobot.ReleaseRight();
                 }
                 if (gamepad2.right_trigger != 0){
-                    theRobot.ReleaseRight();
+                    theRobot.ReleaseLeft();
                 }
                 // Slides HIGH
                 if (gamepad2.y && !gamepad2.back) {
@@ -147,7 +147,7 @@ public class ManualWithUniversalClass extends LinearOpMode {
                     theRobot.rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     theRobot.SetSlidePower(.5);
                 }
-                else if (gamepad2.dpad_down)
+                if (gamepad2.dpad_down)
                 {
                     // slowly lower the slides
                     theRobot.SlidesDown();
