@@ -286,11 +286,10 @@ public class  UniversalControlClass {
         grabberRight.setPosition(0);
     }
     public void GrabPixelPos(){ // in center of pixels
-        armRotLeft.setPosition(.04);
-        armRotRight.setPosition(.04);
-        SpecialSleep(150);
         wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
         wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
+        armRotLeft.setPosition(.04);
+        armRotRight.setPosition(.04);
     }
     public void ReadyToLiftSlides(){ // slight move before lifting slides
         armRotLeft.setPosition(.08);
@@ -309,8 +308,8 @@ public class  UniversalControlClass {
         SetSlidePower(SLIDE_POWER);
     }
     public void DeliverPixelToBoardPos(){
-        armRotLeft.setPosition(.58);
-        armRotRight.setPosition(.58);
+        armRotLeft.setPosition(.57);
+        armRotRight.setPosition(.57);
         SpecialSleep(150);
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
@@ -361,7 +360,7 @@ public class  UniversalControlClass {
         GrabPixelPos();
         SpecialSleep(400);
         GrabPixels();
-        SpecialSleep(400);
+        SpecialSleep(500);
         ServoOuttake();
         ReadyToLiftSlides();
         AutoIntake = false;
@@ -799,8 +798,8 @@ public class  UniversalControlClass {
         }
         else{
             //pick a spot
-            opMode.telemetry.addData("!!Team Art NOT DETECTED!! ", "DEFAULT TO CENTER");
-            autoPosition = 2;
+            opMode.telemetry.addData("!!Team Art NOT DETECTED!! ", "DEFAULT TO RIGHT");
+            autoPosition = 3;
             DESIRED_TAG_ID = 6;
         }
     }

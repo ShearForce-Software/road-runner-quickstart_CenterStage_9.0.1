@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -38,22 +39,27 @@ public class BlueBoardAuto extends LinearOpMode {
 
         drive.updatePoseEstimate();
         Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                drive.actionBuilder(drive.pose)
                         .lineToX(47)
                         .build());
+        drive.updatePoseEstimate();
         control.ResetArmAuto();
         sleep(400);
 
         BlueLeftTeamArtPixelDelivery();
+        drive.updatePoseEstimate();
         control.DropOnLine();
         control.ResetArm();
         sleep(400);
 
         // Move the robot to the parking position
         Actions.runBlocking(
-                drive.actionBuilder(deliverToFloorPose)
+                drive.actionBuilder(drive.pose)
                         .setTangent(Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(60,60,Math.toRadians(270)), Math.toRadians(0))
+                        //.strafeTo(new Vector2d(57,57))
+                        .strafeToLinearHeading(new Vector2d(57,57), Math.toRadians(270))
+                        //.turnTo(Math.toRadians(270))
+                        //.splineToLinearHeading(new Pose2d(57,57,Math.toRadians(270)), Math.toRadians(0))
                         .build());
 
         telemetry.update();
@@ -74,6 +80,7 @@ public class BlueBoardAuto extends LinearOpMode {
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
+            drive.updatePoseEstimate();
         }
         //***POSITION 2***
         else {
@@ -94,12 +101,12 @@ public class BlueBoardAuto extends LinearOpMode {
                             .build());
         }
         else if (control.autoPosition == 3) {
-            deliverToFloorPose = new Pose2d(12, 33, Math.toRadians(0));
+            deliverToFloorPose = new Pose2d(12, 36, Math.toRadians(0));
             Actions.runBlocking(
-                    drive.actionBuilder(deliverToBoardPose)
+                    drive.actionBuilder(drive.pose)
                             .splineToLinearHeading(new Pose2d(27, 33, Math.toRadians(0)), Math.toRadians(0))
                             .setTangent(Math.toRadians(180))
-                            .splineToLinearHeading(new Pose2d(0,33,Math.toRadians(0)), Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(0,36,Math.toRadians(0)), Math.toRadians(180))
                             .splineToLinearHeading (deliverToFloorPose, Math.toRadians(180))
                             .build());
         }
