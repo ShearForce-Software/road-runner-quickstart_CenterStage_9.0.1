@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,7 +24,7 @@ public class RedBoardAuto extends LinearOpMode {
         telemetry.update();
 
         while(!isStarted()){
-            control.DetectTeamArtRed();
+            control.DetectTeamArtRedBoard();
             telemetry.update();
         }
         waitForStart();
@@ -40,23 +41,31 @@ public class RedBoardAuto extends LinearOpMode {
 
         drive.updatePoseEstimate();
         Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                drive.actionBuilder(drive.pose)
                         .lineToX(47)
                         .build());
-
+        drive.updatePoseEstimate();
         control.ResetArmAuto();
         sleep(400);
 
         RedRightTeamArtPixelDelivery();
+        //sleep (5000);
         control.DropOnLine();
         control.ResetArmAuto();
         sleep(400);
 
+        if (control.autoPosition == 2){
+            Actions.runBlocking(
+                    drive.actionBuilder(deliverToFloorPose)
+                            .splineToLinearHeading(new Pose2d(12, -42, Math.toRadians(90)), Math.toRadians(270))
+                            .build());
+        }
+        drive.updatePoseEstimate();
         //PARK
         Actions.runBlocking(
-                drive.actionBuilder(deliverToFloorPose)
+                drive.actionBuilder(drive.pose)
                         .setTangent(Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(60,-60, Math.toRadians(90)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(60,-61.5, Math.toRadians(90)), Math.toRadians(0))
                         .build());
 
         telemetry.update();
@@ -64,46 +73,55 @@ public class RedBoardAuto extends LinearOpMode {
     public void RedBoardDelivery() {
         //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(50,-25,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(48,-25,Math.toRadians(180));
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
+            drive.updatePoseEstimate();
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(50,-35,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(48,-35,Math.toRadians(180));
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
+            drive.updatePoseEstimate();
         }
         //***POSITION 2***
         else {
-            deliverToBoardPose = new Pose2d(50,-30,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(48,-30,Math.toRadians(180));
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                             .build());
+            drive.updatePoseEstimate();
         }
     }
     public void RedRightTeamArtPixelDelivery() {
         if (control.autoPosition == 1) {
-            deliverToFloorPose = new Pose2d(12, -33, Math.toRadians(0));
+            deliverToFloorPose = new Pose2d(12, -30, Math.toRadians(0));
             Actions.runBlocking(
                     drive.actionBuilder(deliverToBoardPose)
-                            .splineToLinearHeading(new Pose2d(27,-33, Math.toRadians(0)), Math.toRadians(0))
-                            .setTangent(Math.toRadians(180))
-                            .splineToLinearHeading(new Pose2d(0,-33, Math.toRadians(0)), Math.toRadians(0))
-                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(0))
+                            .splineToLinearHeading(new Pose2d(27,-33, Math.toRadians(0)), Math.toRadians(180))
+                            //.setTangent(Math.toRadians(180))
+                            .lineToX(0)
+                            .lineToX(12)
+                            .strafeTo(new Vector2d(12, -30))
+                            //.splineToLinearHeading(new Pose2d(0,-33, Math.toRadians(0)), Math.toRadians(0))
+                            //.splineToLinearHeading(deliverToFloorPose, Math.toRadians(0))
                             .build());
+            drive.updatePoseEstimate();
         }
         else if (control.autoPosition == 3) {
             deliverToFloorPose = new Pose2d(12, -36, Math.toRadians(180));
             Actions.runBlocking(
                     drive.actionBuilder(deliverToBoardPose)
+                            .setTangent(Math.toRadians(180))
                             .splineToLinearHeading (deliverToFloorPose, Math.toRadians(180))
                             .build());
+            drive.updatePoseEstimate();
         }
         else {
             deliverToFloorPose = new Pose2d(12, -36, Math.toRadians(270));
@@ -112,6 +130,7 @@ public class RedBoardAuto extends LinearOpMode {
                             .splineToLinearHeading(new Pose2d(12, -30, Math.toRadians(-90)), Math.toRadians(180))
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
                             .build());
+            drive.updatePoseEstimate();
         }
     }
 }
