@@ -14,11 +14,11 @@ public class CloseRouteTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                         drive.trajectorySequenceBuilder(new Pose2d(46,26,Math.toRadians(180)))
-                                 .splineToLinearHeading(new Pose2d(27, 33, Math.toRadians(0)), Math.toRadians(0))
+                         drive.trajectorySequenceBuilder(new Pose2d(48,-25,Math.toRadians(180)))
+                                 .splineToLinearHeading(new Pose2d(27,-33, Math.toRadians(0)), Math.toRadians(180))
                                  .setTangent(Math.toRadians(180))
-                                 .splineToLinearHeading(new Pose2d(0,36,Math.toRadians(0)), Math.toRadians(180))
-                                 .splineToLinearHeading (new Pose2d(12, 36, Math.toRadians(0)), Math.toRadians(180))
+                                 .splineToLinearHeading(new Pose2d(0,-33, Math.toRadians(0)), Math.toRadians(0))
+                                 .splineToLinearHeading(new Pose2d(12, -33, Math.toRadians(0)), Math.toRadians(0))
                                  .build()
                 );
 
