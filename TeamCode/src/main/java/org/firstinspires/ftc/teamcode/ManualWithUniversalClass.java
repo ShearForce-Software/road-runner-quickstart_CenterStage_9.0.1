@@ -24,6 +24,7 @@ public class ManualWithUniversalClass extends LinearOpMode {
 
         telemetry.update();
         waitForStart();
+        resetRuntime();
 
         try {
             while (opModeIsActive()) {
@@ -32,6 +33,7 @@ public class ManualWithUniversalClass extends LinearOpMode {
                     theRobot.DisableAutoIntake();
                     sleep(100);
                 }
+                theRobot.EndgameBuzzer();
                 theRobot.PickupRoutine();
 
                 /* *************************************************
