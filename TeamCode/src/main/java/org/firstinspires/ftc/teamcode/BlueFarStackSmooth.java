@@ -48,6 +48,13 @@ public class BlueFarStackSmooth extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
+        if(control.autoPosition==2){
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .strafeTo(new Vector2d(-38.5, 14))
+                            .build());
+        }
+        drive.updatePoseEstimate();
         //control.SpecialSleep(10000);
         control.SpecialSleep(6000);
         control.ServoIntake();
