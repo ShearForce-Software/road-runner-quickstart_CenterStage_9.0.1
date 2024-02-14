@@ -68,11 +68,11 @@ public class MeepMeepMultipleBlueFarTesting {
                                 //.lineTo(new Vector2d(50, 29))
 
                                 // Position - 3 board
-                                .lineTo(new Vector2d(50, 24.5))
+                                .lineTo(new Vector2d(50, 12.5))
 
                                 // TODO -- deliver to the board here
                                 .waitSeconds(0.5)
-
+/*
                                 // Return to the bridge
                                 // avoid hitting alliance marker
                                 .lineTo(new Vector2d(34, 12))
@@ -105,7 +105,10 @@ public class MeepMeepMultipleBlueFarTesting {
                                 // Parking Position
                                 .lineTo(new Vector2d(50, 11)) //lineToX(47)
                                 .turn(Math.toRadians(90))
-
+*/
+                                .splineToLinearHeading(new Pose2d(-30, 12, Math.toRadians(180)), Math.toRadians(0))
+                              //  .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(180)), Math.toRadians(0))
+                              //  .lineTo(new Vector2d(-56,12))
                                 .build()
                 );
 
