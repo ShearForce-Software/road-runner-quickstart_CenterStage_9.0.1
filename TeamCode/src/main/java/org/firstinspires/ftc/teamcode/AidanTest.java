@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -185,16 +186,31 @@ public class AidanTest extends LinearOpMode {
         control.ResetArm();
         sleep(400);
 
-        // Move the robot to the parking position
+// Robot goes back to white pixel stack.
+        Actions.runBlocking(
+                //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(180)), Math.toRadians(0))
+                .lineToX(-56)
+                        .build());
+        // Back to backboard Stopped on 2/13/24
+    //    Actions.runBlocking(new SequentialAction(stopSpinners()),
+      //          (new SequentialAction(drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180))),
+       //         (new SequentialAction(.splineToLinearHeading(new Pose2d(-56, 12, Math.toRadians(180))))
+          //      )));
+ /*       // Move the robot to the parking position
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                         .splineToLinearHeading(new Pose2d(48, 15, Math.toRadians(270)), Math.toRadians(270))
                         .build());
+
+  */
         control.ServoStop();
         sleep(100);
         telemetry.update();
+
     }
     public void BlueBoardDelivery() {
         // Look for potential errors
@@ -268,6 +284,7 @@ public class AidanTest extends LinearOpMode {
                             .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
                             .build());
         }
+
     }
     public Action stopSpinners() {
         return new StopSpinners();
@@ -316,6 +333,7 @@ public class AidanTest extends LinearOpMode {
             }
             return returnValue;
         }
+
 
     }
 }
