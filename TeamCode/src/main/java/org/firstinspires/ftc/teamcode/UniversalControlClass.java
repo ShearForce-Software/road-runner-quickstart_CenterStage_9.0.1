@@ -496,6 +496,13 @@ public class  UniversalControlClass {
             }else{
                 rightSlide.setPower(slidePower);
             }
+            if (opMode.gamepad1.left_trigger != 0) {
+                SetScissorLiftPower(opMode.gamepad1.left_trigger);
+            } else if (opMode.gamepad1.right_trigger != 0) {
+                SetScissorLiftPower(-opMode.gamepad1.right_trigger);
+            } else {
+                SetScissorLiftPower(0);
+            }
             SpecialSleep(150);
         }
 
