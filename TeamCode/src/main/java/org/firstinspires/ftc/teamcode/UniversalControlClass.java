@@ -606,6 +606,13 @@ public class  UniversalControlClass {
         leftScissor.setPower(power);
         rightScissor.setPower(power);
     }
+
+    public void EndgameBuzzer(){
+        if(opMode.getRuntime() < 109.5 && opMode.getRuntime() > 109.0){
+            opMode.gamepad1.rumble(1000);
+            opMode.gamepad2.rumble(1000);
+        }
+    }
     public void ColorDetect(){
         //double rightColor = rightColorSensor.getLightDetected();
     }
