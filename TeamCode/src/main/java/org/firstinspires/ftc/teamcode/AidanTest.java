@@ -291,15 +291,12 @@ public class AidanTest extends LinearOpMode {
     }
     public class StopSpinners implements Action {
         private boolean initialized = false;
-
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
                 control.ServoStop();
                 initialized = true;
             }
-
-
             packet.put("disable Intakes", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
@@ -311,7 +308,6 @@ public class AidanTest extends LinearOpMode {
     }
     public class DriveAcrossField implements Action {
         private boolean initialized = false;
-
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
