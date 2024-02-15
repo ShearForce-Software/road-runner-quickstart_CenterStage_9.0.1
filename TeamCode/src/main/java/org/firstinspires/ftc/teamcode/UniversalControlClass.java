@@ -496,6 +496,13 @@ public class  UniversalControlClass {
             }else{
                 rightSlide.setPower(slidePower);
             }
+            if (opMode.gamepad1.left_trigger != 0) {
+                SetScissorLiftPower(opMode.gamepad1.left_trigger);
+            } else if (opMode.gamepad1.right_trigger != 0) {
+                SetScissorLiftPower(-opMode.gamepad1.right_trigger);
+            } else {
+                SetScissorLiftPower(0);
+            }
             SpecialSleep(150);
         }
 
@@ -605,6 +612,13 @@ public class  UniversalControlClass {
     public void SetScissorLiftPower(double power){
         leftScissor.setPower(power);
         rightScissor.setPower(power);
+    }
+
+    public void EndgameBuzzer(){
+        if(opMode.getRuntime() < 109.5 && opMode.getRuntime() > 109.0){
+            opMode.gamepad1.rumble(1000);
+            opMode.gamepad2.rumble(1000);
+        }
     }
     public void ColorDetect(){
         //double rightColor = rightColorSensor.getLightDetected();

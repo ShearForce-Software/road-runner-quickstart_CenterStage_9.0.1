@@ -4,11 +4,12 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Far Stack SMOOTH")
+@Autonomous(name="Red Far Stack SMOOTH", preselectTeleOp="ManualWithUniversalClass")
 public class RedFarStackSmooth extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
     MecanumDrive drive;
@@ -42,6 +43,13 @@ public class RedFarStackSmooth extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
+        if(control.autoPosition==2){
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                    .strafeTo(new Vector2d(-38.5, -14))
+                    .build());
+        }
+        drive.updatePoseEstimate();
         //control.SpecialSleep(10000);
         control.SpecialSleep(6000);
         control.ServoIntake();
