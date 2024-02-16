@@ -193,11 +193,15 @@ public class AidanTest extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-52, 12, Math.toRadians(180)), Math.toRadians(180))
                 .lineToX(-56)
                         .build());
-        // Back to backboard Stopped on 2/15/24
-        Actions.runBlocking(new ParallelAction(stopSpinners()),
-                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(0)))
-                        .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(0)), Math.toRadians(0))
-                );
+        // Back to backboard Stopped on 2/15/24 *** Aidan this is how you do a parallel action, you create the trajectory outside the parallel call, then you just refer to it ***
+        Action backToBackboardTrajectory = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(0)))
+                .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(0)), Math.toRadians(0))
+                        .build();
+        Actions.runBlocking(
+                new ParallelAction(
+                        stopSpinners(),
+                        backToBackboardTrajectory
+                ));
         // Back
  /*       // Move the robot to the parking position
         drive.updatePoseEstimate();
