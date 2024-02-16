@@ -49,6 +49,7 @@ public class  UniversalControlClass {
     RevColorSensorV3 rightColorSensor;
     RevColorSensorV3 clawDistanceSensor;
     HuskyLens huskyLens;
+    HuskyLens huskyLens2;
     IMU imu;
     Servo   grabberLeft;
     Servo   grabberRight;
@@ -70,6 +71,11 @@ public class  UniversalControlClass {
     int leftSpikeBound = 100;
     int rightSpikeBound = 200;
     int autoPosition;
+    double pixelCorrectionAmountLR = 0.0;
+    double pixelWidth_HL = 0.0;
+    double hl_rangeToBoard = 0.0;
+    double distanceCorrectionLR_HL = 0.0;
+    double hl_halfScreenWidth = 0.0;
     public static double grabPosition = 0.5;
     public static double dropPosition = 0;
     boolean AutoIntake = false;
@@ -153,6 +159,7 @@ public class  UniversalControlClass {
         leftColorSensor.enableLed(false);
         rightColorSensor.enableLed(false);
         huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens1");
+        huskyLens2 = hardwareMap.get(HuskyLens.class, "huskyLens2");
 
         //TODO: set motor direction, zero power brake behavior, stop and reset encoders, etc
         rightFront.setDirection(DcMotor.Direction.REVERSE);
@@ -736,6 +743,43 @@ public class  UniversalControlClass {
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION
         );
         opMode.telemetry.update();
+    }
+    public void HuskyLensInit2(){
+        if (!huskyLens2.knock()) {
+            opMode.telemetry.addData(">>", "Problem communicating with " + huskyLens2.getDeviceName());
+        } else {
+            opMode.telemetry.addData(">>", "Press start to continue");
+        }
+        huskyLens2.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION
+        );
+        opMode.telemetry.update();
+    }
+    public void TagCorrection(){
+        HuskyLens.Block[] blocks = huskyLens2.blocks();
+
+        if (blocks.length > 0){
+            double xVal = blocks[0].x;
+            pixelCorrectionAmountLR = xVal - 160;
+
+            double xWidth = blocks[0].width;
+            pixelWidth_HL = 2/xWidth;
+            distanceCorrectionLR_HL = pixelCorrectionAmountLR * pixelWidth_HL;
+
+            opMode.telemetry.addData("AprilTag width: ", xWidth);
+            opMode.telemetry.addData("pixel width HL: ", "%.04f", pixelWidth_HL);
+
+            hl_halfScreenWidth = pixelWidth_HL * 160;
+            hl_rangeToBoard = (pixelWidth_HL * 160) / Math.tan(Math.toRadians(30));
+
+            opMode.telemetry.addData("HL range to board", "%.01f in", hl_rangeToBoard);
+            opMode.telemetry.addData("HL Half Screen Width", "%.01f in", hl_halfScreenWidth);
+            opMode.telemetry.addData("Correction LR: ","%.01f in", distanceCorrectionLR_HL);
+            opMode.telemetry.update();
+
+        }else{
+            opMode.telemetry.addData("No April Tags in view",0 );
+            opMode.telemetry.update();
+        }
     }
     public void DetectTeamArtBlue() {
         allianceColorIsBlue = true;

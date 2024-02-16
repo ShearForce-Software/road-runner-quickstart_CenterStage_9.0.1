@@ -186,18 +186,19 @@ public class AidanTest extends LinearOpMode {
         control.ResetArm();
         sleep(400);
 
-// Robot goes back to white pixel stack.
+// RobRobot goes back to white pixel stack.
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
-                .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(180)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-52, 12, Math.toRadians(180)), Math.toRadians(180))
                 .lineToX(-56)
                         .build());
-        // Back to backboard Stopped on 2/13/24
-    //    Actions.runBlocking(new SequentialAction(stopSpinners()),
-      //          (new SequentialAction(drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180))),
-       //         (new SequentialAction(.splineToLinearHeading(new Pose2d(-56, 12, Math.toRadians(180))))
-          //      )));
+        // Back to backboard Stopped on 2/15/24
+        Actions.runBlocking(new ParallelAction(stopSpinners()),
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(0)))
+                        .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(0)), Math.toRadians(0))
+                );
+        // Back
  /*       // Move the robot to the parking position
         drive.updatePoseEstimate();
         Actions.runBlocking(
