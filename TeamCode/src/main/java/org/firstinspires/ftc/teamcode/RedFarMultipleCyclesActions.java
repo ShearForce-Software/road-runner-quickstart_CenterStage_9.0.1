@@ -24,6 +24,9 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
     Action DriveToStack;
     Action BoardTraj2;
     Action BoardTraj1;
+    Action BackUp;
+    Action Park;
+    Action DriveBackToStack;
     public void runOpMode(){
         startPose = new Pose2d(-35.5,-62.5,Math.toRadians(90));
         drive = new MecanumDrive(hardwareMap, startPose);
@@ -52,6 +55,18 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 .splineToLinearHeading(stackPose, Math.toRadians(180))
                 .build();
         RedBoardDecision();
+        BackUp = drive.actionBuilder(deliverToBoardPose)
+                .lineToX(47)
+                .build();
+        DriveBackToStack = drive.actionBuilder(new Pose2d(47, deliverToBoardPose.position.y, Math.toRadians(180)))
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(30,9, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-50,12, Math.toRadians(180)), Math.toRadians(180))
+                .build();
+        Park = drive.actionBuilder(new Pose2d(47, deliverToBoardPose.position.y, Math.toRadians(180)))
+                .splineToLinearHeading(new Pose2d(48, -9, Math.toRadians(90)), Math.toRadians(90))
+                .build();
+
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -360,14 +375,27 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket packet) {
             boolean moveArm = false;
             drive.updatePoseEstimate();
-            if (drive.pose.position.x >= 20) {
+            if (drive.pose.position.x >= 12) {
                 moveArm = true;
                 control.SlidesToAuto();
                 sleep(150);
                 control.DeliverPixelToBoardPos();
             }
-            packet.put("drop purple pixel on line", 0);
+            packet.put("move arm trigger", 0);
             return !moveArm;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+    public Action servoStop(){return new ServoStop();}
+    public class ServoStop implements Action{
+        private boolean initialized = false;
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                control.ServoStop();
+                initialized = true;
+            }
+            packet.put("drop purple pixel on line", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
 }
