@@ -403,10 +403,8 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 initialized = true;
             }
             packet.put("drop purple pixel on line", 0);
-            return false;  // returning true means not done, and will be called again.  False means action is completely done
-            packet.put("halfwayTrigger", 0);
-            return !moveArm;  // returning true means not done, and will be called again.  False means action is completely done
-        }
+            return false;
+            }
     }
 }
 
