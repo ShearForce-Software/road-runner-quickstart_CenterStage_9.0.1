@@ -70,21 +70,28 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                new ParallelAction(
-                        lockPixels(),
-                        FloorTraj),
-                dropOnLine(),
-                resetArm(),
-                new ParallelAction(
-                        servoIntake(),
-                        DriveToStack),
-                autoPickup(),
-                /*BoardTraj1,*/
-                new ParallelAction(
-                        BoardTraj2,
-                        halfwayTrigger()
-                        ),
-                stopNearBoardAuto()
+                        /* Drive to Floor Position */
+                        new ParallelAction(
+                                lockPixels(),
+                                FloorTraj),
+                        /* Deliver the Purple Pixel */
+                        dropOnLine(),
+                        resetArm(),
+                        /* Drive to the Stack */
+                        new ParallelAction(
+                                servoIntake(),
+                                DriveToStack),
+                        /* Pick up a White Pixel */
+                        autoPickup(),
+                        /* Drive to the Board */
+                        /*BoardTraj1,*/
+                        new ParallelAction(
+                                BoardTraj2,
+                                halfwayTrigger()),
+                        /* Use AprilTags to Align Perfectly to the Board */
+                        /* Deliver to the Board */
+                        stopNearBoardAuto()
+                        /* Reset Arm */
                 )
         );
         telemetry.update();
@@ -242,6 +249,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
     public void RedLeftPurplePixelDecision() {
         //***POSITION 1***
         if (control.autoPosition == 1) {
+            deliverToFloorPose = new Pose2d(-39.5, -20.5, Math.toRadians(45));
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
                     .splineToLinearHeading (deliverToFloorPose, Math.toRadians(45))
@@ -301,7 +309,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 control.ResetArmAuto();
                 initialized = true;
             }
-            packet.put("drop purple pixel on line", 0);
+            packet.put("ResetArm", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
@@ -314,7 +322,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 control.ServoIntake();
                 initialized = true;
             }
-            packet.put("drop purple pixel on line", 0);
+            packet.put("servoIntake", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
@@ -327,7 +335,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 control.AutoPickupRoutine();
                 initialized = true;
             }
-            packet.put("drop purple pixel on line", 0);
+            packet.put("AutoPickup", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
@@ -340,7 +348,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 control.SlidesToAuto();
                 initialized = true;
             }
-            packet.put("drop purple pixel on line", 0);
+            packet.put("SlidesToAuto", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
@@ -353,7 +361,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 control.DeliverPixelToBoardPos();
                 initialized = true;
             }
-            packet.put("drop purple pixel on line", 0);
+            packet.put("DeliverPixelToBoardPos", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
@@ -366,7 +374,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 control.StopNearBoardAuto(true);
                 initialized = true;
             }
-            packet.put("drop purple pixel on line", 0);
+            packet.put("StopNearBoardAuto", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
@@ -375,7 +383,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket packet) {
             boolean moveArm = false;
             drive.updatePoseEstimate();
-            if (drive.pose.position.x >= 12) {
+            if (drive.pose.position.x >= 20) {
                 moveArm = true;
                 control.SlidesToAuto();
                 sleep(150);
@@ -396,6 +404,8 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             }
             packet.put("drop purple pixel on line", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
+            packet.put("halfwayTrigger", 0);
+            return !moveArm;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
 }
