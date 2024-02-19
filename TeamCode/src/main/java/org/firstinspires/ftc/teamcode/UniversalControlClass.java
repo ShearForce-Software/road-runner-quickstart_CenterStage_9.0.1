@@ -329,6 +329,12 @@ public class  UniversalControlClass {
         SpecialSleep(200);
         SlidesDown();
     }
+    public void ResetArmAutoNoSlides(){
+        armRotLeft.setPosition(.07);
+        armRotRight.setPosition(.07);
+        wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
+        wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
+    }
     public void ResetArm(){
         ManualStartPos();
         SpecialSleep(250);
@@ -357,7 +363,7 @@ public class  UniversalControlClass {
         EnableAutoIntake();
         ServoIntake();
         while((AutoIntake) && (opMode.getRuntime() <= timeout)){
-            moveRobot(.75, 0, 0);
+            moveRobot(.5, 0, 0);
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
                 break;
             }
@@ -800,8 +806,8 @@ public class  UniversalControlClass {
             opMode.telemetry.addData("Team Art Detected: ", true);
             opMode.telemetry.addData("Team Art X position: ", xVal);
             if (xVal <= leftSpikeBound){
-                autoPosition = 1;
-                DESIRED_TAG_ID = 1;
+                autoPosition = 3;
+                DESIRED_TAG_ID = 3;
             }
             else if ((xVal > leftSpikeBound) && (xVal < rightSpikeBound)){
                 autoPosition = 2;
@@ -809,8 +815,8 @@ public class  UniversalControlClass {
             }
             else if (xVal >= rightSpikeBound)
             {
-                autoPosition = 3;
-                DESIRED_TAG_ID = 3;
+                autoPosition = 1;
+                DESIRED_TAG_ID = 1;
             }
             opMode.telemetry.addData("Auto position: ", autoPosition);
         }
@@ -840,8 +846,8 @@ public class  UniversalControlClass {
             opMode.telemetry.addData("Team Art Detected: ", true);
             opMode.telemetry.addData("Team Art X position: ", xVal);
             if (xVal <= leftSpikeBound){
-                autoPosition = 1;
-                DESIRED_TAG_ID = 1;
+                autoPosition = 3;
+                DESIRED_TAG_ID = 3;
             }
             else if ((xVal > leftSpikeBound) && (xVal < rightSpikeBound)){
                 autoPosition = 2;
@@ -849,8 +855,8 @@ public class  UniversalControlClass {
             }
             else if (xVal >= rightSpikeBound)
             {
-                autoPosition = 3;
-                DESIRED_TAG_ID = 3;
+                autoPosition = 1;
+                DESIRED_TAG_ID = 1;
             }
             opMode.telemetry.addData("Auto position: ", autoPosition);
         }
@@ -880,17 +886,17 @@ public class  UniversalControlClass {
             opMode.telemetry.addData("Team Art Detected: ", true);
             opMode.telemetry.addData("Team Art X position: ", xVal);
             if (xVal <= leftSpikeBound){
-                autoPosition = 1;
-                DESIRED_TAG_ID = 5;
+                autoPosition = 3;
+                DESIRED_TAG_ID = 6;
             }
             else if ((xVal > leftSpikeBound) && (xVal < rightSpikeBound)){
                 autoPosition = 2;
-                DESIRED_TAG_ID = 6;
+                DESIRED_TAG_ID = 5;
             }
             else if (xVal >= rightSpikeBound)
             {
-                autoPosition = 3;
-                DESIRED_TAG_ID = 7;
+                autoPosition = 1;
+                DESIRED_TAG_ID = 4;
             }
             opMode.telemetry.addData("Auto position: ", autoPosition);
         }
@@ -920,17 +926,17 @@ public class  UniversalControlClass {
             opMode.telemetry.addData("Team Art Detected: ", true);
             opMode.telemetry.addData("Team Art X position: ", xVal);
             if (xVal <= leftSpikeBound){
-                autoPosition = 1;
-                DESIRED_TAG_ID = 5;
+                autoPosition = 3;
+                DESIRED_TAG_ID = 6;
             }
             else if ((xVal > leftSpikeBound) && (xVal < rightSpikeBound)){
                 autoPosition = 2;
-                DESIRED_TAG_ID = 6;
+                DESIRED_TAG_ID = 5;
             }
             else if (xVal >= rightSpikeBound)
             {
-                autoPosition = 3;
-                DESIRED_TAG_ID = 7;
+                autoPosition = 1;
+                DESIRED_TAG_ID = 4;
             }
             opMode.telemetry.addData("Auto position: ", autoPosition);
         }
