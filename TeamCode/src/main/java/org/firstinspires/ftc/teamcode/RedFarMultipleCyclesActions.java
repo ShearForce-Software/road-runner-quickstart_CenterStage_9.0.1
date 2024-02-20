@@ -56,8 +56,9 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                         /* Deliver the Purple Pixel */
                         dropOnLine(),
                         resetArm(),
-                        slidesDown(),
+                        //slidesDown(),
                         new ParallelAction(
+                                slidesDown(),
                                 servoIntake(),
                                 DriveToStack)
                 )
@@ -113,7 +114,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
                 .build();
         Actions.runBlocking(
-                new SequentialAction(
+                new ParallelAction(
                         slidesDown(),
                         DriveBackToStack2
                 )
@@ -155,10 +156,11 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 Park,
-                                resetArm()
+                                resetArm(),
+                                servoStop()
                         ),
-                        slidesDown(),
-                        servoStop()
+                        slidesDown()
+                        //servoStop()
                 )
         );
     }
@@ -288,11 +290,12 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
-                control.SlidesDown();
+                //control.SlidesDown();
                 initialized = true;
             }
             packet.put("Slides Down", 0);
-            return false;  // returning true means not done, and will be called again.  False means action is completely done
+            boolean slidesAllDown = control.SlidesDownInParallel();
+            return !slidesAllDown;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
     public Action servoIntake(){return new ServoIntake();}

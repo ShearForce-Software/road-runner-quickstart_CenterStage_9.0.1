@@ -262,14 +262,21 @@ public class  UniversalControlClass {
         grabberLeft.setPosition(.72);
     }
     public void DropOnLine(){
+        // move the arm to just off of the floor -- candidate part to do in parallel
         armRotLeft.setPosition(.72);
         armRotRight.setPosition(.72);
         SpecialSleep(200);
+
+        // move the wrist to put the purple pixel on the floor
         wristLeft.setPosition(.85);
         wristRight.setPosition(.85);
         SpecialSleep(200);
+
+        // release the purple pixel
         grabberRight.setPosition(0);
         SpecialSleep(200);
+
+        // Move the arm and wrist slightly up so the grabber servo is clear of the pixel, so doesn't fly out when the arm is reset
         armRotLeft.setPosition(.7);
         armRotRight.setPosition(.7);
         wristLeft.setPosition(.83);
@@ -369,12 +376,21 @@ public class  UniversalControlClass {
             }
             opMode.sleep(100);
         }
+        // stop the spinners
         ServoStop();
+
+        // Move arm and wrist down to grab the pixels
         GrabPixelPos();
         SpecialSleep(400);
+
+        // lock on to the pixels
         GrabPixels();
         SpecialSleep(500);
+
+        // Turn spinners back on the other way, in case a pixel is in a bad spot
         ServoOuttake();
+
+        // make a slight move of the arm to prevent the pixels getting hit on the sensors when the slides start going up has a (150ms sleep)
         ReadyToLiftSlides();
         AutoIntake = false;
     }
@@ -526,6 +542,39 @@ public class  UniversalControlClass {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public boolean SlidesDownInParallel() {
+        boolean slidesAllDown = false;
+        // if one of the slide limit switches are not pressed
+        if ((!(leftSlideLimit.isPressed() || rightSlideLimit.isPressed())))
+        {
+            leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (leftSlideLimit.isPressed()){
+                leftSlide.setPower(0);
+                leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }else{
+                leftSlide.setPower(slidePower);
+            }
+
+            if (rightSlideLimit.isPressed()){
+                rightSlide.setPower(0);
+                rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }else{
+                rightSlide.setPower(slidePower);
+            }
+        }
+        else {
+            // at least one of the slide limits has been pressed when we get to here, stop both slide motors, and then reset encoders to zero
+            leftSlide.setPower(0);
+            rightSlide.setPower(0);
+            leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            slidesAllDown = true;
+        }
+        return slidesAllDown;
     }
     public void SetSlidePower(double power){
         //TODO: CLAIRE slides w/ limit switch
