@@ -28,10 +28,8 @@ public class MeepMeep_RedMulti_withParallelActions {
     static Action ParkingTraj;
     static RoadRunnerBotEntity myBot;
     static int autoPosition = 1;
-    static VelConstraint speedUpVelocityConstraint = new TranslationalVelConstraint(90.0);
-    static AccelConstraint speedUpAccelerationConstraint = new ProfileAccelConstraint(-90.0, 90.0);
-    static VelConstraint slowDownVelocityConstraint = new TranslationalVelConstraint(30.0);
-    static AccelConstraint slowDownAccelerationConstraint = new ProfileAccelConstraint(-30.0, 30.0);
+    static VelConstraint speedUpVelocityConstraint;
+    static AccelConstraint speedUpAccelerationConstraint;
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
@@ -39,11 +37,16 @@ public class MeepMeep_RedMulti_withParallelActions {
         startPose = new Pose2d(-35.5,-62.5,Math.toRadians(90));
         stackPose = new Pose2d(-54.5, -11.5, Math.toRadians(180));
 
+        // Define the standard constraints to use for this robot
         myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(40, 40, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(40, 40, Math.PI*.8, Math.PI, 15)
                 .setDimensions(18, 15)
                 .build();
+
+        // Define some custom constraints to use when wanting to go faster than defaults
+        speedUpVelocityConstraint = new TranslationalVelConstraint(90.0);
+        speedUpAccelerationConstraint = new ProfileAccelConstraint(-50.0, 60.0);
 
         // ******************************************
         /* Specify which Position will be run */
