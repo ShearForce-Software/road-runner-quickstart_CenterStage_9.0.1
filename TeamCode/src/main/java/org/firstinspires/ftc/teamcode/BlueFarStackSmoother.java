@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@Autonomous(name="Blue Far Stack SMOOTHER")
+@Autonomous(name="Blue Far Stack SMOOTHER", preselectTeleOp = "1 Manual Control")
 public class BlueFarStackSmoother extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
     MecanumDrive drive;
