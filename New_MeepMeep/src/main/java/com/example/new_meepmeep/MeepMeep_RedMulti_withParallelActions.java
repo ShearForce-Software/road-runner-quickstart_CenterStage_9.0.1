@@ -51,7 +51,7 @@ public class MeepMeep_RedMulti_withParallelActions {
         // ******************************************
         /* Specify which Position will be run */
         // ******************************************
-        autoPosition = 3;
+        autoPosition = 2;
 
         // Build up the floor delivery trajectory
         RedLeftPurplePixelDecision();
@@ -99,8 +99,8 @@ public class MeepMeep_RedMulti_withParallelActions {
         //Action Park = myBot.getDrive().actionBuilder(new Pose2d(46, deliverToBoardPose.position.y, Math.toRadians(180)))
         Action Park = myBot.getDrive().actionBuilder(new Pose2d(46, -28, Math.toRadians(180)))
                 //.splineToLinearHeading(new Pose2d(48, -9, Math.toRadians(90)), Math.toRadians(90))
-                //.strafeToLinearHeading(new Vector2d(48, -9), Math.toRadians(90))
-                .turnTo(Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(48, -10), Math.toRadians(90))
+                //.turnTo(Math.toRadians(90))
                 .build();
 
         myBot.runAction(new SequentialAction(
@@ -154,7 +154,9 @@ public class MeepMeep_RedMulti_withParallelActions {
             deliverToFloorPose = new Pose2d(-39.5, -20.5, Math.toRadians(45));
             FloorTraj = myBot.getDrive().actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
-                    .splineToLinearHeading (deliverToFloorPose, Math.toRadians(45))
+                    //.splineToLinearHeading (deliverToFloorPose, Math.toRadians(45))
+                    //.strafeToLinearHeading(new Vector2d(-38.5, -33), Math.toRadians(90))
+                    .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(45))
                     .build();
         }
         //***POSITION 3***
@@ -173,7 +175,9 @@ public class MeepMeep_RedMulti_withParallelActions {
             deliverToFloorPose = new Pose2d(-38.5, -12.5, Math.toRadians(90));
             FloorTraj = myBot.getDrive().actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
-                    .splineToLinearHeading(deliverToFloorPose, Math.toRadians(90))
+                    //.splineToLinearHeading(deliverToFloorPose, Math.toRadians(90))
+                    //.strafeToLinearHeading(new Vector2d(-38.5, -33), Math.toRadians(90))
+                    .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(90))
                     .build();
         }
     }
@@ -184,41 +188,35 @@ public class MeepMeep_RedMulti_withParallelActions {
         if (autoPosition == 1) {
             deliverToBoardPose = new Pose2d(47.5,-28,Math.toRadians(180));
             BoardTraj2 = myBot.getDrive().actionBuilder(stackPose)
-                    //.setTangent(0)
-                    //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                    //.splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                    .strafeToLinearHeading(new Vector2d(47.5, -11.5), Math.toRadians(180), speedUpVelocityConstraint)
+                    .setTangent(0)
+                    .splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
+                    //.strafeToLinearHeading(new Vector2d(47.5, -11.5), Math.toRadians(180), speedUpVelocityConstraint)
                     .setTangent(Math.toRadians(270))
                     .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
                     .build();
-            //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-
         }
         //***POSITION 3***
         else if (autoPosition == 3) {
             deliverToBoardPose = new Pose2d(47.5,-38,Math.toRadians(180));
             BoardTraj2 = myBot.getDrive().actionBuilder(stackPose)
-                    //.setTangent(0)
-                    //.splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                    //.setTangent(Math.toRadians(270))
-                    //.splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
-                    .strafeToLinearHeading(new Vector2d(47.5, -11.5), Math.toRadians(180), speedUpVelocityConstraint)
-                    .strafeToLinearHeading(new Vector2d(deliverToBoardPose.position.x, deliverToBoardPose.position.y), Math.toRadians(180))
+                    .setTangent(0)
+                    .splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
+                    .setTangent(Math.toRadians(270))
+                    .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
+                    //.strafeToLinearHeading(new Vector2d(47.5, -11.5), Math.toRadians(180), speedUpVelocityConstraint)
+                    //.strafeToLinearHeading(new Vector2d(deliverToBoardPose.position.x, deliverToBoardPose.position.y), Math.toRadians(180))
                     .build();
-            //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
         }
         //***POSITION 2***
         else {
             deliverToBoardPose = new Pose2d(47.5,-33,Math.toRadians(180));
             BoardTraj2 = myBot.getDrive().actionBuilder(stackPose)
-                    //.setTangent(0)
-                    //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                    //.splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                    .strafeToLinearHeading(new Vector2d(47.5, -11.5), Math.toRadians(180), speedUpVelocityConstraint)
+                    .setTangent(0)
+                    .splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
+                    //.strafeToLinearHeading(new Vector2d(47.5, -11.5), Math.toRadians(180), speedUpVelocityConstraint)
                     .setTangent(Math.toRadians(270))
                     .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
                     .build();
-            //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
         }
     }
 

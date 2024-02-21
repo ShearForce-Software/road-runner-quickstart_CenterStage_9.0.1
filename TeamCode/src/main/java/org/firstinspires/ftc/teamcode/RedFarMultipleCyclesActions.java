@@ -53,6 +53,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             telemetry.update();//make decisions
             RedLeftPurplePixelDecision();
         }
+        resetRuntime();
 
         DriveToStack = drive.actionBuilder(deliverToFloorPose)
                 .splineToLinearHeading(stackPose, Math.toRadians(180))
@@ -86,7 +87,11 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 autoGrab1(),
                 new SleepAction(.5),
                 new ParallelAction(
-                        autoGrab2(),
+                        new SequentialAction(
+                                autoGrab2(),
+                                new SleepAction(.15),
+                                servoOuttake()
+                        ),
                         BoardTraj2,
                         new SequentialAction(
                                 halfwayTrigger1(),
@@ -127,7 +132,11 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         Actions.runBlocking(
                 new ParallelAction(
                         DriveBackToStack,
-                        resetArm(),
+                        new SequentialAction(
+                                resetArm(),
+                                new SleepAction(.15),
+                                slidesDown()
+                        ),
                         servoIntake()
                 )
         );
@@ -136,10 +145,10 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         drive.updatePoseEstimate();
 
         //grab 2 more white pixels
-        control.AutoPickupRoutineDrive();  //TODO -- takes too long, need to see if can split up pickup part to be in parallel
+        control.AutoPickupRoutineDrive();
         drive.updatePoseEstimate();
 
-        //drive to center position
+        //drive to position 1
         BoardTraj2 = drive.actionBuilder(drive.pose)
                 .setTangent(0)
                 //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
@@ -152,7 +161,11 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                         autoGrab1(),
                         new SleepAction(.5),
                         new ParallelAction(
-                                autoGrab2(),
+                                new SequentialAction(
+                                        autoGrab2(),
+                                        new SleepAction(.15),
+                                        servoOuttake()
+                                        ),
                                 BoardTraj2,
                                 new SequentialAction(
                                         halfwayTrigger1(),
@@ -170,12 +183,17 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         /* Park the Robot, and Reset the Arm and slides */
         Park = drive.actionBuilder(drive.pose)
                 .lineToX(46)
-                .splineToLinearHeading(new Pose2d(48, -6, Math.toRadians(90)), Math.toRadians(90))
+                //.splineToLinearHeading(new Pose2d(48, -6, Math.toRadians(90)), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(48, -10), Math.toRadians(90))
                 .build();
         Actions.runBlocking(
                 new ParallelAction(
                         Park,
-                        resetArm(),
+                        new SequentialAction(
+                                resetArm(),
+                                new SleepAction(.15),
+                                slidesDown()
+                        ),
                         servoStop()
                 )
         );
@@ -188,7 +206,6 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             deliverToBoardPose = new Pose2d(47.5,-28,Math.toRadians(180));
             BoardTraj2 = drive.actionBuilder(drive.pose)
                     .setTangent(0)
-                    //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
                     .splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
                     .setTangent(Math.toRadians(270))
                     .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
@@ -201,7 +218,6 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             deliverToBoardPose = new Pose2d(47.5,-38,Math.toRadians(180));
             BoardTraj2 = drive.actionBuilder(drive.pose)
                     .setTangent(0)
-                    //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
                     .splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
                     .setTangent(Math.toRadians(270))
                     .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
@@ -213,12 +229,10 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             deliverToBoardPose = new Pose2d(47.5,-33,Math.toRadians(180));
             BoardTraj2 = drive.actionBuilder(drive.pose)
                     .setTangent(0)
-                    //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
                     .splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
                     .setTangent(Math.toRadians(270))
                     .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
                     .build();
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
         }
     }
     public void RedLeftPurplePixelDecision() {
@@ -228,6 +242,8 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
                     .splineToLinearHeading (deliverToFloorPose, Math.toRadians(45))
+                    //.strafeToLinearHeading(new Vector2d(-38.5, -33), Math.toRadians(90))
+                    //.strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(45))
                     .build();
         }
         //***POSITION 3***
@@ -235,8 +251,10 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             deliverToFloorPose = new Pose2d(-34.5, -32, Math.toRadians(180));
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
-                    .splineToLinearHeading(new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
-                    .splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
+                    //.splineToLinearHeading(new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
+                    //.splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
+                    .strafeToLinearHeading(new Vector2d(-27, -33), Math.toRadians(180))
+                    .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(180))
                     .build();
         }
         //***POSITION 2***
@@ -289,6 +307,19 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }
+    public Action slidesDown(){return new SlidesDown();}
+    public class SlidesDown implements Action{
+        private boolean initialized = false;
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            packet.put("Slides Down", 0);
+            boolean slidesAllDown = control.SlidesDownInParallel();
+            return !slidesAllDown;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
     public Action autoGrab1(){return new AutoGrab1();}
     public class AutoGrab1 implements Action{
         private boolean initialized = false;
@@ -312,6 +343,19 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 initialized = true;
             }
             packet.put("servoIntake", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+    public Action servoOuttake(){return new ServoOuttake();}
+    public class ServoOuttake implements Action{
+        private boolean initialized = false;
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                control.ServoOuttake();
+                initialized = true;
+            }
+            packet.put("ServoOuttake", 0);
             return false;  // returning true means not done, and will be called again.  False means action is completely done
         }
     }

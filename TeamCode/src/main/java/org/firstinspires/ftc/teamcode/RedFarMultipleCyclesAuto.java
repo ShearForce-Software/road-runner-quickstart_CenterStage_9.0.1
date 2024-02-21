@@ -42,7 +42,10 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
-       // control.SpecialSleep(8000);
+        sleep(150);
+        control.SlidesDown();
+
+        // control.SpecialSleep(8000);
 
         if(control.autoPosition == 3) {
             Actions.runBlocking(
@@ -89,7 +92,9 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
                         .build());
 
         control.ResetArmAuto();
-        sleep(200);
+        sleep(150);
+        control.SlidesDown();
+
 
         //drive back to stack
         drive.updatePoseEstimate();
@@ -129,7 +134,9 @@ public class RedFarMultipleCyclesAuto extends LinearOpMode {
                         .build());
 
         control.ResetArmAuto();
-        sleep(200);
+        sleep(150);
+        control.SlidesDown();
+        ;
 
         // Move the robot to the parking position
         Actions.runBlocking(
