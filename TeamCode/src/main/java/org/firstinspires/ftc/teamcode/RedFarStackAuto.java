@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Disabled
-@Autonomous(name="Red Far Stack")
+@Autonomous(name="Red Far Stack", preselectTeleOp = "1 Manual Control")
 public class RedFarStackAuto extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     MecanumDrive drive;

@@ -31,6 +31,12 @@ public class BlueBoardAuto extends LinearOpMode {
         control.GrabPixels();
 
         BlueBoardDelivery();
+        control.TagCorrection();
+        drive.updatePoseEstimate();
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        .strafeToLinearHeading(new Vector2d(drive.pose.position.x + .5, drive.pose.position.y + control.distanceCorrectionLR_HL), Math.toRadians(180))
+                        .build());
         control.SlidesToAuto();
         sleep(150);
         control.DeliverPixelToBoardPos();
@@ -71,7 +77,7 @@ public class BlueBoardAuto extends LinearOpMode {
     public void BlueBoardDelivery() {
         //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(46,38,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(47.5,38,Math.toRadians(180));
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
@@ -80,7 +86,7 @@ public class BlueBoardAuto extends LinearOpMode {
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(46,26,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(47.5,26,Math.toRadians(180));
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
@@ -89,7 +95,7 @@ public class BlueBoardAuto extends LinearOpMode {
         }
         //***POSITION 2***
         else {
-            deliverToBoardPose = new Pose2d(46,33,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(47.5,33,Math.toRadians(180));
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
                             .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
