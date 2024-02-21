@@ -22,9 +22,11 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -76,8 +78,12 @@ public class  UniversalControlClass {
     double hl_rangeToBoard = 0.0;
     double distanceCorrectionLR_HL = 0.0;
     double hl_halfScreenWidth = 0.0;
+    double stackCorrectionLR = 0.0;
+    double stackCorrection = 0.0;
+    double stackWidth = 0.0;
     public static double grabPosition = 0.5;
     public static double dropPosition = 0;
+    private TfodProcessor tfod;
     boolean AutoIntake = false;
     public static final double SLIDE_POWER   = 0.75;
     public static final int SLIDE_MAX_HEIGHT = -2850;
@@ -808,6 +814,27 @@ public class  UniversalControlClass {
         huskyLens2.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION
         );
         opMode.telemetry.update();
+    }
+    public void StackCorrection(){
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        opMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
+
+        // Step through the list of recognitions and display info for each one.
+        for (Recognition recognition : currentRecognitions) {
+            stackWidth = recognition.getWidth();
+            stackCorrectionLR = stackWidth - 160;
+            stackCorrection = stackCorrectionLR * stackWidth;
+
+//            opMode.telemetry.addData(""," ");
+//            opMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+//            opMode.telemetry.addData("- Position", "%.0f / %.0f", x, y);
+//            opMode.telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+            opMode.telemetry.update();
+
+
+
+        }
+
     }
     public void TagCorrection(){
         HuskyLens.Block[] blocks = huskyLens2.blocks();
