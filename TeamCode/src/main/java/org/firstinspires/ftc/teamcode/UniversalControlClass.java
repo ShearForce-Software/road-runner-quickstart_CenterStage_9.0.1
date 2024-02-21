@@ -328,13 +328,18 @@ public class  UniversalControlClass {
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
     }
+    public void DeliverPixelToBoardPosTest(){
+        armRotLeft.setPosition(.57);
+        armRotRight.setPosition(.57);
+        wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
+        wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
+    }
     public void ResetArmAuto(){
         armRotLeft.setPosition(.07);
         armRotRight.setPosition(.07);
         wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
         wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
-        SpecialSleep(200);
-        SlidesDown();
+        SlidesDownInParallel();
     }
     public void ResetArmAutoNoSlides(){
         armRotLeft.setPosition(.07);
@@ -364,6 +369,30 @@ public class  UniversalControlClass {
                 AutoIntake = false;
             }
         }
+    }
+    public void AutoPickupRoutineDrive(){
+        double timeout = opMode.getRuntime() + 1.5;
+        ServoIntake();
+        while(opMode.getRuntime() <= timeout){
+            moveRobot(.5, 0, 0);
+            if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
+                break;
+            }
+            opMode.sleep(100);
+        }
+    }
+    public void AutoPickupRoutineStopAndLower(){
+        // stop the spinners
+        ServoStop();
+        // Move arm and wrist down to grab the pixels
+        GrabPixelPos();
+        GrabPixels();
+    }
+    public void AutoPickupRoutineGrabAndUp(){
+        // Turn spinners back on the other way, in case a pixel is in a bad spot
+        // make a slight move of the arm to prevent the pixels getting hit on the sensors when the slides start going up has a (150ms sleep)
+        ReadyToLiftSlides();
+        ServoOuttake();
     }
     public void AutoPickupRoutine(){
         double timeout = opMode.getRuntime() + 1.5;
@@ -1071,7 +1100,6 @@ public class  UniversalControlClass {
     public void SetFieldCentricMode(boolean fieldCentricEnabled) {
         IsFieldCentric = fieldCentricEnabled;
     }
-
     public void SpecialSleep(long milliseconds) {
         for (long stop = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(milliseconds); stop > System.nanoTime(); ) {
             if (!opMode.opModeIsActive() || opMode.isStopRequested()) return;
