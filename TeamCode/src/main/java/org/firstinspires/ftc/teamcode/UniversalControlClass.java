@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -199,11 +200,18 @@ public class  UniversalControlClass {
         double  drive           = 0;        // Desired forward power/speed (-1 to +1)
         double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
         double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-        aprilTag = new AprilTagProcessor.Builder().build();
+        /*aprilTag = new AprilTagProcessor.Builder().build();
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(aprilTag)
-                .build();
+                .build();*/
+        // Create the TensorFlow processor the easy way.
+        tfod = TfodProcessor.easyCreateWithDefaults();
+
+        // Create the vision portal the easy way.
+
+            visionPortal = VisionPortal.easyCreateWithDefaults(
+                    hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
     }
     public void NavToTag(){
         desiredTag  = null;
@@ -850,7 +858,7 @@ public class  UniversalControlClass {
     public void StackCorrection(){
         List<Recognition> currentRecognitions = tfod.getRecognitions();
 
-        double timeout = opMode.getRuntime() + 0.25;
+        double timeout = opMode.getRuntime() + 5.0;
         while ((currentRecognitions.size() < 1) && (opMode.getRuntime() < timeout))
         {
             opMode.sleep(50);
