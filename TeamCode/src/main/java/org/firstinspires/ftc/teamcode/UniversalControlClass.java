@@ -19,7 +19,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -200,19 +199,11 @@ public class  UniversalControlClass {
         double  drive           = 0;        // Desired forward power/speed (-1 to +1)
         double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
         double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-        /*aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag = new AprilTagProcessor.Builder().build();
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(aprilTag)
-                .build();*/
-
-        // Create the TensorFlow processor the easy way.
-        tfod = TfodProcessor.easyCreateWithDefaults();
-
-        // Create the vision portal the easy way.
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
-
+                .build();
     }
     public void NavToTag(){
         desiredTag  = null;
@@ -343,13 +334,18 @@ public class  UniversalControlClass {
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
     }
+    public void DeliverPixelToBoardPosTest(){
+        armRotLeft.setPosition(.57);
+        armRotRight.setPosition(.57);
+        wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
+        wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
+    }
     public void ResetArmAuto(){
         armRotLeft.setPosition(.07);
         armRotRight.setPosition(.07);
         wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
         wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
-        SpecialSleep(200);
-        SlidesDown();
+        //SlidesDownInParallel();
     }
     public void ResetArmAutoNoSlides(){
         armRotLeft.setPosition(.07);
@@ -379,6 +375,33 @@ public class  UniversalControlClass {
                 AutoIntake = false;
             }
         }
+    }
+    public void AutoPickupRoutineDrive(){
+        double timeout = opMode.getRuntime() + 1.5;
+        ServoIntake();
+        while(opMode.getRuntime() <= timeout){
+            moveRobot(.5, 0, 0);
+            if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
+                break;
+            }
+            opMode.sleep(100);
+        }
+    }
+    public void AutoPickupRoutineStopAndLower(){
+        // stop the spinners
+        ServoStop();
+        // Move arm and wrist down to grab the pixels
+        GrabPixelPos();
+        GrabPixels();
+    }
+    public void AutoPickupRoutineGrabAndUp(){
+        // Turn spinners back on the other way, in case a pixel is in a bad spot
+        // make a slight move of the arm to prevent the pixels getting hit on the sensors when the slides start going up has a (150ms sleep)
+        //ReadyToLiftSlides();
+        armRotLeft.setPosition(.08);
+        armRotRight.setPosition(.08);
+
+        //ServoOuttake();
     }
     public void AutoPickupRoutine(){
         double timeout = opMode.getRuntime() + 1.5;
@@ -619,10 +642,6 @@ public class  UniversalControlClass {
         opMode.telemetry.addData("LeftScissor: ", leftScissor.getPower());
         opMode.telemetry.addData("RightScissor: ", rightScissor.getPower());
         opMode.telemetry.addData("Claw Distance: ", clawDistanceSensor.getDistance(DistanceUnit.MM));
-        opMode.telemetry.addData("LeftOdometry: ", leftFront.getCurrentPosition());
-        opMode.telemetry.addData("RightOdometry: ", rightFront.getCurrentPosition());
-        opMode.telemetry.addData("CenterOdometry: ", leftScissor.getCurrentPosition());
-
         showColorSensorTelemetry();
         opMode.telemetry.update();
     }
@@ -830,28 +849,50 @@ public class  UniversalControlClass {
     }
     public void StackCorrection(){
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-        opMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
+
+        double timeout = opMode.getRuntime() + 0.25;
+        while ((currentRecognitions.size() < 1) && (opMode.getRuntime() < timeout))
+        {
+            opMode.sleep(50);
+            currentRecognitions = tfod.getRecognitions();
+        }
+
+        if (currentRecognitions.size() < 1)
+        {
+            opMode.telemetry.addData("WARNING **** - No WHITE Pixels in view - ***** ", currentRecognitions.size());
+        }
+        else {
+            opMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
+        }
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
-            stackWidth = recognition.getWidth();
-            stackCorrectionLR = stackWidth - 160;
+            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
+            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+
+            stackWidth = 3/recognition.getWidth(); // pixels are 3 inches in diameter
+            // I think the webcam resolution is 640x480
+            stackCorrectionLR = x - 320; // x distance from center of the screen
             stackCorrection = stackCorrectionLR * stackWidth;
 
-//            opMode.telemetry.addData(""," ");
-//            opMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-//            opMode.telemetry.addData("- Position", "%.0f / %.0f", x, y);
-            opMode.telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-            opMode.telemetry.addData("stackCorrection: ", stackCorrection);
-            opMode.telemetry.update();
-
-
-
+            opMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+            opMode.telemetry.addData("stack image Size:", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+            opMode.telemetry.addData("stack Position:  ", "%.0f / %.0f", x, y);
+            opMode.telemetry.addData("stackCorrection: ", "%.0f / %.0f", stackCorrection);
+            break;
         }
+        opMode.telemetry.update();
 
     }
     public void TagCorrection(){
         HuskyLens.Block[] blocks = huskyLens2.blocks();
+
+        double timeout = opMode.getRuntime() + 0.15;
+        while ((blocks.length < 1) && (opMode.getRuntime() < timeout))
+        {
+            opMode.sleep(50);
+            blocks = huskyLens2.blocks();
+        }
 
         if (blocks.length > 0){
             double xVal = blocks[0].x;
@@ -873,7 +914,7 @@ public class  UniversalControlClass {
             opMode.telemetry.update();
 
         }else{
-            opMode.telemetry.addData("No April Tags in view",0 );
+            opMode.telemetry.addData("WARNING **** - No April Tags in view - *****",0 );
             opMode.telemetry.update();
         }
     }
@@ -1112,7 +1153,6 @@ public class  UniversalControlClass {
     public void SetFieldCentricMode(boolean fieldCentricEnabled) {
         IsFieldCentric = fieldCentricEnabled;
     }
-
     public void SpecialSleep(long milliseconds) {
         for (long stop = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(milliseconds); stop > System.nanoTime(); ) {
             if (!opMode.opModeIsActive() || opMode.isStopRequested()) return;

@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Disabled
-@Autonomous(name="Aidan Test")
+@Autonomous(name="Aidan Test", preselectTeleOp = "1 Manual Control")
 public class AidanTest extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false, this);
     MecanumDrive drive;
@@ -53,7 +53,7 @@ public class AidanTest extends LinearOpMode {
         //control.SpecialSleep(10000);
         control.SpecialSleep(6000);
         control.ServoIntake();
-        if(control.autoPosition == 1) {
+        if (control.autoPosition == 1) {
             // drive to stack
             Actions.runBlocking(
                     drive.actionBuilder(deliverToFloorPose)
@@ -61,8 +61,7 @@ public class AidanTest extends LinearOpMode {
                             .splineToConstantHeading(stackVec, Math.toRadians(180))
                             .build()
             );
-        }
-        else{
+        } else {
             Actions.runBlocking(
                     drive.actionBuilder(deliverToFloorPose)
                             .lineToY(10)
@@ -78,13 +77,13 @@ public class AidanTest extends LinearOpMode {
         drive.updatePoseEstimate();
 
 
-            Actions.runBlocking(new ParallelAction(
-                    stopSpinners(),
-                    driveAcrossField()
-                    ));
+        Actions.runBlocking(new ParallelAction(
+                stopSpinners(),
+                driveAcrossField()
+        ));
 
 
-            // Pre-create the trajectory before asking parallel action to execute it
+        // Pre-create the trajectory before asking parallel action to execute it
      /*       Action StackToBoardArea_Trajectory = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
                     .setTangent(0)
                     .splineToLinearHeading(new Pose2d(-30, 9, Math.toRadians(180)), Math.toRadians(0))
@@ -186,23 +185,35 @@ public class AidanTest extends LinearOpMode {
         control.ResetArm();
         sleep(400);
 
-// RobRobot goes back to white pixel stack.
+// Robot goes back to white pixel stack.
         Actions.runBlocking(
                 //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                 drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
-                .splineToLinearHeading(new Pose2d(-52, 12, Math.toRadians(180)), Math.toRadians(180))
-                .lineToX(-56)
+                        .splineToLinearHeading(new Pose2d(-52, 12, Math.toRadians(180)), Math.toRadians(180))
+                        .lineToX(-56)
                         .build());
+        /*
         // Back to backboard Stopped on 2/15/24 *** Aidan this is how you do a parallel action, you create the trajectory outside the parallel call, then you just refer to it ***
         Action backToBackboardTrajectory = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(0)))
                 .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(0)), Math.toRadians(0))
-                        .build();
+                .build();
         Actions.runBlocking(
                 new ParallelAction(
                         stopSpinners(),
                         backToBackboardTrajectory
                 ));
-        // Back
+        // Back to white stack
+        Actions.runBlocking(
+                //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                        .splineToLinearHeading(new Pose2d(-52, 12, Math.toRadians(180)), Math.toRadians(180))
+                        .lineToX(-56)
+                        .build());
+
+         */
+        Actions.runBlocking(new SequentialAction(fullCycle(),parkPosition()
+                ));
+
  /*       // Move the robot to the parking position
         drive.updatePoseEstimate();
         Actions.runBlocking(
@@ -217,11 +228,12 @@ public class AidanTest extends LinearOpMode {
         telemetry.update();
 
     }
+
     public void BlueBoardDelivery() {
         // Look for potential errors
         //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToBoardPose = new Pose2d(50,34.5,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50, 34.5, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
@@ -231,7 +243,7 @@ public class AidanTest extends LinearOpMode {
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
-            deliverToBoardPose = new Pose2d(50,24.5,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50, 24.5, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.
                     // yawError, Math.toRadians(180)))
@@ -242,7 +254,7 @@ public class AidanTest extends LinearOpMode {
         }
         //***POSITION 2***
         else {
-            deliverToBoardPose = new Pose2d(50,29,Math.toRadians(180));
+            deliverToBoardPose = new Pose2d(50, 29, Math.toRadians(180));
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(new Pose2d(30, 9, Math.toRadians(180)))
@@ -277,7 +289,7 @@ public class AidanTest extends LinearOpMode {
             Actions.runBlocking(
                     //drive.actionBuilder(drive.  newa Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
                     drive.actionBuilder(aTempPose)
-                            .splineToLinearHeading (deliverToFloorPose, Math.toRadians(315))
+                            .splineToLinearHeading(deliverToFloorPose, Math.toRadians(315))
                             .build());
         }
         //***POSITION 2***
@@ -291,11 +303,14 @@ public class AidanTest extends LinearOpMode {
         }
 
     }
+
     public Action stopSpinners() {
         return new StopSpinners();
     }
+
     public class StopSpinners implements Action {
         private boolean initialized = false;
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
@@ -307,12 +322,14 @@ public class AidanTest extends LinearOpMode {
         }
 
     }
-    public Action driveAcrossField()
-    {
+
+    public Action driveAcrossField() {
         return new DriveAcrossField();
     }
+
     public class DriveAcrossField implements Action {
         private boolean initialized = false;
+
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
@@ -328,13 +345,79 @@ public class AidanTest extends LinearOpMode {
             boolean returnValue = true;
 
             drive.updatePoseEstimate();
-            if ((drive.pose.position.x == 30) && (drive.pose.position.y == 9))
-            {
+            if ((drive.pose.position.x == 30) && (drive.pose.position.y == 9)) {
                 returnValue = false;
             }
             return returnValue;
         }
+    }
 
+        public Action fullCycle() {
+            return new FullCycle();
+        }
+
+        public class FullCycle implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    initialized = true;
+                    drive.updatePoseEstimate();
+                    // Back to backboard
+                    Action backToBackboardTrajectory = drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(0)))
+                            .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(0)), Math.toRadians(0))
+                            .build();
+                    Actions.runBlocking(
+                            new ParallelAction(
+                                    stopSpinners(),
+                                    backToBackboardTrajectory
+                            ));
+                    // Back to white stack
+                    Actions.runBlocking(
+                            //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                            drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                                    .splineToLinearHeading(new Pose2d(-52, 12, Math.toRadians(180)), Math.toRadians(180))
+                                    .lineToX(-56)
+                                    .build());
+                }
+                packet.put("drive across blue field", 0);
+                boolean returnValue = true;
+
+                drive.updatePoseEstimate();
+                if ((drive.pose.position.x == 30) && (drive.pose.position.y == 9)) {
+                    returnValue = false;
+                }
+                return returnValue;
+            }
+        }
+
+    public Action parkPosition()
+    {
+        return new ParkPosition();
+    }
+
+    public class ParkPosition implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                // Move the robot to the parking position
+                drive.updatePoseEstimate();
+                Actions.runBlocking(
+                        //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
+                        drive.actionBuilder(new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(180)))
+                                .splineToLinearHeading(new Pose2d(48, 15, Math.toRadians(270)), Math.toRadians(270))
+                                .build());
+                control.ServoStop();
+                sleep(100);
+                telemetry.update();
+                initialized = true;
+            }
+            packet.put("Robot parks", 0);
+            return false;  // returning true means not done, and will be called again.  False means action is completely done
+        }
 
     }
 }

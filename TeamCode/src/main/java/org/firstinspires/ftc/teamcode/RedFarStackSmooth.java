@@ -43,6 +43,9 @@ public class RedFarStackSmooth extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
+        sleep(150);
+        control.SlidesDown();
+
         if(control.autoPosition==2){
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
@@ -111,6 +114,9 @@ public class RedFarStackSmooth extends LinearOpMode {
                         .build());
 
         control.ResetArmAuto();
+        sleep(150);
+        control.SlidesDown();
+
         sleep(300);
         //END OF TEST MULTIPLE CYCLES*/
 

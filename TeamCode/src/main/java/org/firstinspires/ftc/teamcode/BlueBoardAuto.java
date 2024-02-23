@@ -25,38 +25,57 @@ public class BlueBoardAuto extends LinearOpMode {
             control.DetectTeamArtBlueBoard();
             telemetry.update();
         }
-        waitForStart();
+        resetRuntime();
 
         // lock the pixels
         control.GrabPixels();
 
+        // ***************************************************
+        // ****  START DRIVING    ****************************
+        // ***************************************************
+
+        /* Drive to the Board */
         BlueBoardDelivery();
+
+        /* Use AprilTags to Align Perfectly to the Board */
         control.TagCorrection();
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(new Vector2d(drive.pose.position.x + .5, drive.pose.position.y + control.distanceCorrectionLR_HL), Math.toRadians(180))
                         .build());
+
+        /* release pixels on the board using the distance sensor to know when to stop */
         control.SlidesToAuto();
         sleep(150);
         control.DeliverPixelToBoardPos();
         control.StopNearBoardAuto(false);
+
         sleep(200);
 
+        /* BACK UP FROM BOARD slightly so that the pixels fall off cleanly */
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .lineToX(47)
                         .build());
         drive.updatePoseEstimate();
-        control.ResetArmAuto();
-        sleep(400);
 
+        control.ResetArmAuto();
+        sleep(150);
+        control.SlidesDown();
+
+        /* Drive to Floor Position */
         BlueLeftTeamArtPixelDelivery();
         drive.updatePoseEstimate();
+
+        /* Deliver the Purple Pixel */
+        control.SlidesToAuto(); //TODO TEMP - should be able to remove this once Husky Lens moved
         control.DropOnLine();
+
         control.ResetArm();
         sleep(400);
+        control.SlidesDown();
 
         if(control.autoPosition == 2){
             Actions.runBlocking(
@@ -65,6 +84,7 @@ public class BlueBoardAuto extends LinearOpMode {
                             .build());
         }
         drive.updatePoseEstimate();
+
         // Move the robot to the parking position
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)

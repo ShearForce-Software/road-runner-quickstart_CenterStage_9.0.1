@@ -41,6 +41,9 @@ public class RedFarStackAuto extends LinearOpMode {
         control.DropOnLine();
         // put the arm back in a safe to travel position
         control.ResetArmAuto();
+        sleep(150);
+        control.SlidesDown();
+
         control.SpecialSleep(6000);
         control.ServoIntake();
 
