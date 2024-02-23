@@ -60,6 +60,7 @@ public class RedFarStackSmoothWithTagCorrection extends LinearOpMode {
                         .build()
         );
         control.StackCorrection();
+        sleep(3000);
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(new Vector2d(drive.pose.position.x + 0.5, drive.pose.position.y + control.stackCorrection), Math.toRadians(180))
