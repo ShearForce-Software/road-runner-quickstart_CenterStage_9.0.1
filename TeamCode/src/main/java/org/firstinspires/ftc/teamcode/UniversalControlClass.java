@@ -322,9 +322,9 @@ public class  UniversalControlClass {
     public void ReadyToLiftSlides(){ // slight move before lifting slides
         armRotLeft.setPosition(.08);
         armRotRight.setPosition(.08);
-        SpecialSleep(150);
-        //wristLeft.setPosition(WRIST_GRAB_PIXEL_POS);
-        //wristRight.setPosition(WRIST_GRAB_PIXEL_POS);
+        //SpecialSleep(150);
+        wristLeft.setPosition(WRIST_GRAB_PIXEL_POS-.02);
+        wristRight.setPosition(WRIST_GRAB_PIXEL_POS-.02);
         //SpecialSleep(150);
     }
 
@@ -342,9 +342,11 @@ public class  UniversalControlClass {
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
     }
-    public void DeliverPixelToBoardPosTest(){
+    public void DeliverPixelToBoardPosPart1(){
         armRotLeft.setPosition(.57);
         armRotRight.setPosition(.57);
+    }
+    public void DeliverPixelToBoardPosPart2(){
         wristLeft.setPosition(WRIST_DELIVER_TO_BOARD_POS);
         wristRight.setPosition(WRIST_DELIVER_TO_BOARD_POS);
     }
@@ -894,14 +896,12 @@ public class  UniversalControlClass {
     }
     public void TagCorrection(){
         HuskyLens.Block[] blocks = huskyLens2.blocks();
-
         double timeout = opMode.getRuntime() + 0.15;
-        while ((blocks.length < 1) && (opMode.getRuntime() < timeout))
-        {
+
+        while ((blocks.length < 1) && (opMode.getRuntime() < timeout)) {
             opMode.sleep(50);
             blocks = huskyLens2.blocks();
         }
-
         if (blocks.length > 0){
             double xVal = blocks[0].x;
             pixelCorrectionAmountLR = xVal - 160;
@@ -921,9 +921,11 @@ public class  UniversalControlClass {
             opMode.telemetry.addData("Correction LR: ","%.01f in", distanceCorrectionLR_HL);
             opMode.telemetry.update();
 
-        }else{
+        }
+        else{
             opMode.telemetry.addData("WARNING **** - No April Tags in view - *****",0 );
             opMode.telemetry.update();
+            distanceCorrectionLR_HL = 0.0;
         }
     }
     public void DetectTeamArtBlue() {

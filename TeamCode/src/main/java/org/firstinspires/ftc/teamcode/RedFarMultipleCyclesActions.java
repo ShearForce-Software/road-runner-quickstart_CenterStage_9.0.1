@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Pose2dDual;
+import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -34,12 +37,17 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
     Action DriveBackToStack2;
     VelConstraint speedUpVelocityConstraint;
     AccelConstraint speedUpAccelerationConstraint;
+    VelConstraint slowDownVelocityConstraint;
+    AccelConstraint slowDownAccelerationConstraint;
+
     public void runOpMode(){
-        startPose = new Pose2d(-35.5,-62.5,Math.toRadians(90));
-        stackPose = new Pose2d(-54.5, -11.5, Math.toRadians(180));
+        startPose = new Pose2d(-36,-62.5,Math.toRadians(90));
+        stackPose = new Pose2d(-54.5, -13.5, Math.toRadians(180)); //-54.5,-11.5
 
         speedUpVelocityConstraint = new TranslationalVelConstraint(90.0); //TODO Need to add a speed-up Velocity constraint to some of the trajectories
         speedUpAccelerationConstraint = new ProfileAccelConstraint(-70.0, 70.0);    //TODO need to determine is an acceleration constraint on some trajectories would be useful
+        slowDownVelocityConstraint = new TranslationalVelConstraint(5); //TODO Need to add a slow-down Velocity constraint to some of the trajectories
+        slowDownAccelerationConstraint = new ProfileAccelConstraint(-30, 30);    //TODO need to determine is an acceleration constraint on some trajectories would be useful
 
         /* Initialize the Robot */
         drive = new MecanumDrive(hardwareMap, startPose);
@@ -57,6 +65,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
 
         DriveToStack = drive.actionBuilder(deliverToFloorPose)
                 .splineToLinearHeading(stackPose, Math.toRadians(180))
+                .lineToX(-60, slowDownVelocityConstraint)
                 .build();
 
         // ***************************************************
@@ -96,7 +105,9 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                         new SequentialAction(
                                 halfwayTrigger1(),
                                 new SleepAction(.15),
-                                halfwayTrigger2()
+                                halfwayTrigger2(),
+                                new SleepAction(.15),
+                                halfwayTrigger3()
                                 )
                         )
                 )
@@ -128,6 +139,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         DriveBackToStack = drive.actionBuilder(drive.pose)
                 .strafeToLinearHeading(new Vector2d(45, -11.5), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
+                .lineToX(-60, slowDownVelocityConstraint)
                 .build();
         Actions.runBlocking(
                 new ParallelAction(
@@ -170,7 +182,9 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                                 new SequentialAction(
                                         halfwayTrigger1(),
                                         new SleepAction(.15),
-                                        halfwayTrigger2()
+                                        halfwayTrigger2(),
+                                        new SleepAction(.15),
+                                        halfwayTrigger3()
                                 )
                         )
                 )
@@ -179,10 +193,11 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         //deliver two white pixels
         control.StopNearBoardAuto(true);
         drive.updatePoseEstimate();
+        sleep(150);
 
         /* Park the Robot, and Reset the Arm and slides */
         Park = drive.actionBuilder(drive.pose)
-                .lineToX(46)
+                .lineToX(45, slowDownVelocityConstraint)
                 //.splineToLinearHeading(new Pose2d(48, -6, Math.toRadians(90)), Math.toRadians(90))
                 .strafeToLinearHeading(new Vector2d(48, -10), Math.toRadians(90))
                 .build();
@@ -392,7 +407,20 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             //drive.updatePoseEstimate();
             if (drive.pose.position.x >= 12) {
                 moveArm = true;
-                control.DeliverPixelToBoardPosTest();
+                control.DeliverPixelToBoardPosPart1();
+            }
+            packet.put("move arm trigger", 0);
+            return !moveArm;  // returning true means not done, and will be called again.  False means action is completely done
+        }
+    }
+    public Action halfwayTrigger3(){return new HalfwayTrigger3();}
+    public class HalfwayTrigger3 implements Action{
+        public boolean run(@NonNull TelemetryPacket packet) {
+            boolean moveArm = false;
+            //drive.updatePoseEstimate();
+            if (drive.pose.position.x >= 12) {
+                moveArm = true;
+                control.DeliverPixelToBoardPosPart2();
             }
             packet.put("move arm trigger", 0);
             return !moveArm;  // returning true means not done, and will be called again.  False means action is completely done
