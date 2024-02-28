@@ -14,7 +14,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class MeepMeep_RedBoard_withParallelActions {
+public class MeepMeep_BlueBoard_withParallelActions {
     static Pose2d startPose;
     static Pose2d stackPose;
     static Pose2d deliverToFloorPose;
@@ -32,8 +32,8 @@ public class MeepMeep_RedBoard_withParallelActions {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
 
-        startPose = new Pose2d(12, -62.5, Math.toRadians(90));
-        stackPose = new Pose2d(-55.5, -36, Math.toRadians(180));
+        startPose = new Pose2d(12, 62.5, Math.toRadians(270));
+        stackPose = new Pose2d(-55.5, 36, Math.toRadians(180));
 
         // Define some custom constraints to use when wanting to go faster than defaults
         speedUpVelocityConstraint = new TranslationalVelConstraint(90.0);
@@ -51,20 +51,20 @@ public class MeepMeep_RedBoard_withParallelActions {
         // ******************************************
         /* Specify which Position will be run */
         // ******************************************
-        autoPosition = 1;
+        autoPosition = 2;
 
         // Build up the start to board delivery trajectory
-        RedBoardDecision();
+        BlueBoardDecision();
 
         // Build up the Board to Floor Trajectory
-        RedRightPurplePixelDecision();
+        BlueRightPurplePixelDecision();
 
         // Build up the Floor to Stack Trajectory
         if (autoPosition == 1)
         {
             DriveToStack = myBot.getDrive().actionBuilder(deliverToFloorPose)
-                    .splineToLinearHeading(new Pose2d(12,-62, Math.toRadians(180)), Math.toRadians(180))
-                    .strafeToLinearHeading(new Vector2d(-55.5,-62), Math.toRadians(180))
+                    .splineToLinearHeading(new Pose2d(12,62, Math.toRadians(180)), Math.toRadians(180))
+                    .strafeToLinearHeading(new Vector2d(-55.5,62), Math.toRadians(180))
                     .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
                     .build();
 
@@ -72,33 +72,33 @@ public class MeepMeep_RedBoard_withParallelActions {
         else
         {
             DriveToStack = myBot.getDrive().actionBuilder(deliverToFloorPose)
-                    .strafeToLinearHeading(new Vector2d(12,-62), Math.toRadians(180))
-                    .strafeToLinearHeading(new Vector2d(-55.5,-62), Math.toRadians(180))
+                    .strafeToLinearHeading(new Vector2d(12,62), Math.toRadians(180))
+                    .strafeToLinearHeading(new Vector2d(-55.5,62), Math.toRadians(180))
                     .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
                     .build();
         }
         /////
-       // Action DriveBackToStack2 = myBot.getDrive().actionBuilder(new Pose2d(48,-11.5,Math.toRadians(180)))
+       // Action DriveBackToStack2 = myBot.getDrive().actionBuilder(new Pose2d(48,11.5,Math.toRadians(180)))
         //        .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180), speedUpVelocityConstraint)
          //       .build();
 
-        // Build up the Stack to Board Position 3 Trajectory
+        // Build up the Stack to Board Position 1 Trajectory
         Action BoardTrajFinal = myBot.getDrive().actionBuilder(stackPose)
                 //.setTangent(0)
-                //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                //.splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
+                //.splineToLinearHeading(new Pose2d(-30, 11.5, Math.toRadians(180)), Math.toRadians(0))
+                //.splineToLinearHeading(new Pose2d(47.5, 11.5, Math.toRadians(180)), Math.toRadians(0))
                 //.setTangent(Math.toRadians(270))5
                 //.splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
-                .strafeToLinearHeading(new Vector2d(-55.5, -62), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(47,-62), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(47,-40), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-55.5, 62), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(47,62), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(47,40), Math.toRadians(180))
                 .build();
 
         // Build up the Board position 3 to Parking Trajectory
         //Action Park = myBot.getDrive().actionBuilder(new Pose2d(46, deliverToBoardPose.position.y, Math.toRadians(180)))
-        Action Park = myBot.getDrive().actionBuilder(new Pose2d(47, -40, Math.toRadians(180)))
-                .splineToLinearHeading(new Pose2d(48, -60, Math.toRadians(90)), Math.toRadians(90))
-                //.strafeToLinearHeading(new Vector2d(48, -10), Math.toRadians(90))
+        Action Park = myBot.getDrive().actionBuilder(new Pose2d(47, 40, Math.toRadians(180)))
+                .splineToLinearHeading(new Pose2d(48, 60, Math.toRadians(270)), Math.toRadians(90))
+                //.strafeToLinearHeading(new Vector2d(48, 10), Math.toRadians(90))
                 //.turnTo(Math.toRadians(90))
                 .build();
 
@@ -132,22 +132,22 @@ public class MeepMeep_RedBoard_withParallelActions {
                 .start();
     }
 
-        static public void RedRightPurplePixelDecision() {
+        static public void BlueRightPurplePixelDecision() {
             //***POSITION 1***
             if (autoPosition == 1) {
-                deliverToFloorPose = new Pose2d(12, -33, Math.toRadians(0));
+                deliverToFloorPose = new Pose2d(12, 33, Math.toRadians(0));
                 FloorTraj = myBot.getDrive().actionBuilder(deliverToBoardPose)
-                        .splineToLinearHeading(new Pose2d(27,-33, Math.toRadians(0)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(27,33, Math.toRadians(0)), Math.toRadians(180))
                         //.setTangent(Math.toRadians(180))
                         .lineToX(0)
                         .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(0))
-                        //.splineToLinearHeading(new Pose2d(0,-33, Math.toRadians(0)), Math.toRadians(0))
+                        //.splineToLinearHeading(new Pose2d(0,33, Math.toRadians(0)), Math.toRadians(0))
                         //.splineToLinearHeading(deliverToFloorPose, Math.toRadians(0))
                         .build();
             }
             //***POSITION 3***
             else if (autoPosition == 3) {
-                deliverToFloorPose = new Pose2d(12, -36, Math.toRadians(180));
+                deliverToFloorPose = new Pose2d(12, 36, Math.toRadians(180));
                 FloorTraj = myBot.getDrive().actionBuilder(deliverToBoardPose)
                         .setTangent(Math.toRadians(180))
                         .splineToLinearHeading (deliverToFloorPose, Math.toRadians(180))
@@ -155,33 +155,31 @@ public class MeepMeep_RedBoard_withParallelActions {
             }
             //***POSITION 2***
             else {
-                deliverToFloorPose = new Pose2d(12, -36, Math.toRadians(270));
+                deliverToFloorPose = new Pose2d(12, 36, Math.toRadians(270));
                 FloorTraj = myBot.getDrive().actionBuilder(deliverToBoardPose)
-                        .splineToLinearHeading(new Pose2d(12, -30, Math.toRadians(-90)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(12, 30, Math.toRadians(-90)), Math.toRadians(180))
                         .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
                         .build();
             }
         }
 
-        static public void RedBoardDecision() {
+        static public void BlueBoardDecision() {
             // Look for potential errors
             //***POSITION 1***
             if (autoPosition == 1) {
-                deliverToBoardPose = new Pose2d(47,-30,Math.toRadians(180));
+                deliverToBoardPose = new Pose2d(47,42,Math.toRadians(180));
             }
             //***POSITION 3***
             else if (autoPosition == 3) {
-                deliverToBoardPose = new Pose2d(47,-42,Math.toRadians(180));
+                deliverToBoardPose = new Pose2d(47,30,Math.toRadians(180));
             }
             //***POSITION 2***
             else {
-                deliverToBoardPose = new Pose2d(47,-36,Math.toRadians(180));
+                deliverToBoardPose = new Pose2d(47,36,Math.toRadians(180));
             }
             BoardTraj2 = myBot.getDrive().actionBuilder(startPose)
                     .splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                     .build();
         }
-
-
     }
 

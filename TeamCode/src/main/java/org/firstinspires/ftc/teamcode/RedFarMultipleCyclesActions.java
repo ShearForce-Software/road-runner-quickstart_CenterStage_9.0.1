@@ -31,10 +31,8 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
     Action FloorTraj;
     Action DriveToStack;
     Action BoardTraj2;
-    Action BoardTrajFinal;
     Action Park;
     Action DriveBackToStack;
-    Action DriveBackToStack2;
     VelConstraint speedUpVelocityConstraint;
     AccelConstraint speedUpAccelerationConstraint;
     VelConstraint slowDownVelocityConstraint;
@@ -146,10 +144,18 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         /* move arm to reset position while strafing to the side, before driving back to the stack of white pixels */
         drive.updatePoseEstimate();
         DriveBackToStack = drive.actionBuilder(drive.pose)
+                /* **** Curvy spline route out **** */
+                //TODO -- Test if this is more accurate
+                //.splineToLinearHeading(new Pose2d(45, -11.5, Math.toRadians(180)), Math.toRadians(180))
+                /* **** Pure strafe out trajectory **** */
                 .strafeToLinearHeading(new Vector2d(45, -11.5), Math.toRadians(180))
+                // Return to stack
                 .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
                 //.lineToX(-60.5, slowDownVelocityConstraint)
                 .build();
+
+                //TODO -- Test if this is more accurate
+                //drive.useExtraCorrectionLogic = true;
         Actions.runBlocking(
                 new ParallelAction(
                         DriveBackToStack,
@@ -161,6 +167,8 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                         servoIntake()
                 )
         );
+        drive.useExtraCorrectionLogic = false;
+
 
         /* move slides down and drive back to stack */
         control.StackCorrection();
@@ -235,39 +243,23 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         //***POSITION 1***
         if (control.autoPosition == 1) {
             deliverToBoardPose = new Pose2d(47,-30,Math.toRadians(180));
-            BoardTraj2 = drive.actionBuilder(drive.pose)
-                    .lineToX(-56, slowDownVelocityConstraint)
-                    .setTangent(0)
-                    .splineToLinearHeading(new Pose2d(45.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                    .setTangent(Math.toRadians(270))
-                    .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
-                    .build();
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
-
         }
         //***POSITION 3***
         else if (control.autoPosition == 3) {
             deliverToBoardPose = new Pose2d(47,-42,Math.toRadians(180));
-            BoardTraj2 = drive.actionBuilder(drive.pose)
-                    .lineToX(-56, slowDownVelocityConstraint)
-                    .setTangent(0)
-                    .splineToLinearHeading(new Pose2d(45.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                    .setTangent(Math.toRadians(270))
-                    .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
-                    .build();
-                    //drive.actionBuilder(drive.  new Pose2d(50+control.rangeError, 36+control.yawError, Math.toRadians(180)))
         }
         //***POSITION 2***
         else {
             deliverToBoardPose = new Pose2d(47,-36,Math.toRadians(180));
-            BoardTraj2 = drive.actionBuilder(drive.pose)
-                    .lineToX(-56, slowDownVelocityConstraint)
-                    .setTangent(0)
-                    .splineToLinearHeading(new Pose2d(45.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                    .setTangent(Math.toRadians(270))
-                    .splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
-                    .build();
         }
+        BoardTraj2 = drive.actionBuilder(drive.pose)
+                .lineToX(-56, slowDownVelocityConstraint)
+                .strafeToLinearHeading(new Vector2d(45.5, -12), Math.toRadians(180))
+                /* **** Curvy spline route without swipe **** */
+                //.splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
+                /* **** Pure swipe-strafe in trajectory **** */
+                .strafeToLinearHeading(new Vector2d(deliverToBoardPose.position.x, deliverToBoardPose.position.y), Math.toRadians(180))
+                .build();
     }
     public void RedLeftPurplePixelDecision() {
         //***POSITION 1***
