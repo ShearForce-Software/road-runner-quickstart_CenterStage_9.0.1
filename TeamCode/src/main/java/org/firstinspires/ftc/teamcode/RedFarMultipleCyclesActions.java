@@ -147,11 +147,10 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 /* **** Curvy spline route out **** */
                 //TODO -- Test if this is more accurate
                 //.splineToLinearHeading(new Pose2d(45, -11.5, Math.toRadians(180)), Math.toRadians(180))
+                //.splineToLinearHeading(stackPose, Math.toRadians(180))
                 /* **** Pure strafe out trajectory **** */
                 .strafeToLinearHeading(new Vector2d(45, -11.5), Math.toRadians(180))
-                // Return to stack
                 .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
-                //.lineToX(-60.5, slowDownVelocityConstraint)
                 .build();
 
                 //TODO -- Test if this is more accurate
@@ -189,7 +188,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 .setTangent(0)
                 //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(45.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                .setTangent(Math.toRadians(270))
+                //.setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(47, -36, Math.toRadians(180)), Math.toRadians(270))
                 .build();
 
@@ -268,8 +267,6 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, -33, Math.toRadians(90)), Math.toRadians(90))
                     .splineToLinearHeading (deliverToFloorPose, Math.toRadians(45))
-                    //.strafeToLinearHeading(new Vector2d(-38.5, -33), Math.toRadians(90))
-                    //.strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(45))
                     .build();
         }
         //***POSITION 3***
@@ -277,8 +274,6 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
             deliverToFloorPose = new Pose2d(-36, -34.5, Math.toRadians(180));
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, -35.5, Math.toRadians(90)), Math.toRadians(90))
-                    //.splineToLinearHeading(new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
-                    //.splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                     .strafeToLinearHeading(new Vector2d(-27, -35.5), Math.toRadians(180))
                     .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(180))
                     .build();
