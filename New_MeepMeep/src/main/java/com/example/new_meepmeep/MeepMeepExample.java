@@ -17,18 +17,13 @@ public class MeepMeepExample {
                 .setDimensions(18, 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, 0, 0))
-                .lineToX(30)
-                .turn(Math.toRadians(90))
-                .lineToY(30)
-                .turn(Math.toRadians(90))
-                .lineToX(0)
-                .turn(Math.toRadians(90))
-                .lineToY(0)
-                .turn(Math.toRadians(90))
-                .build());
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-36, -62.5, Math.toRadians(90)))
+                        .splineToLinearHeading(new Pose2d(-46, -33, Math.toRadians(90)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(-36, -11.5, Math.toRadians(90)), Math.toRadians(90))
+                        .build());
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
+
+                meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)

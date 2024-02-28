@@ -388,11 +388,24 @@ public class  UniversalControlClass {
     }
     public void AutoPickupRoutineDrive(){
         double timeout = opMode.getRuntime() + 1.5;
+        boolean forward = true;
         ServoIntake();
         while(opMode.getRuntime() <= timeout){
-            moveRobot(.5, 0, 0);
             if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) && (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
                 break;
+            }
+            else if((leftColorSensor.getDistance(DistanceUnit.MM) < hopperDistance) || (rightColorSensor.getDistance(DistanceUnit.MM) < hopperDistance)) {
+                if (forward) {
+                    moveRobot(-.1, 0, 0);
+                    forward = false;
+                }
+                else{
+                    moveRobot(.75, 0, 0);
+                    forward = true;
+                }
+            }
+            else{
+                moveRobot(.65, 0, 0);
             }
             opMode.sleep(100);
         }
@@ -860,7 +873,7 @@ public class  UniversalControlClass {
     public void StackCorrection(){
         List<Recognition> currentRecognitions = tfod.getRecognitions();
 
-        double timeout = opMode.getRuntime() + 5.0;
+        double timeout = opMode.getRuntime() + 1;
         while ((currentRecognitions.size() < 1) && (opMode.getRuntime() < timeout))
         {
             opMode.sleep(50);
@@ -870,6 +883,7 @@ public class  UniversalControlClass {
         if (currentRecognitions.size() < 1)
         {
             opMode.telemetry.addData("WARNING **** - No WHITE Pixels in view - ***** ", currentRecognitions.size());
+            stackCorrection = -1;
         }
         else {
             opMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
@@ -885,10 +899,10 @@ public class  UniversalControlClass {
             stackCorrectionLR = x - 320; // x distance from center of the screen
             stackCorrection = stackCorrectionLR * stackWidth;
 
-            opMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+            //opMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             opMode.telemetry.addData("stack image Size:", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
             opMode.telemetry.addData("stack Position:  ", "%.0f / %.0f", x, y);
-            opMode.telemetry.addData("stackCorrection: ", "%.0f / %.0f", stackCorrection);
+            opMode.telemetry.addData("stackCorrection: ", stackCorrection);
             break;
         }
         opMode.telemetry.update();
