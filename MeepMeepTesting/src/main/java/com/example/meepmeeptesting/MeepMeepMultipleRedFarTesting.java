@@ -8,7 +8,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepMultipleRedFarTesting {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(500);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -104,7 +104,7 @@ public class MeepMeepMultipleRedFarTesting {
 
                                 // Parking Position
                                 .lineTo(new Vector2d(50, -11)) //lineToX(47)
-                                .turn(Math.toRadians(90))
+                                .turn(Math.toRadians(-90))
 
                                 .build()
                 );
