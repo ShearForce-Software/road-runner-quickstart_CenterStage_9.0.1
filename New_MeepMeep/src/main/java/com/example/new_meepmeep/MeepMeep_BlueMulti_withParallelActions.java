@@ -30,8 +30,8 @@ public class MeepMeep_BlueMulti_withParallelActions {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
 
-        startPose = new Pose2d(-35.5,62.5,Math.toRadians(-90));
-        stackPose = new Pose2d(-54.5, 11.5, Math.toRadians(180));
+        startPose = new Pose2d(-36,62.5,Math.toRadians(-90));
+        stackPose = new Pose2d(-54.5, 13.5, Math.toRadians(180));
 
         // Define the standard constraints to use for this robot
         myBot = new DefaultBotBuilder(meepMeep)
@@ -71,7 +71,7 @@ public class MeepMeep_BlueMulti_withParallelActions {
                 //.strafeToLinearHeading(new Vector2d(45, -11.5), Math.toRadians(180))
                 //.setTangent(0)
                 //.setReversed(true)
-                .splineToLinearHeading(new Pose2d(48, 11.5, Math.toRadians(180)), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(45,11.5), Math.toRadians(180))
                 .build();
         Action DriveBackToStack2 = myBot.getDrive().actionBuilder(new Pose2d(48,11.5,Math.toRadians(180)))
                 .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180), speedUpVelocityConstraint)
@@ -84,7 +84,7 @@ public class MeepMeep_BlueMulti_withParallelActions {
                 //.splineToLinearHeading(new Pose2d(47.5, -11.5, Math.toRadians(180)), Math.toRadians(0))
                 //.setTangent(Math.toRadians(270))
                 //.splineToLinearHeading(deliverToBoardPose, Math.toRadians(270))
-                .strafeToLinearHeading(new Vector2d(47.5, 11.5), Math.toRadians(0), speedUpVelocityConstraint)
+                .strafeToLinearHeading(new Vector2d(45, 11.5), Math.toRadians(180), speedUpVelocityConstraint)
                 .splineToLinearHeading(new Pose2d(47.5, 28, Math.toRadians(0)), Math.toRadians(0))
                 //.strafeToLinearHeading(new Vector2d(47.5, -28), Math.toRadians(180)) // Position 1
                 .build();
