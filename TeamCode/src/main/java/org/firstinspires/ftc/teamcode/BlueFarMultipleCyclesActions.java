@@ -48,6 +48,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, startPose);
         control.Init(hardwareMap);
         control.HuskyLensInit();
+        control.WebcamInit(hardwareMap);
         control.AutoStartPos();
         telemetry.update();
 
