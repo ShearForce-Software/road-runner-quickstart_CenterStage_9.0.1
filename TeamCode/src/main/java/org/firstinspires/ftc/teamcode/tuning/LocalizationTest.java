@@ -14,9 +14,9 @@ public class LocalizationTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
             //Red Far Start Position
-            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -62.5, Math.toRadians(90)));
+            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36,62.5,Math.toRadians(270)));
 
-            waitForStart();
+            waitForStart  ();
 
             while (opModeIsActive()) {
                 drive.setDrivePowers(new PoseVelocity2d(

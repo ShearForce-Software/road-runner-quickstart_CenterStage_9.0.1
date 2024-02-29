@@ -16,7 +16,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Board", preselectTeleOp = "1 Manual Control")
+@Autonomous(name="Red Board Cycle Actions", preselectTeleOp = "1 Manual Control")
 public class RedBoardAutoMultipleCyclesActions extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     MecanumDrive drive;
