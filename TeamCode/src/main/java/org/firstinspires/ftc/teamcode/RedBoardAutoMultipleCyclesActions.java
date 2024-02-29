@@ -16,7 +16,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Red Board Multiple Cycles", preselectTeleOp = "1 Manual Control")
+@Autonomous(name="Red Board Cycle Actions", preselectTeleOp = "1 Manual Control")
 public class RedBoardAutoMultipleCyclesActions extends LinearOpMode {
     UniversalControlClass control = new UniversalControlClass(true, false,this);
     MecanumDrive drive;
@@ -141,17 +141,17 @@ public class RedBoardAutoMultipleCyclesActions extends LinearOpMode {
         );
         drive.updatePoseEstimate();
 
-        control.StackCorrectionHL();
+        control.StackCorrection();
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(new Vector2d(-57,drive.pose.position.y - control.stackCorrection), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-57,drive.pose.position.y + control.stackCorrection), Math.toRadians(180))
                         .build()
         );
         drive.updatePoseEstimate();
 
         //grab 2 more white pixels
-        control.AutoPickupRoutineDrive(1.5);
+        control.AutoPickupRoutineDrive();
         drive.updatePoseEstimate();
 
         // Build up the Stack to Board Position 3 Trajectory

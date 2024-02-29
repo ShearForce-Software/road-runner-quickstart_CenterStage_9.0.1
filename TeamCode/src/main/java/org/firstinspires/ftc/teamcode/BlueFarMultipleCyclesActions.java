@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
@@ -37,7 +38,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 
     public void runOpMode(){
         startPose = new Pose2d(-36,62.5,Math.toRadians(270));
-        stackPose = new Pose2d(-55.5, 13, Math.toRadians(180)); //-54.5,-11.5
+        stackPose = new Pose2d(-55.5, 11.5, Math.toRadians(175)); //-54.5,-11.5
 
         speedUpVelocityConstraint = new TranslationalVelConstraint(90.0); //TODO Need to add a speed-up Velocity constraint to some of the trajectories
         speedUpAccelerationConstraint = new ProfileAccelConstraint(-70.0, 70.0);    //TODO need to determine is an acceleration constraint on some trajectories would be useful
@@ -48,6 +49,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, startPose);
         control.Init(hardwareMap);
         control.HuskyLensInit();
+        control.HuskyLensInit2();
         control.WebcamInit(hardwareMap);
         control.AutoStartPos();
         telemetry.update();
@@ -68,6 +70,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         // ***************************************************
         // ****  START DRIVING    ****************************
         // ***************************************************
+        //drive.useExtraCorrectionLogic = true;
         Actions.runBlocking(
                 new SequentialAction(
                         /* Drive to Floor Position */
@@ -84,8 +87,8 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         );
 
         /* Pick up a White Pixel from the stack */
-        drive.updatePoseEstimate();
-        control.AutoPickupRoutineDrive(1.5);
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-55.5, 11.5, Math.toRadians(180)));
+        control.AutoPickupRoutineDrive();
         drive.updatePoseEstimate();
 
         /* Drive to the board while moving arm up to scoring position after crossing the half-way point */
@@ -136,13 +139,15 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         drive.updatePoseEstimate();
         DriveBackToStack = drive.actionBuilder(drive.pose)
                 /* **** Curvy spline route out **** */
-                .splineToLinearHeading(new Pose2d(45, 12, Math.toRadians(180)), Math.toRadians(180))
+                //.splineToLinearHeading(new Pose2d(45, 12, Math.toRadians(180)), Math.toRadians(180))
                 /* **** Pure strafe out trajectory **** */
-                //.strafeToLinearHeading(new Vector2d(45, 11.5), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(45, 11.5), Math.toRadians(180))
                 // Return to stack
                 .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
                 //.lineToX(-60.5, slowDownVelocityConstraint)
                 .build();
+
+        drive.useExtraCorrectionLogic = true;
         Actions.runBlocking(
                 new ParallelAction(
                         DriveBackToStack,
@@ -154,25 +159,34 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
                         servoIntake()
                 )
         );
+        drive.useExtraCorrectionLogic = false;
+
 
         /* Use Web-cam to make a minor adjustment to position if needed */
         control.StackCorrection();
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(new Vector2d(-57,drive.pose.position.y + control.stackCorrection), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-59,drive.pose.position.y + control.stackCorrection), Math.toRadians(180))
                         .build()
         );
         drive.updatePoseEstimate();
 
-       //drive to position 3
+        //grab 2 more white pixels
+        control.AutoPickupRoutineDrive();
+        drive.updatePoseEstimate();
+
+        //drive to position 3
         BoardTraj2 = drive.actionBuilder(drive.pose)
-                .lineToX(-56, slowDownVelocityConstraint)
-                .strafeToLinearHeading(new Vector2d(45.5, 12), Math.toRadians(180))
+//                .setTangent(0)
+//                .splineToLinearHeading(new Pose2d(44, stackPose.position.y, Math.toRadians(180)), Math.toRadians(0))
+//                .splineToLinearHeading(new Pose2d(45.5, 30, Math.toRadians(180)), Math.toRadians(90))
+                //                .lineToX(-56, slowDownVelocityConstraint)
+                .strafeToLinearHeading(new Vector2d(44, 11.5), Math.toRadians(180))
                 /* **** Curvy spline route without swipe **** */
                 //.splineToLinearHeading(ew Pose2d(47.5, 22, Math.toRadians(180), Math.toRadians(0))
                 /* **** Pure swipe-strafe in trajectory **** */
-                .strafeToLinearHeading(new Vector2d(47.5, 30), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(45.5, 20), Math.toRadians(180))
                 .build();
 
         Actions.runBlocking(new SequentialAction(
@@ -236,7 +250,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         }
         BoardTraj2 = drive.actionBuilder(drive.pose)
                 .lineToX(-56, slowDownVelocityConstraint)
-                .strafeToLinearHeading(new Vector2d(45.5, 12), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(45.5, 11.5), Math.toRadians(180))
                 /* **** Curvy spline route without swipe **** */
                 //.splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                 /* **** Pure swipe-strafe in trajectory **** */
@@ -244,27 +258,27 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
                 .build();
     }
     public void BlueRightPurplePixelDecision() {
-        //***POSITION 3***
-        if (control.autoPosition == 3) {
-            deliverToFloorPose = new Pose2d(-41, 20, Math.toRadians(315));
-            FloorTraj = drive.actionBuilder(startPose)
-                    .splineToLinearHeading(new Pose2d(-39.5, 33, Math.toRadians(270)), Math.toRadians(270))
-                    //.splineToLinearHeading (deliverToFloorPose, Math.toRadians(315))
-                    .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(315))
-                    .build();
-        }
         //***POSITION 1***
-        else if (control.autoPosition == 1) {
-            deliverToFloorPose = new Pose2d(-36, 34.5, Math.toRadians(180));
+        if (control.autoPosition == 1) {
+            deliverToFloorPose = new Pose2d(-35, 33, Math.toRadians(180));
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, 35.5, Math.toRadians(270)), Math.toRadians(270))
                     .strafeToLinearHeading(new Vector2d(-27, 35.5), Math.toRadians(180))
                     .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(180))
                     .build();
         }
+        //***POSITION 3***
+        else if (control.autoPosition == 3) {
+            deliverToFloorPose = new Pose2d(-54, 21, Math.toRadians(315));
+            FloorTraj = drive.actionBuilder(startPose)
+                    .splineToLinearHeading(new Pose2d(-38.5, 33, Math.toRadians(270)), Math.toRadians(270))
+                    .splineToLinearHeading (deliverToFloorPose, Math.toRadians(315))
+                    //.splineToLinearHeading(deliverToFloorPose), Math.toRadians(315))
+                    .build();
+        }
         //***POSITION 2***
         else {
-            deliverToFloorPose = new Pose2d(-36, 12.5, Math.toRadians(90));
+            deliverToFloorPose = new Pose2d(-36, 13.3, Math.toRadians(270));
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-46, 33, Math.toRadians(270)), Math.toRadians(270))
                     .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
