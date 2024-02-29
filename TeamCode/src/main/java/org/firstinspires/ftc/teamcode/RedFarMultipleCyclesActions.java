@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Pose2dDual;
 import com.acmerobotics.roadrunner.PosePath;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
@@ -63,6 +64,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         }
         resetRuntime();
 
+        // Create the floor to Stack trajectory
         DriveToStack = drive.actionBuilder(deliverToFloorPose)
                 .splineToLinearHeading(stackPose, Math.toRadians(180))
                 .lineToX(-57, slowDownVelocityConstraint)
@@ -86,14 +88,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 )
         );
         drive.updatePoseEstimate();
-//        control.StackCorrection();
-//        drive.updatePoseEstimate();
-//        Actions.runBlocking(
-//                drive.actionBuilder(drive.pose)
-//                        .strafeToLinearHeading(new Vector2d(-57,drive.pose.position.y + control.stackCorrection), Math.toRadians(180))
-//                        .build()
-//        );
-//        drive.updatePoseEstimate();
+
         /* Pick up a White Pixel from the stack */
         control.AutoPickupRoutineDrive(1.5);
         drive.updatePoseEstimate();
@@ -151,6 +146,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 //.splineToLinearHeading(stackPose, Math.toRadians(180))
                 /* **** Pure strafe out trajectory **** */
                 .strafeToLinearHeading(new Vector2d(45, -11.5), Math.toRadians(180))
+                // Return to stack
                 .strafeToLinearHeading(new Vector2d(-52, stackPose.position.y), Math.toRadians(180))
                 .build();
 
@@ -170,7 +166,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         drive.useExtraCorrectionLogic = false;
 
 
-        /* move slides down and drive back to stack */
+        /* Use camera to make a minor adjustment to position if needed */
         control.StackCorrectionHL();
         drive.updatePoseEstimate();
         Actions.runBlocking(
@@ -181,7 +177,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         drive.updatePoseEstimate();
 
         //grab 2 more white pixels
-        control.AutoPickupRoutineDrive(2);
+        control.AutoPickupRoutineDrive(2.0);
         sleep(200);
         drive.updatePoseEstimate();
 
@@ -193,11 +189,6 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 //.splineToLinearHeading(ew Pose2d(47.5, 22, Math.toRadians(180), Math.toRadians(0))
                 /* **** Pure swipe-strafe in trajectory **** */
                 .strafeToLinearHeading(new Vector2d(47.5, -36), Math.toRadians(180))
-//                .setTangent(0)
-//                //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
-//                .splineToLinearHeading(new Pose2d(44, -12, Math.toRadians(180)), Math.toRadians(0))
-//                //.setTangent(Math.toRadians(270))
-//                .splineToLinearHeading(new Pose2d(45, -36, Math.toRadians(180)), Math.toRadians(270))
                 .build();
 
         Actions.runBlocking(new SequentialAction(

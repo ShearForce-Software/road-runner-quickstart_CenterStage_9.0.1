@@ -42,7 +42,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 
         speedUpVelocityConstraint = new TranslationalVelConstraint(90.0); //TODO Need to add a speed-up Velocity constraint to some of the trajectories
         speedUpAccelerationConstraint = new ProfileAccelConstraint(-70.0, 70.0);    //TODO need to determine is an acceleration constraint on some trajectories would be useful
-        slowDownVelocityConstraint = new TranslationalVelConstraint(15); //TODO Need to add a slow-down Velocity constraint to some of the trajectories
+        slowDownVelocityConstraint = new TranslationalVelConstraint(5); //TODO Need to add a slow-down Velocity constraint to some of the trajectories
         slowDownAccelerationConstraint = new ProfileAccelConstraint(-30, 30);    //TODO need to determine is an acceleration constraint on some trajectories would be useful
 
         /* Initialize the Robot */
@@ -86,8 +86,13 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
                 )
         );
 
-        /* Pick up a White Pixel from the stack */
+        drive.updatePoseEstimate();
+        // *******************************************************************
+        // ********** CREATE A NEW MECANUM DRIVE to correct HEADING DRIFT ****
+        // *******************************************************************
         drive = new MecanumDrive(hardwareMap, new Pose2d(-55.5, 12, Math.toRadians(180)));
+
+        /* Pick up a White Pixel from the stack */
         control.AutoPickupRoutineDrive(1.5);
         drive.updatePoseEstimate();
 
@@ -144,7 +149,6 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(45, 11), Math.toRadians(180))
                 // Return to stack
                 .strafeToLinearHeading(new Vector2d(-52, 11), Math.toRadians(180))
-                //.lineToX(-60.5, slowDownVelocityConstraint)
                 .build();
 
         drive.useExtraCorrectionLogic = true;
@@ -162,7 +166,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         drive.useExtraCorrectionLogic = false;
 
 
-        /* Use Web-cam to make a minor adjustment to position if needed */
+        /* Use camera to make a minor adjustment to position if needed */
         control.StackCorrectionHL();
         drive.updatePoseEstimate();
         Actions.runBlocking(
@@ -174,13 +178,11 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 
         //grab 2 more white pixels
         control.AutoPickupRoutineDrive(2.0);
+        sleep(200);
         drive.updatePoseEstimate();
 
         //drive to position 3
         BoardTraj2 = drive.actionBuilder(drive.pose)
-//                .setTangent(0)
-//                .splineToLinearHeading(new Pose2d(44, stackPose.position.y, Math.toRadians(180)), Math.toRadians(0))
-//                .splineToLinearHeading(new Pose2d(45.5, 30, Math.toRadians(180)), Math.toRadians(90))
                 //                .lineToX(-56, slowDownVelocityConstraint)
                 .strafeToLinearHeading(new Vector2d(44, 11), Math.toRadians(180))
                 /* **** Curvy spline route without swipe **** */
