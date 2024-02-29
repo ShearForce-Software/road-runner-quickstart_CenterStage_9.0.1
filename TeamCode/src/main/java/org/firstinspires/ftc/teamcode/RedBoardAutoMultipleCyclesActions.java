@@ -151,7 +151,7 @@ public class RedBoardAutoMultipleCyclesActions extends LinearOpMode {
         drive.updatePoseEstimate();
 
         //grab 2 more white pixels
-        control.AutoPickupRoutineDrive();
+        control.AutoPickupRoutineDrive(2.0);
         drive.updatePoseEstimate();
 
         // Build up the Stack to Board Position 3 Trajectory
