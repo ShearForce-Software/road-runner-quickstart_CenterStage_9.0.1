@@ -151,7 +151,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 //.splineToLinearHeading(stackPose, Math.toRadians(180))
                 /* **** Pure strafe out trajectory **** */
                 .strafeToLinearHeading(new Vector2d(45, -11.5), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-48, stackPose.position.y), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-52, stackPose.position.y), Math.toRadians(180))
                 .build();
 
                 //TODO -- Test if this is more accurate

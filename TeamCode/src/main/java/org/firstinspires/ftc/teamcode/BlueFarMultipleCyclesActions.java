@@ -38,7 +38,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 
     public void runOpMode(){
         startPose = new Pose2d(-36,62.5,Math.toRadians(270));
-        stackPose = new Pose2d(-55.5, 11.5, Math.toRadians(175)); //-54.5,-11.5
+        stackPose = new Pose2d(-55.5, 12, Math.toRadians(175)); //-54.5,-11.5
 
         speedUpVelocityConstraint = new TranslationalVelConstraint(90.0); //TODO Need to add a speed-up Velocity constraint to some of the trajectories
         speedUpAccelerationConstraint = new ProfileAccelConstraint(-70.0, 70.0);    //TODO need to determine is an acceleration constraint on some trajectories would be useful
@@ -50,7 +50,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         control.Init(hardwareMap);
         control.HuskyLensInit();
         control.HuskyLensInit2();
-        control.WebcamInit(hardwareMap);
+        //control.WebcamInit(hardwareMap);
         control.AutoStartPos();
         telemetry.update();
 
@@ -87,7 +87,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         );
 
         /* Pick up a White Pixel from the stack */
-        drive = new MecanumDrive(hardwareMap, new Pose2d(-55.5, 11.5, Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-55.5, 12, Math.toRadians(180)));
         control.AutoPickupRoutineDrive(1.5);
         drive.updatePoseEstimate();
 
@@ -141,9 +141,9 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
                 /* **** Curvy spline route out **** */
                 //.splineToLinearHeading(new Pose2d(45, 12, Math.toRadians(180)), Math.toRadians(180))
                 /* **** Pure strafe out trajectory **** */
-                .strafeToLinearHeading(new Vector2d(45, 11.5), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(45, 11), Math.toRadians(180))
                 // Return to stack
-                .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-52, 11), Math.toRadians(180))
                 //.lineToX(-60.5, slowDownVelocityConstraint)
                 .build();
 
@@ -163,11 +163,11 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 
 
         /* Use Web-cam to make a minor adjustment to position if needed */
-        control.StackCorrection();
+        control.StackCorrectionHL();
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(new Vector2d(-59,drive.pose.position.y + control.stackCorrection), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-58,drive.pose.position.y - control.distanceCorrectionLR_HL), Math.toRadians(180))
                         .build()
         );
         drive.updatePoseEstimate();
@@ -182,11 +182,11 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 //                .splineToLinearHeading(new Pose2d(44, stackPose.position.y, Math.toRadians(180)), Math.toRadians(0))
 //                .splineToLinearHeading(new Pose2d(45.5, 30, Math.toRadians(180)), Math.toRadians(90))
                 //                .lineToX(-56, slowDownVelocityConstraint)
-                .strafeToLinearHeading(new Vector2d(44, 11.5), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(44, 11), Math.toRadians(180))
                 /* **** Curvy spline route without swipe **** */
                 //.splineToLinearHeading(ew Pose2d(47.5, 22, Math.toRadians(180), Math.toRadians(0))
                 /* **** Pure swipe-strafe in trajectory **** */
-                .strafeToLinearHeading(new Vector2d(45.5, 20), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(45.5, 36), Math.toRadians(180))
                 .build();
 
         Actions.runBlocking(new SequentialAction(
@@ -250,7 +250,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         }
         BoardTraj2 = drive.actionBuilder(drive.pose)
                 .lineToX(-56, slowDownVelocityConstraint)
-                .strafeToLinearHeading(new Vector2d(45.5, 11.5), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(45.5, 12), Math.toRadians(180))
                 /* **** Curvy spline route without swipe **** */
                 //.splineToLinearHeading(deliverToBoardPose, Math.toRadians(0))
                 /* **** Pure swipe-strafe in trajectory **** */
@@ -260,7 +260,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
     public void BlueRightPurplePixelDecision() {
         //***POSITION 1***
         if (control.autoPosition == 1) {
-            deliverToFloorPose = new Pose2d(-35, 33, Math.toRadians(180));
+            deliverToFloorPose = new Pose2d(-36, 33, Math.toRadians(180));
             FloorTraj = drive.actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, 35.5, Math.toRadians(270)), Math.toRadians(270))
                     .strafeToLinearHeading(new Vector2d(-27, 35.5), Math.toRadians(180))
