@@ -51,7 +51,8 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, startPose);
         control.Init(hardwareMap);
         control.HuskyLensInit();
-        control.WebcamInit(hardwareMap);
+        control.HuskyLensInit2();
+        //control.WebcamInit(hardwareMap);
         control.AutoStartPos();
         telemetry.update();
 
@@ -94,7 +95,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
 //        );
 //        drive.updatePoseEstimate();
         /* Pick up a White Pixel from the stack */
-        control.AutoPickupRoutineDrive();
+        control.AutoPickupRoutineDrive(1.5);
         drive.updatePoseEstimate();
 
         /* Drive to the board while moving arm up to scoring position after crossing the half-way point */
@@ -150,7 +151,7 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
                 //.splineToLinearHeading(stackPose, Math.toRadians(180))
                 /* **** Pure strafe out trajectory **** */
                 .strafeToLinearHeading(new Vector2d(45, -11.5), Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(stackPose.position.x, stackPose.position.y), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-48, stackPose.position.y), Math.toRadians(180))
                 .build();
 
                 //TODO -- Test if this is more accurate
@@ -170,26 +171,33 @@ public class RedFarMultipleCyclesActions extends LinearOpMode {
 
 
         /* move slides down and drive back to stack */
-        control.StackCorrection();
+        control.StackCorrectionHL();
         drive.updatePoseEstimate();
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(new Vector2d(-57,drive.pose.position.y + control.stackCorrection), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-57,drive.pose.position.y - control.distanceCorrectionLR_HL), Math.toRadians(180))
                         .build()
         );
         drive.updatePoseEstimate();
 
         //grab 2 more white pixels
-        control.AutoPickupRoutineDrive();
+        control.AutoPickupRoutineDrive(2);
+        sleep(200);
         drive.updatePoseEstimate();
 
         //drive to position 1
         BoardTraj2 = drive.actionBuilder(drive.pose)
-                .setTangent(0)
-                //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(45.5, -12, Math.toRadians(180)), Math.toRadians(0))
-                //.setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(47, -36, Math.toRadians(180)), Math.toRadians(270))
+                .lineToX(-56, slowDownVelocityConstraint)
+                .strafeToLinearHeading(new Vector2d(45.5, -11), Math.toRadians(180))
+                /* **** Curvy spline route without swipe **** */
+                //.splineToLinearHeading(ew Pose2d(47.5, 22, Math.toRadians(180), Math.toRadians(0))
+                /* **** Pure swipe-strafe in trajectory **** */
+                .strafeToLinearHeading(new Vector2d(47.5, -36), Math.toRadians(180))
+//                .setTangent(0)
+//                //.splineToLinearHeading(new Pose2d(-30, -11.5, Math.toRadians(180)), Math.toRadians(0))
+//                .splineToLinearHeading(new Pose2d(44, -12, Math.toRadians(180)), Math.toRadians(0))
+//                //.setTangent(Math.toRadians(270))
+//                .splineToLinearHeading(new Pose2d(45, -36, Math.toRadians(180)), Math.toRadians(270))
                 .build();
 
         Actions.runBlocking(new SequentialAction(

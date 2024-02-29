@@ -85,7 +85,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 
         /* Pick up a White Pixel from the stack */
         drive.updatePoseEstimate();
-        control.AutoPickupRoutineDrive();
+        control.AutoPickupRoutineDrive(1.5);
         drive.updatePoseEstimate();
 
         /* Drive to the board while moving arm up to scoring position after crossing the half-way point */
@@ -172,7 +172,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
                 /* **** Curvy spline route without swipe **** */
                 //.splineToLinearHeading(ew Pose2d(47.5, 22, Math.toRadians(180), Math.toRadians(0))
                 /* **** Pure swipe-strafe in trajectory **** */
-                .strafeToLinearHeading(new Vector2d(47.5, 24), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(47.5, 30), Math.toRadians(180))
                 .build();
 
         Actions.runBlocking(new SequentialAction(

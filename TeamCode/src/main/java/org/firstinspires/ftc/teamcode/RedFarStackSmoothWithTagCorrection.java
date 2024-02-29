@@ -63,7 +63,7 @@ public class RedFarStackSmoothWithTagCorrection extends LinearOpMode {
                         .splineToLinearHeading(stackPose, Math.toRadians(180))
                         .build()
         );
-        control.StackCorrection();
+        control.StackCorrectionHL();
         sleep(10000);
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)

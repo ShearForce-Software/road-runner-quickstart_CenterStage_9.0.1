@@ -386,8 +386,8 @@ public class  UniversalControlClass {
             }
         }
     }
-    public void AutoPickupRoutineDrive(){
-        double timeout = opMode.getRuntime() + 1.5;
+    public void AutoPickupRoutineDrive(double wait){
+        double timeout = opMode.getRuntime() + wait;
         boolean forward = true;
         ServoIntake();
         while(opMode.getRuntime() <= timeout){
@@ -941,6 +941,41 @@ public class  UniversalControlClass {
             opMode.telemetry.update();
             distanceCorrectionLR_HL = 0.0;
         }
+    }
+    public void StackCorrectionHL(){
+        HuskyLens.Block[] blocks = huskyLens.blocks();
+        double timeout = opMode.getRuntime() + 0.15;
+
+        while ((blocks.length < 1) && (opMode.getRuntime() < timeout)) {
+            opMode.sleep(50);
+            blocks = huskyLens.blocks();
+        }
+        if (blocks.length > 0){
+            double xVal = blocks[0].x;
+            pixelCorrectionAmountLR = xVal - 160;
+
+            double xWidth = blocks[0].width;
+            pixelWidth_HL = 3/xWidth;
+            distanceCorrectionLR_HL = pixelCorrectionAmountLR * pixelWidth_HL;
+
+            opMode.telemetry.addData("Stack width: ", xWidth);
+            opMode.telemetry.addData("pixel width HL: ", "%.04f", pixelWidth_HL);
+
+            hl_halfScreenWidth = pixelWidth_HL * 160;
+            hl_rangeToBoard = (pixelWidth_HL * 160) / Math.tan(Math.toRadians(30));
+
+            opMode.telemetry.addData("HL range to board", "%.01f in", hl_rangeToBoard);
+            opMode.telemetry.addData("HL Half Screen Width", "%.01f in", hl_halfScreenWidth);
+            opMode.telemetry.addData("Correction LR: ","%.01f in", distanceCorrectionLR_HL);
+            opMode.telemetry.update();
+
+        }
+        else{
+            opMode.telemetry.addData("WARNING **** - No Stack in view - *****",0 );
+            opMode.telemetry.update();
+            distanceCorrectionLR_HL = 0.0;
+        }
+
     }
     public void DetectTeamArtBlue() {
         allianceColorIsBlue = true;
