@@ -88,7 +88,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
 
         /* Pick up a White Pixel from the stack */
         drive = new MecanumDrive(hardwareMap, new Pose2d(-55.5, 11.5, Math.toRadians(180)));
-        control.AutoPickupRoutineDrive();
+        control.AutoPickupRoutineDrive(1.5);
         drive.updatePoseEstimate();
 
         /* Drive to the board while moving arm up to scoring position after crossing the half-way point */
@@ -173,7 +173,7 @@ public class BlueFarMultipleCyclesActions extends LinearOpMode {
         drive.updatePoseEstimate();
 
         //grab 2 more white pixels
-        control.AutoPickupRoutineDrive();
+        control.AutoPickupRoutineDrive(2.0);
         drive.updatePoseEstimate();
 
         //drive to position 3
