@@ -141,27 +141,25 @@ public class MeepMeep_BlueMulti_withParallelActions {
     static public void BlueLeftPurplePixelDecision() {
         //***POSITION 3***
         if (autoPosition == 3) {
-            deliverToFloorPose = new Pose2d(-41, 20, Math.toRadians(315));
+            deliverToFloorPose = new Pose2d(-30, 21, Math.toRadians(315));
             FloorTraj = myBot.getDrive().actionBuilder(startPose)
-                    .splineToLinearHeading(new Pose2d(-39.5, 33, Math.toRadians(270)), Math.toRadians(270))
-                    //.splineToLinearHeading (deliverToFloorPose, Math.toRadians(315)).
-                    .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(315))
+                    .splineToLinearHeading(new Pose2d(-38.5, 33, Math.toRadians(270)), Math.toRadians(270))
+                    .splineToLinearHeading (deliverToFloorPose, Math.toRadians(315))
+                    //.splineToLinearHeading(deliverToFloorPose), Math.toRadians(315))
                     .build();
         }
         //***POSITION 1***
         else if (autoPosition == 1) {
-            deliverToFloorPose = new Pose2d(-36, 34.5, Math.toRadians(180));
+            deliverToFloorPose = new Pose2d(-36, 33, Math.toRadians(180));
             FloorTraj = myBot.getDrive().actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-38.5, 35.5, Math.toRadians(270)), Math.toRadians(270))
-                    //.splineToLinearHeading(new Pose2d(-27, -33, Math.toRadians(180)), Math.toRadians(180))
-                    //.splineToLinearHeading(deliverToFloorPose, Math.toRadians(180))
                     .strafeToLinearHeading(new Vector2d(-27, 35.5), Math.toRadians(180))
                     .strafeToLinearHeading(new Vector2d(deliverToFloorPose.position.x, deliverToFloorPose.position.y), Math.toRadians(180))
                     .build();
         }
         //***POSITION 2***
         else {
-            deliverToFloorPose = new Pose2d(-36, 12.5, Math.toRadians(270));
+            deliverToFloorPose = new Pose2d(-36, 13.3, Math.toRadians(270));
             FloorTraj = myBot.getDrive().actionBuilder(startPose)
                     .splineToLinearHeading(new Pose2d(-46, 33, Math.toRadians(270)), Math.toRadians(270))
                     .splineToLinearHeading(deliverToFloorPose, Math.toRadians(270))
