@@ -22,6 +22,7 @@ public class RedFarStackSmooth extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, startPose);
         control.Init(hardwareMap);
         control.HuskyLensInit();
+        control.HuskyLensInit2();
         control.AutoStartPos();
 
         telemetry.update();
@@ -70,6 +71,13 @@ public class RedFarStackSmooth extends LinearOpMode {
 
         // Return Arm to Ready position
         control.SlidesToAuto();
+        sleep(150);
+        control.TagCorrection();
+        sleep(150);
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        .strafeToLinearHeading(new Vector2d(drive.pose.position.x, drive.pose.position.y + control.distanceCorrectionLR_HL), Math.toRadians(180))
+                        .build());
         sleep(150);
         control.DeliverPixelToBoardPos();
         control.StopNearBoardAuto(true);
